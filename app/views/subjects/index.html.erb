@@ -4,7 +4,7 @@
   <% if @subjects.any? %>
     <div class="grid gap-4">
       <% @subjects.each do |subject| %>
-        <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between">
+        <div class="bg-white rounded-lg shadow p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h2 class="text-lg font-semibold">
               <%= link_to subject.name, subject, class: "text-blue-600 hover:text-blue-800" %>
@@ -12,11 +12,11 @@
             <p class="text-sm text-gray-500"><%= subject.code %> &middot; <%= subject.department.name %></p>
             <p class="text-sm text-gray-500">Teacher: <%= subject.teacher.full_name %></p>
           </div>
-          <div class="flex gap-2">
+          <div class="flex items-center gap-2 self-end sm:self-auto">
             <% if subject.teacher == Current.user %>
-              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">You teach this</span>
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded whitespace-nowrap">You teach this</span>
             <% end %>
-            <%= link_to "View", subject, class: "rounded-md bg-blue-600 px-3 py-1.5 text-white text-sm hover:bg-blue-700" %>
+            <%= link_to "View", subject, class="rounded-md bg-blue-600 px-3 py-1.5 text-white text-sm hover:bg-blue-700 whitespace-nowrap" %>
           </div>
         </div>
       <% end %>
