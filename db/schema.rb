@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_03_221952) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_03_222530) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -75,6 +75,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_221952) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
+  create_table "materials", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "discarded_at"
+    t.integer "subject_id", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["discarded_at"], name: "index_materials_on_discarded_at"
+    t.index ["subject_id"], name: "index_materials_on_subject_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.integer "author_id", null: false
     t.text "content", null: false
@@ -127,6 +137,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_221952) do
   add_foreign_key "departments", "colleges"
   add_foreign_key "enrollments", "subjects"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "materials", "subjects"
   add_foreign_key "posts", "users", column: "author_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "subjects", "departments"

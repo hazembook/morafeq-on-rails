@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  resources :subjects, only: [ :index, :show ]
+  resources :subjects, only: [ :index, :show ] do
+    resources :materials, only: [ :index, :show, :new, :create, :destroy ]
+  end
   get "feed", to: "feed#index", as: :feed_index
   post "feed", to: "feed#create"
 
