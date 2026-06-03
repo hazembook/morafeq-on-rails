@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
 
   resources :subjects, only: [ :index, :show ]
+  get "feed", to: "feed#index", as: :feed_index
+  post "feed", to: "feed#create"
 
   namespace :admin do
     get "/", to: "dashboard#index"

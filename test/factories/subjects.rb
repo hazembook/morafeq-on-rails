@@ -3,6 +3,6 @@ FactoryBot.define do
     sequence(:name) { |n| "Subject #{n}" }
     sequence(:code) { |n| "SUB#{n}" }
     department
-    teacher { association(:user, :teacher) }
+    teacher { build(:user, :teacher) }
   end
 end

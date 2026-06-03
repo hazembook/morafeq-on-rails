@@ -1,0 +1,24 @@
+<div class="bg-white rounded-lg shadow p-4">
+  <div class="flex items-start gap-3">
+    <div class="flex-1">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="font-medium text-sm"><%= post.author.full_name %></span>
+        <span class="text-xs text-gray-400"><%= time_ago_in_words(post.created_at) %> ago</span>
+        <% if post.pinned? %>
+          <span class="text-xs bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded">Official</span>
+        <% end %>
+      </div>
+      <p class="text-sm text-gray-700"><%= post.content %></p>
+      <% if post.attachments.any? %>
+        <div class="mt-2 flex gap-2">
+          <% post.attachments.each do |attachment| %>
+            <%= link_to attachment.filename, attachment, class: "text-xs text-blue-600 hover:underline" %>
+          <% end %>
+        </div>
+      <% end %>
+      <div class="mt-2 text-xs text-gray-400">
+        <%= post.scope.name %>
+      </div>
+    </div>
+  </div>
+</div>

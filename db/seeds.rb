@@ -2,10 +2,15 @@
 # Run with: bin/rails db:seed
 
 puts "Cleaning existing data..."
+ActiveStorage::Attachment.delete_all
+ActiveStorage::Blob.delete_all
+AuditLog.delete_all
+Post.delete_all
 Enrollment.delete_all
 Subject.delete_all
 Department.delete_all
 College.delete_all
+Session.delete_all
 User.delete_all
 
 puts "Creating users..."
@@ -118,9 +123,25 @@ Enrollment.create!(user: student1, subject: subjects.find { |s| s.code == "PH101
 Enrollment.create!(user: student2, subject: subjects.find { |s| s.code == "CH101" })
 Enrollment.create!(user: student3, subject: subjects.find { |s| s.code == "EN101" })
 
+puts "Creating demo posts..."
+
+cs101 = subjects.find { |s| s.code == "CS101" }
+cs201 = subjects.find { |s| s.code == "CS201" }
+engineering_college = engineering
+
+Post.create!(content: "Welcome to Introduction to Programming! Check the syllabus in Materials.", author: teacher1, scope: cs101, pinned: true)
+Post.create!(content: "Reminder: Assignment 1 is due next Sunday.", author: teacher1, scope: cs101)
+Post.create!(content: "Office hours this week: Tuesday 2-4 PM.", author: teacher1, scope: cs, scope_type: "Department", scope_id: cs.id)
+Post.create!(content: "Engineering hackathon next month! Teams of 3-4.", author: teacher1, scope: engineering_college, scope_type: "College", scope_id: engineering_college.id, pinned: true)
+Post.create!(content: "Data Structures midterm will cover trees and graphs.", author: teacher1, scope: cs201)
+
+puts "  #{Post.count} posts (#{Post.where(pinned: true).count} pinned)"
+
+puts ""
 puts "Seeding complete!"
 puts "  #{User.count} users (#{User.student.count} students, #{User.teacher.count} teachers, #{User.admin.count} admins)"
 puts "  #{College.count} colleges"
 puts "  #{Department.count} departments"
 puts "  #{Subject.count} subjects"
 puts "  #{Enrollment.count} enrollments"
+puts "  #{Post.count} posts (#{Post.where(pinned: true).count} pinned)"

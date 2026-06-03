@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_03_210041) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_03_221952) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -75,6 +75,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_210041) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
+  create_table "posts", force: :cascade do |t|
+    t.integer "author_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "discarded_at"
+    t.boolean "pinned", default: false, null: false
+    t.integer "scope_id", null: false
+    t.string "scope_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_posts_on_author_id"
+    t.index ["discarded_at"], name: "index_posts_on_discarded_at"
+    t.index ["scope_type", "scope_id"], name: "index_posts_on_scope_type_and_scope_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -113,6 +127,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_210041) do
   add_foreign_key "departments", "colleges"
   add_foreign_key "enrollments", "subjects"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "posts", "users", column: "author_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "subjects", "departments"
   add_foreign_key "subjects", "users", column: "teacher_id"
