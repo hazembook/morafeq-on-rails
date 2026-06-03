@@ -137,6 +137,16 @@ Post.create!(content: "Data Structures midterm will cover trees and graphs.", au
 
 puts "  #{Post.count} posts (#{Post.where(pinned: true).count} pinned)"
 
+puts "Creating demo materials..."
+
+[ "CS101 Syllabus", "Assignment 1", "Lecture Slides - Week 1" ].each do |title|
+  material = Material.new(title: title, subject: cs101)
+  material.file.attach(io: StringIO.new("Demo content"), filename: "#{title.parameterize}.pdf", content_type: "application/pdf")
+  material.save!
+end
+
+puts "  #{Material.count} materials"
+
 puts ""
 puts "Seeding complete!"
 puts "  #{User.count} users (#{User.student.count} students, #{User.teacher.count} teachers, #{User.admin.count} admins)"
