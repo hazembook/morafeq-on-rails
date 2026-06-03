@@ -6,16 +6,17 @@
         <div>
           <%= f.text_area :content, placeholder: "What's on your mind?", rows: 3, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", name: "post[content]" %>
         </div>
-        <div class="flex items-center gap-4">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div class="flex-1">
-            <%= f.label :scope, "Post to", class: "text-sm text-gray-600 mr-2" %>
-            <%= f.select :scope, scope_options_for(Current.user), { prompt: "Select a subject" }, class: "rounded-md border-gray-300 text-sm", name: "post[scope]" %>
+            <%= f.select :scope, scope_options_for(Current.user), { prompt: "Post to a subject..." }, class: "w-full rounded-md border-gray-300 text-sm", name: "post[scope]" %>
           </div>
-          <div class="flex items-center gap-2">
-            <%= f.check_box :pinned, class: "rounded border-gray-300", name: "post[pinned]" %>
-            <%= f.label :pinned, "Official", class: "text-sm text-gray-600" %>
+          <div class="flex items-center gap-3">
+            <label class="flex items-center gap-1.5 text-sm text-gray-600">
+              <%= f.check_box :pinned, class: "rounded border-gray-300", name: "post[pinned]" %>
+              Official
+            </label>
+            <%= f.submit "Post", class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
           </div>
-          <%= f.submit "Post", class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
         </div>
       <% end %>
     </div>
