@@ -18,12 +18,12 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
             <div class="min-w-0">
-              <p class="font-medium truncate"><%= material.title %></p>
+              <%= link_to material.title, subject_material_path(@subject, material), class: "font-medium truncate hover:text-blue-600", data: { turbo: false } %>
               <p class="text-xs text-gray-400"><%= time_ago_in_words(material.created_at) %> ago</p>
             </div>
           </div>
           <div class="flex gap-2 self-end sm:self-auto">
-            <%= link_to "Download", subject_material_path(@subject, material), class: "rounded-md bg-blue-600 px-3 py-1.5 text-white text-sm hover:bg-blue-700 whitespace-nowrap" %>
+            <%= link_to "Download", subject_material_path(@subject, material, download: true), class: "rounded-md bg-blue-600 px-3 py-1.5 text-white text-sm hover:bg-blue-700 whitespace-nowrap", data: { turbo: false } %>
             <% if Current.user.admin? || @subject.teacher == Current.user %>
               <%= button_to "Delete", subject_material_path(@subject, material), method: :delete, class: "text-red-600 text-sm hover:text-red-800 whitespace-nowrap", data: { turbo_confirm: "Are you sure?" } %>
             <% end %>

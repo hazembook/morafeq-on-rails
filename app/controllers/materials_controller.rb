@@ -8,7 +8,8 @@ class MaterialsController < ApplicationController
 
   def show
     @material = @subject.materials.kept.find(params[:id])
-    send_file @material.file.download, filename: @material.file.filename.to_s, content_type: @material.file.content_type
+    disposition = params[:download] ? :attachment : :inline
+    send_data @material.file.download, filename: @material.file.filename.to_s, content_type: @material.file.content_type, disposition: disposition
   end
 
   def new
