@@ -10,7 +10,7 @@ class MaterialTest < ActiveSupport::TestCase
   test "validates presence of file" do
     material = build(:material)
     assert_not material.valid?
-    assert_includes material.errors[:file], "can't be blank"
+    assert_includes material.errors[:file], "must be attached"
   end
 
   test "belongs to subject" do

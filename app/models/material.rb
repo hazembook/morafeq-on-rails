@@ -5,7 +5,7 @@ class Material < ApplicationRecord
   has_one_attached :file
 
   validates :title, presence: true
-  validates :file, presence: true
+  validate :file_attached
   validate :file_type_valid, if: -> { file.attached? }
   validate :file_size_valid, if: -> { file.attached? }
 
@@ -21,6 +21,10 @@ class Material < ApplicationRecord
   MAX_FILE_SIZE = 50.megabytes
 
   private
+
+  def file_attached
+    errors.add(:file, "must be attached") unless file.attached?
+  end
 
   def file_type_valid
     unless ALLOWED_TYPES.include?(file.content_type)
