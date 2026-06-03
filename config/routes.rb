@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   end
   get "feed", to: "feed#index", as: :feed_index
   post "feed", to: "feed#create"
+  resource :profile, only: [ :show, :edit, :update ]
 
   namespace :admin do
     get "/", to: "dashboard#index"
