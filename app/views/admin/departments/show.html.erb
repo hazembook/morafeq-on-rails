@@ -1,0 +1,20 @@
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-2xl font-bold mb-2"><%= @department.name %></h1>
+  <p class="text-gray-500 mb-4">College: <%= @department.college.name %></p>
+
+  <h2 class="text-lg font-semibold mb-2">Subjects</h2>
+  <% if @department.subjects.any? %>
+    <ul class="list-disc list-inside space-y-1 mb-4">
+      <% @department.subjects.each do |subject| %>
+        <li><%= subject.code %> - <%= subject.name %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-500 mb-4">No subjects yet.</p>
+  <% end %>
+
+  <div class="flex gap-3">
+    <%= link_to "Edit", edit_admin_department_path(@department), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
+    <%= link_to "Back", admin_departments_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+  </div>
+</div>

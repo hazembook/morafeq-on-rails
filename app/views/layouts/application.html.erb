@@ -23,8 +23,50 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="bg-gray-50">
+    <nav class="bg-white border-b border-gray-200 fixed top-0 w-full z-50">
+      <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-6">
+          <%= link_to "Morafeq", root_path, class: "text-xl font-bold text-blue-600" %>
+          <% if authenticated? %>
+            <%= link_to "Subjects", subjects_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+          <% end %>
+        </div>
+        <div class="flex items-center gap-4">
+          <% if authenticated? %>
+            <% if Current.user.admin? %>
+              <div class="relative group">
+                <button class="text-sm text-gray-600 hover:text-gray-900">Admin</button>
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border hidden group-hover:block">
+                  <%= link_to "Colleges", admin_colleges_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                  <%= link_to "Departments", admin_departments_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                  <%= link_to "Subjects", admin_subjects_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                  <%= link_to "Users", admin_users_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                  <%= link_to "Audit Logs", admin_audit_logs_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                </div>
+              </div>
+            <% end %>
+            <span class="text-sm text-gray-500"><%= Current.user.full_name %></span>
+            <%= button_to "Sign out", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-900" %>
+          <% else %>
+            <%= link_to "Sign in", new_session_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <% if notice %>
+      <div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" role="alert">
+        <%= notice %>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded" role="alert">
+        <%= alert %>
+      </div>
+    <% end %>
+
+    <main class="container mx-auto mt-28 px-5">
       <%= yield %>
     </main>
   </body>

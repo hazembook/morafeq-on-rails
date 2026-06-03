@@ -1,0 +1,19 @@
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-2xl font-bold mb-4"><%= @college.name %></h1>
+
+  <h2 class="text-lg font-semibold mb-2">Departments</h2>
+  <% if @college.departments.any? %>
+    <ul class="list-disc list-inside space-y-1 mb-4">
+      <% @college.departments.each do |dept| %>
+        <li><%= dept.name %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-500 mb-4">No departments yet.</p>
+  <% end %>
+
+  <div class="flex gap-3">
+    <%= link_to "Edit", edit_admin_college_path(@college), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
+    <%= link_to "Back", admin_colleges_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+  </div>
+</div>

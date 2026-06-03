@@ -1,0 +1,29 @@
+<div class="max-w-4xl mx-auto">
+  <h1 class="text-2xl font-bold mb-6">My Subjects</h1>
+
+  <% if @subjects.any? %>
+    <div class="grid gap-4">
+      <% @subjects.each do |subject| %>
+        <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold">
+              <%= link_to subject.name, subject, class: "text-blue-600 hover:text-blue-800" %>
+            </h2>
+            <p class="text-sm text-gray-500"><%= subject.code %> &middot; <%= subject.department.name %></p>
+            <p class="text-sm text-gray-500">Teacher: <%= subject.teacher.full_name %></p>
+          </div>
+          <div class="flex gap-2">
+            <% if subject.teacher == Current.user %>
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">You teach this</span>
+            <% end %>
+            <%= link_to "View", subject, class: "rounded-md bg-blue-600 px-3 py-1.5 text-white text-sm hover:bg-blue-700" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+      <p class="text-gray-500">You are not enrolled in any subjects yet.</p>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,13 @@
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-2xl font-bold mb-2"><%= @user.full_name %></h1>
+  <p class="text-gray-500 mb-1">Email: <%= @user.email_address %></p>
+  <p class="text-gray-500 mb-1">Role: <%= @user.role.titleize %></p>
+  <% if @user.bio.present? %>
+    <p class="text-gray-500 mb-4">Bio: <%= @user.bio %></p>
+  <% end %>
+
+  <div class="flex gap-3">
+    <%= link_to "Edit", edit_admin_user_path(@user), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
+    <%= link_to "Back", admin_users_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+  </div>
+</div>

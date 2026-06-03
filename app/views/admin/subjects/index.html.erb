@@ -1,0 +1,35 @@
+<div class="max-w-5xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Subjects</h1>
+    <%= link_to "New Subject", new_admin_subject_path, class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Department</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Teacher</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @subjects.each do |subject| %>
+          <tr>
+            <td class="px-6 py-4"><%= subject.code %></td>
+            <td class="px-6 py-4"><%= subject.name %></td>
+            <td class="px-6 py-4"><%= subject.department.name %></td>
+            <td class="px-6 py-4"><%= subject.teacher.full_name %></td>
+            <td class="px-6 py-4 text-right space-x-2">
+              <%= link_to "Show", admin_subject_path(subject), class: "text-blue-600 hover:text-blue-800 text-sm" %>
+              <%= link_to "Edit", edit_admin_subject_path(subject), class: "text-blue-600 hover:text-blue-800 text-sm" %>
+              <%= button_to "Delete", admin_subject_path(subject), method: :delete, class: "text-red-600 hover:text-red-800 text-sm", data: { turbo_confirm: "Are you sure?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

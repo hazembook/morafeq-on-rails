@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_03_202955) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_03_210041) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -39,6 +39,42 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_202955) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "audit_logs", force: :cascade do |t|
+    t.string "action"
+    t.integer "auditable_id"
+    t.string "auditable_type"
+    t.datetime "created_at", null: false
+    t.text "record_changes"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_audit_logs_on_user_id"
+  end
+
+  create_table "colleges", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_colleges_on_name", unique: true
+  end
+
+  create_table "departments", force: :cascade do |t|
+    t.integer "college_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["college_id"], name: "index_departments_on_college_id"
+  end
+
+  create_table "enrollments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "subject_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["subject_id"], name: "index_enrollments_on_subject_id"
+    t.index ["user_id", "subject_id"], name: "index_enrollments_on_user_id_and_subject_id", unique: true
+    t.index ["user_id"], name: "index_enrollments_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -46,6 +82,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_202955) do
     t.string "user_agent"
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "subjects", force: :cascade do |t|
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.integer "department_id", null: false
+    t.string "name", null: false
+    t.integer "teacher_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_subjects_on_code", unique: true
+    t.index ["department_id"], name: "index_subjects_on_department_id"
+    t.index ["teacher_id"], name: "index_subjects_on_teacher_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -61,5 +109,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_202955) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "audit_logs", "users"
+  add_foreign_key "departments", "colleges"
+  add_foreign_key "enrollments", "subjects"
+  add_foreign_key "enrollments", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "subjects", "departments"
+  add_foreign_key "subjects", "users", column: "teacher_id"
 end
