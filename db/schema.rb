@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_03_222530) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_03_233023) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -50,6 +50,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_222530) do
     t.index ["user_id"], name: "index_audit_logs_on_user_id"
   end
 
+  create_table "chat_rooms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "is_private", default: false, null: false
+    t.string "name", null: false
+    t.integer "subject_id"
+    t.datetime "updated_at", null: false
+    t.index ["subject_id"], name: "index_chat_rooms_on_subject_id"
+  end
+
   create_table "colleges", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -83,6 +92,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_222530) do
     t.datetime "updated_at", null: false
     t.index ["discarded_at"], name: "index_materials_on_discarded_at"
     t.index ["subject_id"], name: "index_materials_on_subject_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "chat_room_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "discarded_at"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["chat_room_id"], name: "index_messages_on_chat_room_id"
+    t.index ["discarded_at"], name: "index_messages_on_discarded_at"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -134,10 +155,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_222530) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audit_logs", "users"
+  add_foreign_key "chat_rooms", "subjects"
   add_foreign_key "departments", "colleges"
   add_foreign_key "enrollments", "subjects"
   add_foreign_key "enrollments", "users"
   add_foreign_key "materials", "subjects"
+  add_foreign_key "messages", "chat_rooms"
+  add_foreign_key "messages", "users"
   add_foreign_key "posts", "users", column: "author_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "subjects", "departments"

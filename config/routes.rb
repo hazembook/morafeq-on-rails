@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   end
   get "feed", to: "feed#index", as: :feed_index
   post "feed", to: "feed#create"
+  resources :chat_rooms, only: [ :index, :show ] do
+    resources :messages, only: [ :create, :destroy ]
+  end
+
   resource :profile, only: [ :show, :edit, :update ]
 
   namespace :admin do

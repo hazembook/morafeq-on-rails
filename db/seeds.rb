@@ -4,6 +4,9 @@
 puts "Cleaning existing data..."
 ActiveStorage::Attachment.delete_all
 ActiveStorage::Blob.delete_all
+Message.delete_all
+ChatRoom.delete_all
+Material.delete_all
 AuditLog.delete_all
 Post.delete_all
 Enrollment.delete_all
@@ -147,11 +150,24 @@ end
 
 puts "  #{Material.count} materials"
 
+puts "Creating demo messages..."
+
+cs101_room = ChatRoom.find_by(subject: cs101)
+if cs101_room
+  Message.create!(content: "Welcome to the CS101 chat room!", user: teacher1, chat_room: cs101_room)
+  Message.create!(content: "Does anyone know when Assignment 1 is due?", user: student1, chat_room: cs101_room)
+  Message.create!(content: "Next Sunday as posted in the feed.", user: teacher1, chat_room: cs101_room)
+  Message.create!(content: "Thanks Dr. Ahmed!", user: student2, chat_room: cs101_room)
+end
+
+puts "  #{Message.count} messages"
+
 puts ""
 puts "Seeding complete!"
 puts "  #{User.count} users (#{User.student.count} students, #{User.teacher.count} teachers, #{User.admin.count} admins)"
 puts "  #{College.count} colleges"
 puts "  #{Department.count} departments"
 puts "  #{Subject.count} subjects"
+puts "  #{ChatRoom.count} chat rooms"
 puts "  #{Enrollment.count} enrollments"
 puts "  #{Post.count} posts (#{Post.where(pinned: true).count} pinned)"
