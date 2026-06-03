@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :subjects, only: [ :index, :show ]
 
   namespace :admin do
+    get "/", to: "colleges#index"
     resources :colleges
     resources :departments
     resources :subjects

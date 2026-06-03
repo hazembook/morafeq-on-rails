@@ -35,16 +35,7 @@
         <div class="flex items-center gap-4">
           <% if authenticated? %>
             <% if Current.user.admin? %>
-              <div class="relative group">
-                <button class="text-sm text-gray-600 hover:text-gray-900">Admin</button>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border hidden group-hover:block">
-                  <%= link_to "Colleges", admin_colleges_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                  <%= link_to "Departments", admin_departments_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                  <%= link_to "Subjects", admin_subjects_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                  <%= link_to "Users", admin_users_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                  <%= link_to "Audit Logs", admin_audit_logs_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                </div>
-              </div>
+              <%= link_to "Admin Panel", admin_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
             <% end %>
             <span class="text-sm text-gray-500"><%= Current.user.full_name %></span>
             <%= button_to "Sign out", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-900" %>
