@@ -148,14 +148,14 @@ Morafeq is designed to be highly adaptable and configurable for various learning
 3. **Online Course Platforms / LMS Platforms (Priority 2):**
    - Hierarchy: Categories/Topics -> Courses -> Chapters/Lessons
    - Roles: Administrators -> Instructors/Creators -> Students/Learners
-4. **Tech Communities (Priority 3):**
-   - Hierarchy: Guilds/User Groups -> Meetups/Cohorts -> Talks/Projects
-   - Roles: Community Leads -> Presenters/Mentors -> Members/Learners
+4. **Tech Communities (Priority 3 - WhatsApp/Telegram-Style Groups):**
+   - Hierarchy: Communities (Main Space) -> Topics/Rooms (Sub-groups/Chat Channels) -> Chats/Threads
+   - Roles: Community Admins -> Moderators -> Members
 
 To support this natively without altering the DB schema, the system will use a global configuration parameter `institution_type` (configured in config settings). This maps DB models to dynamic user-facing terms:
-- `college` translates to: `College` (University), `Stage` (School), `Category` (Course Platform), `Guild` (Tech Community)
-- `department` translates to: `Department` (University), `Classroom` (School), `Course` (Course Platform), `Meetup` (Tech Community)
-- `subject` translates to: `Course/Subject` (University), `Class` (School), `Chapter` (Course Platform), `Talk` (Tech Community)
+- `college` translates to: `College` (University), `Stage` (School), `Category` (Course Platform), `Community` (Tech Community)
+- `department` translates to: `Department` (University), `Classroom` (School), `Course` (Course Platform), `Topic` (Tech Community)
+- `subject` translates to: `Course/Subject` (University), `Class` (School), `Chapter` (Course Platform), `Chat` (Tech Community)
 
 > [!IMPORTANT]
 > **Priority Focus:** The core UI templates, translation keys, default seeds, and functional test flows are built specifically to focus on **Universities/Colleges** and **Schools (K-12)** first. Online Course Platforms and Tech Communities configurations are designed for subsequent expansion phases.
