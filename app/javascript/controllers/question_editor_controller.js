@@ -30,32 +30,8 @@ export default class extends Controller {
         this.addOption()
         this.addOption()
       }
-    } else if (type === "true_false") {
-      this.mcqOptionsContainerTarget.classList.remove("hidden")
-      
-      // Hide add option button
-      const addBtn = this.mcqOptionsContainerTarget.querySelector('[data-action*="addOption"]')
-      if (addBtn) addBtn.classList.add("hidden")
-      
-      // Set to read-only True and False
-      const optionsList = this.mcqOptionsContainerTarget.querySelector('.options-list')
-      optionsList.innerHTML = ""
-      
-      const optionTemplate = this.optionTemplateTarget.innerHTML
-      
-      // Add True option
-      optionsList.insertAdjacentHTML('beforeend', optionTemplate)
-      const inputTrue = optionsList.lastElementChild.querySelector('input')
-      inputTrue.value = "True"
-      inputTrue.readOnly = true
-      optionsList.lastElementChild.querySelector('button[data-action*="removeOption"]').classList.add("hidden")
-
-      // Add False option
-      optionsList.insertAdjacentHTML('beforeend', optionTemplate)
-      const inputFalse = optionsList.lastElementChild.querySelector('input')
-      inputFalse.value = "False"
-      inputFalse.readOnly = true
-      optionsList.lastElementChild.querySelector('button[data-action*="removeOption"]').classList.add("hidden")
+    } else {
+      this.mcqOptionsContainerTarget.classList.add("hidden")
     }
   }
 

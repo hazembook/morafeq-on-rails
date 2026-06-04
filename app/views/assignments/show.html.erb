@@ -9,6 +9,7 @@
     <% if Current.user.teacher? || Current.user.admin? %>
       <div class="flex gap-2 flex-wrap sm:shrink-0">
         <%= link_to "Grade Submissions", grade_subject_assignment_path(@subject, @assignment), class: "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 shadow-sm transition" %>
+        <%= button_to @assignment.locked? ? "Unlock Assignment" : "Lock Assignment", subject_assignment_path(@subject, @assignment), method: :patch, params: { assignment: { locked: !@assignment.locked? }, redirect_to: request.original_url }, class: "rounded-lg #{@assignment.locked? ? 'bg-green-50 text-green-600 hover:bg-green-100 border-green-200' : 'bg-amber-50 text-amber-600 hover:bg-amber-100 border-amber-200'} px-4 py-2 text-sm font-semibold border transition cursor-pointer" %>
         <%= link_to "Edit Assignment", edit_subject_assignment_path(@subject, @assignment), class: "rounded-lg bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 transition" %>
         <%= button_to "Delete Assignment", subject_assignment_path(@subject, @assignment), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this assignment?" }, class: "rounded-lg bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-100 transition cursor-pointer" %>
       </div>

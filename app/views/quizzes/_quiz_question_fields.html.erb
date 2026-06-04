@@ -37,7 +37,7 @@
 
     <!-- Options List -->
     <div class="options-list space-y-2 mb-2">
-      <% if q_form.object.choices.is_a?(Array) %>
+      <% if q_form.object.question_type == "mcq" && q_form.object.choices.is_a?(Array) %>
         <% q_form.object.choices.each do |choice| %>
           <div class="flex items-center gap-2" data-option-wrapper="true">
             <input type="text" name="quiz[quiz_questions_attributes][<%= q_form.index %>][choices][]" value="<%= choice %>" placeholder="Enter option text..." class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" required>
