@@ -7,6 +7,7 @@ class Subject < ApplicationRecord
 
   has_one :chat_room, dependent: :destroy
   has_many :quizzes, dependent: :destroy
+  has_many :assignments, dependent: :destroy
   has_many :schedules, dependent: :destroy
   has_many :attendances, dependent: :destroy
 

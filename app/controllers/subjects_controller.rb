@@ -14,6 +14,7 @@ class SubjectsController < ApplicationController
   def show
     @materials = @subject.materials.kept.order(created_at: :desc).limit(5)
     @quizzes = @subject.quizzes.order(due_at: :desc)
+    @assignments = @subject.assignments.order(due_at: :desc)
     @schedules = @subject.schedules.order(:day, :start_time)
     @posts = Post.kept.where(scope_type: "Subject", scope_id: @subject.id).order(pinned: :desc, created_at: :desc).limit(5)
 

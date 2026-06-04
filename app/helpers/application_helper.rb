@@ -47,16 +47,7 @@ module ApplicationHelper
       end
     end
 
-    if quiz_answer.file.attached?
-      html << tag.div(class: "mt-2 pt-2 border-t border-gray-100 flex items-center gap-2") do
-        safe_join([
-          tag.svg(class: "w-4 h-4 text-blue-500 shrink-0", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24") do
-            tag.path(stroke_linecap: "round", stroke_linejoin: "round", stroke_width: "2", d: "M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z")
-          end,
-          link_to("Download Submitted File (#{quiz_answer.file.filename})", rails_blob_path(quiz_answer.file, disposition: "attachment"), class: "text-xs font-semibold text-blue-600 hover:text-blue-800 underline", target: "_blank")
-        ])
-      end
-    end
+
 
     safe_join(html)
   end

@@ -132,4 +132,74 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match "100.0%", response.body
   end
+
+  test "assignments system: teacher creates, student submits, teacher grades" do
+    # 1. Teacher creates an assignment with worksheet file
+    sign_in_as(@teacher)
+
+    worksheet = fixture_file_upload("test.pdf", "application/pdf")
+    assert_difference "Assignment.count", 1 do
+      post subject_assignments_path(@subject), params: {
+        assignment: {
+          title: "Lab Assignment 1",
+          description: "Solve the problems in the attached worksheet.",
+          due_at: 2.days.from_now.to_s,
+          total_points: 100,
+          file: worksheet
+        }
+      }
+    end
+
+    assignment = Assignment.last
+    assert_equal "Lab Assignment 1", assignment.title
+    assert assignment.file.attached?
+    assert_redirected_to subject_path(@subject)
+
+    # 2. Student submits assignment file
+    sign_in_as(@student)
+    get subject_assignment_path(@subject, assignment)
+    assert_response :success
+    assert_match "Download Worksheet", response.body
+
+    student_solution = fixture_file_upload("test.pdf", "application/pdf")
+    assert_difference "AssignmentSubmission.count", 1 do
+      post subject_assignment_assignment_submissions_path(@subject, assignment), params: {
+        assignment_submission: {
+          file: student_solution
+        }
+      }
+    end
+
+    assert_redirected_to subject_assignment_path(@subject, assignment)
+    follow_redirect!
+    assert_match "submitted successfully", response.body
+    assert_match "Download Solved File", response.body
+
+    # 3. Teacher grades submission
+    sign_in_as(@teacher)
+    get grade_subject_assignment_path(@subject, assignment)
+    assert_response :success
+    assert_match "Download Solved File", response.body
+
+    submission = AssignmentSubmission.last
+    post grade_submissions_subject_assignment_path(@subject, assignment), params: {
+      grades: {
+        submission.id => 95
+      },
+      feedbacks: {
+        submission.id => "Well done! Clean work."
+      }
+    }
+
+    assert_redirected_to grade_subject_assignment_path(@subject, assignment)
+    assert_equal 95, submission.reload.score
+    assert_equal "Well done! Clean work.", submission.feedback
+
+    # 4. Student views their score & feedback
+    sign_in_as(@student)
+    get subject_assignment_path(@subject, assignment)
+    assert_response :success
+    assert_match "95 / 100 pts", response.body
+    assert_match "Well done! Clean work.", response.body
+  end
 end

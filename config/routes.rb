@@ -11,6 +11,13 @@ Rails.application.routes.draw do
         post :grade_answers
       end
     end
+    resources :assignments, only: [ :show, :new, :create ] do
+      resources :assignment_submissions, only: [ :create ]
+      member do
+        get :grade
+        post :grade_submissions
+      end
+    end
     resources :schedules, only: [ :index, :new, :create, :destroy ]
     resources :attendances, only: [ :index, :create ] do
       get :record, on: :collection
