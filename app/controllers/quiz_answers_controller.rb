@@ -17,12 +17,18 @@ class QuizAnswersController < ApplicationController
     end
 
     QuizAnswer.transaction do
-      answers_params.each do |question_id, text|
-        question = @quiz.quiz_questions.find(question_id)
+      questions.each do |question|
+        val = answers_params[question.id.to_s]
+        serialized_val = if val.is_a?(Hash) || val.is_a?(ActionController::Parameters)
+          val.to_unsafe_h.to_json
+        else
+          val.to_s
+        end
+
         QuizAnswer.create!(
-          quiz_question: q = question,
+          quiz_question: question,
           user: Current.user,
-          answer: text
+          answer: serialized_val
         )
       end
     end

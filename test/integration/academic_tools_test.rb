@@ -82,6 +82,99 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     assert_match "Failed to update grades", response.body
   end
 
+  test "quiz system with diverse question types: MCQ, True/False, Match, Written" do
+    sign_in_as(@teacher)
+
+    # 1. Teacher creates a quiz with multiple question types
+    assert_difference "Quiz.count", 1 do
+      post subject_quizzes_path(@subject), params: {
+        quiz: {
+          title: "Comprehensive Quiz",
+          due_at: 2.days.from_now.to_s,
+          quiz_questions_attributes: [
+            { question: "What is Ruby?", question_type: "mcq", choices_text: "A Gem\nA Language\nA Mineral", points: 5 },
+            { question: "Rails is written in Ruby.", question_type: "true_false", points: 5 },
+            { question: "Match Capitals", question_type: "match", choices_text: "France: Paris\nSpain: Madrid", points: 10 },
+            { question: "Explain ActiveRecord.", question_type: "written", points: 10 }
+          ]
+        }
+      }
+    end
+
+    quiz = Quiz.last
+    assert_equal 4, quiz.quiz_questions.count
+    assert_equal 30, quiz.total_points
+
+    q_mcq, q_tf, q_match, q_written = quiz.quiz_questions.order(:id).to_a
+    assert_equal "mcq", q_mcq.question_type
+    assert_equal [ "A Gem", "A Language", "A Mineral" ], q_mcq.choices
+    assert_equal "true_false", q_tf.question_type
+    assert_equal [ "True", "False" ], q_tf.choices
+    assert_equal "match", q_match.question_type
+    assert_equal({ "France" => "Paris", "Spain" => "Madrid" }, q_match.choices)
+    assert_equal "written", q_written.question_type
+
+    # 2. Student takes the quiz
+    sign_in_as(@student)
+    get subject_quiz_path(@subject, quiz)
+    assert_response :success
+
+    # Submit diverse answer types
+    assert_difference "QuizAnswer.count", 4 do
+      post subject_quiz_quiz_answers_path(@subject, quiz), params: {
+        answers: {
+          q_mcq.id.to_s => "A Language",
+          q_tf.id.to_s => "True",
+          q_match.id.to_s => {
+            "France" => "Paris",
+            "Spain" => "Madrid"
+          },
+          q_written.id.to_s => "ActiveRecord is an ORM framework."
+        }
+      }
+    end
+
+    assert_redirected_to subject_quiz_path(@subject, quiz)
+    follow_redirect!
+    assert_match "submitted successfully", response.body
+
+    # Check that formatted answers are displayed correctly
+    # Match display should render matched keys and values
+    assert_match "France", response.body
+    assert_match "Paris", response.body
+    assert_match "Spain", response.body
+    assert_match "Madrid", response.body
+
+    # 3. Teacher grades the quiz
+    sign_in_as(@teacher)
+    get grade_subject_quiz_path(@subject, quiz)
+    assert_response :success
+
+    a_mcq = QuizAnswer.find_by(quiz_question: q_mcq, user: @student)
+    a_tf = QuizAnswer.find_by(quiz_question: q_tf, user: @student)
+    a_match = QuizAnswer.find_by(quiz_question: q_match, user: @student)
+    a_written = QuizAnswer.find_by(quiz_question: q_written, user: @student)
+
+    # Verify matching answer is stored as JSON string
+    assert_equal({ "France" => "Paris", "Spain" => "Madrid" }.to_json, a_match.answer)
+
+    # Update grades
+    post grade_answers_subject_quiz_path(@subject, quiz), params: {
+      grades: {
+        a_mcq.id => 5,
+        a_tf.id => 5,
+        a_match.id => 10,
+        a_written.id => 8
+      }
+    }
+
+    assert_redirected_to grade_subject_quiz_path(@subject, quiz)
+    assert_equal 5, a_mcq.reload.score
+    assert_equal 5, a_tf.reload.score
+    assert_equal 10, a_match.reload.score
+    assert_equal 8, a_written.reload.score
+  end
+
   test "schedules: teacher manages weekly timetable" do
     sign_in_as(@teacher)
 

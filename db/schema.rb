@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_04_053553) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_04_054908) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -157,9 +157,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_053553) do
   end
 
   create_table "quiz_questions", force: :cascade do |t|
+    t.text "choices"
     t.datetime "created_at", null: false
     t.integer "points", null: false
     t.text "question", null: false
+    t.string "question_type"
     t.integer "quiz_id", null: false
     t.datetime "updated_at", null: false
     t.index ["quiz_id"], name: "index_quiz_questions_on_quiz_id"

@@ -34,8 +34,8 @@
                     <span class="text-xs text-gray-500">/ <%= q.points %> pts</span>
                   </div>
                 </div>
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-sm text-gray-700 whitespace-pre-wrap">
-                  <%= ans.answer %>
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-sm text-gray-700">
+                  <%= format_quiz_answer(ans) %>
                 </div>
               </div>
             <% end %>
