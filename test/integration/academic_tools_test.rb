@@ -31,7 +31,12 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     quiz = Quiz.last
     assert_equal 25, quiz.total_points
     assert_equal 2, quiz.quiz_questions.count
-    assert_redirected_to subject_path(@subject)
+    assert_redirected_to subject_quizzes_path(@subject)
+
+    # 1.1. Check index page
+    get subject_quizzes_path(@subject)
+    assert_response :success
+    assert_match "Midterm Exam", response.body
 
     # 2. Student takes the quiz
     sign_in_as(@student)
@@ -110,7 +115,7 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     assert_difference "Quiz.count", -1 do
       delete subject_quiz_path(@subject, quiz)
     end
-    assert_redirected_to subject_path(@subject)
+    assert_redirected_to subject_quizzes_path(@subject)
   end
 
   test "schedules: teacher manages weekly timetable" do
@@ -184,7 +189,12 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     assignment = Assignment.last
     assert_equal "Lab Assignment 1", assignment.title
     assert assignment.file.attached?
-    assert_redirected_to subject_path(@subject)
+    assert_redirected_to subject_assignments_path(@subject)
+
+    # 1.1. Check index page
+    get subject_assignments_path(@subject)
+    assert_response :success
+    assert_match "Lab Assignment 1", response.body
 
     # 2. Student submits assignment file
     sign_in_as(@student)
@@ -232,5 +242,26 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match "95 / 100 pts", response.body
     assert_match "Well done! Clean work.", response.body
+
+    # 5. Teacher edits assignment
+    sign_in_as(@teacher)
+    get edit_subject_assignment_path(@subject, assignment)
+    assert_response :success
+
+    patch subject_assignment_path(@subject, assignment), params: {
+      assignment: {
+        title: "Revised Lab Assignment 1",
+        total_points: 90
+      }
+    }
+    assert_redirected_to subject_assignment_path(@subject, assignment)
+    assert_equal "Revised Lab Assignment 1", assignment.reload.title
+    assert_equal 90, assignment.total_points
+
+    # 6. Teacher deletes assignment
+    assert_difference "Assignment.count", -1 do
+      delete subject_assignment_path(@subject, assignment)
+    end
+    assert_redirected_to subject_assignments_path(@subject)
   end
 end

@@ -4,6 +4,10 @@ class QuizzesController < ApplicationController
   before_action :require_teacher_or_admin, only: [ :new, :create, :edit, :update, :destroy, :grade, :grade_answers ]
   before_action :set_quiz, only: [ :show, :edit, :update, :destroy, :grade, :grade_answers ]
 
+  def index
+    @quizzes = @subject.quizzes.order(due_at: :asc)
+  end
+
   def show
     @questions = @quiz.quiz_questions
 
@@ -31,7 +35,7 @@ class QuizzesController < ApplicationController
     @quiz.total_points = @quiz.quiz_questions.map(&:points).compact.sum
 
     if @quiz.save
-      redirect_to subject_path(@subject), notice: "Quiz created successfully."
+      redirect_to subject_quizzes_path(@subject), notice: "Quiz created successfully."
     else
       @quiz.quiz_questions.build if @quiz.quiz_questions.empty?
       render :new, status: :unprocessable_entity
@@ -54,7 +58,7 @@ class QuizzesController < ApplicationController
 
   def destroy
     @quiz.destroy
-    redirect_to subject_path(@subject), notice: "Quiz deleted successfully."
+    redirect_to subject_quizzes_path(@subject), notice: "Quiz deleted successfully."
   end
 
 

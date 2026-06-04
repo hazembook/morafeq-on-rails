@@ -4,14 +4,14 @@ Rails.application.routes.draw do
 
   resources :subjects, only: [ :index, :show ] do
     resources :materials, only: [ :index, :show, :new, :create, :destroy ]
-    resources :quizzes, only: [ :show, :new, :create, :edit, :update, :destroy ] do
+    resources :quizzes, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
       resources :quiz_answers, only: [ :create ]
       member do
         get :grade
         post :grade_answers
       end
     end
-    resources :assignments, only: [ :show, :new, :create ] do
+    resources :assignments, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
       resources :assignment_submissions, only: [ :create ]
       member do
         get :grade

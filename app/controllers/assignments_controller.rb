@@ -1,8 +1,12 @@
 class AssignmentsController < ApplicationController
   before_action :require_authentication
   before_action :set_subject
-  before_action :require_teacher_or_admin, only: [ :new, :create, :grade, :grade_submissions ]
-  before_action :set_assignment, only: [ :show, :grade, :grade_submissions ]
+  before_action :require_teacher_or_admin, only: [ :new, :create, :edit, :update, :destroy, :grade, :grade_submissions ]
+  before_action :set_assignment, only: [ :show, :edit, :update, :destroy, :grade, :grade_submissions ]
+
+  def index
+    @assignments = @subject.assignments.order(due_at: :asc)
+  end
 
   def show
     if Current.user.student?
@@ -20,10 +24,26 @@ class AssignmentsController < ApplicationController
     @assignment = @subject.assignments.new(assignment_params)
 
     if @assignment.save
-      redirect_to subject_path(@subject), notice: "Assignment created successfully."
+      redirect_to subject_assignments_path(@subject), notice: "Assignment created successfully."
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def edit
+  end
+
+  def update
+    if @assignment.update(assignment_params)
+      redirect_to subject_assignment_path(@subject, @assignment), notice: "Assignment updated successfully."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @assignment.destroy
+    redirect_to subject_assignments_path(@subject), notice: "Assignment deleted successfully."
   end
 
   def grade
