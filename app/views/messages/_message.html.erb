@@ -2,6 +2,11 @@
   <div class="<%= message.user == Current.user ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900' %> rounded-lg px-3 py-2 max-w-[75%]">
     <p class="text-xs font-medium <%= message.user == Current.user ? 'text-blue-200' : 'text-gray-500' %>"><%= message.user.full_name %></p>
     <p class="text-sm"><%= message.content %></p>
-    <p class="text-xs <%= message.user == Current.user ? 'text-blue-200' : 'text-gray-400' %> mt-0.5"><%= time_ago_in_words(message.created_at) %> ago</p>
+    <div class="flex items-center justify-between gap-4 mt-0.5">
+      <span class="text-xs <%= message.user == Current.user ? 'text-blue-200' : 'text-gray-400' %>"><%= time_ago_in_words(message.created_at) %> ago</span>
+      <% if message.user == Current.user && message.created_at > 5.minutes.ago %>
+        <%= button_to "Unsend", chat_room_message_path(message.chat_room, message), method: :delete, class: "text-[10px] text-red-200 hover:text-red-100 underline focus:outline-none cursor-pointer", data: { turbo_confirm: "Are you sure you want to unsend this message?" } %>
+      <% end %>
+    </div>
   </div>
 </div>

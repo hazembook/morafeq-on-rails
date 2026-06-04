@@ -39,8 +39,8 @@ class MessagesController < ApplicationController
 
   def broadcast_destroy
     Turbo::StreamsChannel.broadcast_remove_to(
-      "chat_room_#{@room.id}",
-      target: dom_id(@message)
+      "chat_room_#{@message.chat_room_id}",
+      target: "message_#{@message.id}"
     )
   end
 end
