@@ -83,4 +83,30 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Updated Student Name", @student.full_name
     assert_equal "This is a new bio.", @student.bio
   end
+
+  test "should toggle and persist locale across requests" do
+    sign_in_as(@student)
+
+    # 1. Default should be English
+    get profile_path
+    assert_response :success
+    assert_match "Edit Profile", response.body
+
+    # 2. Switch to Arabic via params
+    get profile_path, params: { locale: "ar" }
+    assert_response :success
+    assert_match "تعديل الملف الشخصي", response.body
+    assert_equal "ar", session[:locale]
+
+    # 3. Request without param should persist Arabic from session
+    get profile_path
+    assert_response :success
+    assert_match "تعديل الملف الشخصي", response.body
+
+    # 4. Switch back to English via params
+    get profile_path, params: { locale: "en" }
+    assert_response :success
+    assert_match "Edit Profile", response.body
+    assert_equal "en", session[:locale]
+  end
 end

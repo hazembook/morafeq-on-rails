@@ -2,18 +2,18 @@
   <div class="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden">
     <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 px-6 py-8 border-b border-white/5 relative overflow-hidden">
       <!-- Glow effect -->
-      <div class="absolute -right-10 -top-10 w-32 h-32 rounded-full bg-indigo-500/20 blur-2xl pointer-events-none"></div>
+      <div class="absolute -end-10 -top-10 w-32 h-32 rounded-full bg-indigo-500/20 blur-2xl pointer-events-none"></div>
       <div class="relative z-10">
-        <h1 class="text-2xl font-extrabold text-white tracking-tight">Edit Profile</h1>
-        <p class="text-xs text-indigo-300 font-medium mt-1">Update your personal details, biography, and profile picture.</p>
+        <h1 class="text-2xl font-extrabold text-white tracking-tight"><%= t("profile.edit") %></h1>
+        <p class="text-xs text-indigo-300 font-medium mt-1"><%= t("profile.edit_subtitle") %></p>
       </div>
     </div>
 
     <%= form_with model: @user, url: profile_path, local: true, class: "p-6 sm:p-8 space-y-6" do |f| %>
       <% if @user.errors.any? %>
         <div class="p-4 bg-red-50 border border-red-200 text-red-700 text-sm font-semibold rounded-2xl">
-          <p class="font-bold mb-1">Please correct the errors below:</p>
-          <ul class="list-disc pl-5 space-y-0.5 text-xs text-red-600">
+          <p class="font-bold mb-1"><%= t("profile.correct_errors") %></p>
+          <ul class="list-disc ps-5 space-y-0.5 text-xs text-red-600">
             <% @user.errors.full_messages.each do |msg| %>
               <li><%= msg %></li>
             <% end %>
@@ -28,11 +28,11 @@
 
       <div class="space-y-1.5">
         <%= f.label :bio, class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
-        <%= f.text_area :bio, rows: 4, placeholder: "Tell others a bit about yourself...", class: "w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium py-2.5 px-3.5 transition" %>
+        <%= f.text_area :bio, rows: 4, placeholder: t("profile.bio_placeholder"), class: "w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium py-2.5 px-3.5 transition" %>
       </div>
 
       <div class="space-y-2">
-        <%= f.label :avatar, "Profile Picture", class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
+        <%= f.label :avatar, t("profile.avatar"), class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
         
         <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-gray-100">
           <% if @user.avatar.attached? %>
@@ -43,15 +43,15 @@
             </div>
           <% end %>
           <div class="flex-1 min-w-0">
-            <%= f.file_field :avatar, class: "block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" %>
-            <p class="text-xxs text-gray-400 mt-1.5">PNG, JPG, JPEG or GIF (Square dimension recommended)</p>
+            <%= f.file_field :avatar, class: "block w-full text-xs text-slate-500 file:me-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" %>
+            <p class="text-xxs text-gray-400 mt-1.5"><%= t("profile.avatar_hint") %></p>
           </div>
         </div>
       </div>
 
       <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
-        <%= f.submit "Save Changes", class: "rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-white text-sm font-bold hover:from-blue-700 hover:to-indigo-700 transition cursor-pointer shadow-md" %>
-        <%= link_to "Cancel", profile_path, class: "rounded-xl bg-slate-100 px-6 py-3 text-slate-700 text-sm font-semibold hover:bg-slate-200 transition text-center" %>
+        <%= f.submit t("profile.save_changes"), class: "rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-white text-sm font-bold hover:from-blue-700 hover:to-indigo-700 transition cursor-pointer shadow-md" %>
+        <%= link_to t("profile.cancel"), profile_path, class: "rounded-xl bg-slate-100 px-6 py-3 text-slate-700 text-sm font-semibold hover:bg-slate-200 transition text-center" %>
       </div>
     <% end %>
   </div>

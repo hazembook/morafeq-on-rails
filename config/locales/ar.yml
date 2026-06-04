@@ -1,0 +1,48 @@
+ar:
+  hello: "مرحباً بك"
+  app_name: "مرافق"
+  nav:
+    home: "الرئيسية"
+    subjects: "المواد"
+    chats: "المحادثات"
+    profile: "الملف الشخصي"
+    admin: "لوحة الإدارة"
+    sign_out: "تسجيل الخروج"
+    sign_in: "تسجيل الدخول"
+    back_to_chats: "→ العودة للمحادثات"
+  alerts:
+    not_authorized: "غير مصرح لك بالقيام بهذا الإجراء."
+    logged_out: "تم تسجيل الخروج بنجاح."
+    logged_in: "تم تسجيل الدخول بنجاح."
+  profile:
+    title: "الملف الشخصي"
+    edit: "تعديل الملف الشخصي"
+    edit_subtitle: "قم بتحديث معلوماتك الشخصية، نبذتك الشخصية، وصورة ملفك الشخصي."
+    correct_errors: "يرجى تصحيح الأخطاء أدناه:"
+    avatar: "الصورة الشخصية"
+    avatar_hint: "صيغ PNG أو JPG أو JPEG أو GIF (يفضل أن تكون الأبعاد مربعة)"
+    save_changes: "حفظ التغييرات"
+    cancel: "إلغاء"
+    bio_placeholder: "أخبر الآخرين بقليل عن نفسك..."
+    sign_out: "تسجيل الخروج"
+    no_bio: "لم يكتب نبذة شخصية بعد. انقر على تعديل الملف الشخصي لإضافة واحدة!"
+    gpa: "المعدل التراكمي"
+    attendance: "نسبة الحضور"
+    quizzes: "الاختبارات"
+    assignments: "الواجبات"
+    details: "التفاصيل"
+    role: "الدور"
+  lightbox:
+    document_viewer: "عرض المستند"
+    open_new_tab: "فتح في علامة تبويب جديدة"
+    download: "تنزيل"
+  sessions:
+    invalid_credentials: "يرجى المحاولة باستخدام بريد إلكتروني أو كلمة مرور أخرى."
+    rate_limited: "يرجى المحاولة مرة أخرى لاحقاً."
+    signed_out: "تم تسجيل الخروج بنجاح."
+  roles:
+    student: "طالب"
+    teacher: "أستاذ"
+    admin: "مسؤول"
+  chats:
+    placeholder: "اكتب رسالة..."

@@ -256,7 +256,7 @@ We use a **GitHub Flow** model:
   - [x] File/image attachment support in messages
   - [x] "Unsend" within 5 minutes (soft delete)
   - [x] Read receipts (seen_by tracking)
-- [ ] Chat push notifications via Notifications system (to be built in Phase 8)
+- [ ] Chat push notifications via Notifications system (to be built in Phase 10)
 - [x] Moderation: Teachers can delete messages in their subject rooms
 - [x] Write system tests + channel tests
 
@@ -268,6 +268,11 @@ We use a **GitHub Flow** model:
   - Teacher creates quizzes for their subjects
   - Students submit answers, view grades
   - Auto-calc total score, show on profile
+- [x] **Assignments & Submissions:**
+  - Assignment model with title, subject, description, due date, points, closed/locked flags
+  - AssignmentSubmission model with user, score, feedback, and attachment (ActiveStorage)
+  - Teachers can lock/unlock and manually end assignments immediately
+  - Students upload files, view scores and feedback, and are blocked if assignment is closed/locked/past due
 - [x] **Schedule / Timetable:**
   - Schedule model (subject, day, start/end time, room)
   - Weekly timetable view per subject
@@ -279,12 +284,27 @@ We use a **GitHub Flow** model:
   - Admin can view/edit any attendance
 - [x] Write tests
 
-### Phase 7: Task Distribution & Role Expansion
+### Phase 7: Multi-language Support (I18n)
+- [x] Configure supported locales (`:en` and `:ar`) in Rails `application.rb` and set default locale.
+- [x] Implement locale switcher UI in the application header/navigation.
+- [x] Set up `ApplicationController` locale middleware to detect, persist, and apply the active locale.
+- [x] Create translation keys and translation files `config/locales/en.yml` and `config/locales/ar.yml` for all user-facing copy.
+- [x] Add RTL layout compatibility to `application.html.erb` by setting correct `dir` and `lang` HTML parameters based on locale.
+- [x] Refactor UI direction styles using logical properties (like padding start/end, absolute start/end positioning).
+
+### Phase 8: Institution Adaptability
+- [ ] Define global configuration key `institution_type` representing `:university`, `:school`, `:course_platform`, or `:tech_community` (with Priority 1 focus on `:university` and `:school` configurations).
+- [ ] Implement translation lookup helpers for dynamic model names (College, Department, Subject) in views and logs.
+- [ ] Set up layout configurations to toggle features based on type (e.g., GPA/attendance analysis for universities/schools vs module progress trackers).
+- [ ] Configure translation layers to map Priority 2 (Online Course Platforms) and Priority 3 (Tech Communities) terminologies.
+- [ ] Adapt seed data configuration to dynamically initialize the database using the selected institution structure, prioritizing university/school setups first.
+
+### Phase 9: Task Distribution & Role Expansion
 - [ ] Add `moderator` and `ta` roles to User enum
 - [ ] **TaskDistribution model:**
   - Polymorphic scope (College, Department, Subject)
   - `assigned_by_id` tracks who granted the assignment
-  - Per-action permission flags (posts, materials, quizzes, schedules, attendance, chat)
+  - Per-action permission flags (posts, materials, quizzes, assignments, schedules, attendance, chat)
 - [ ] **Super Admin** — restricted to admin panel only (no feed/subjects/chats nav)
 - [ ] **Moderator** — assigned to College or Department, manages posts only
 - [ ] **Teaching Assistant** — assigned to Subject by teacher or super admin, granular permissions
@@ -294,7 +314,7 @@ We use a **GitHub Flow** model:
 - [ ] Seed moderator, TA, and task_distribution data
 - [ ] Write tests
 
-### Phase 8: Notifications System
+### Phase 10: Notifications System
 - [ ] Create `Notification` model (polymorphic)
 - [ ] Integration points:
   - New post in student's scope → notify enrolled students
@@ -307,7 +327,7 @@ We use a **GitHub Flow** model:
 - [ ] Use Solid Queue for async notification delivery
 - [ ] Write tests
 
-### Phase 9: Search
+### Phase 11: Search
 - [ ] Add SQLite FTS5 virtual tables for:
   - Posts (full-text on content)
   - Subjects (name + code)
@@ -315,21 +335,6 @@ We use a **GitHub Flow** model:
 - [ ] Global search bar in header
 - [ ] Results grouped by type (Subjects, Posts, Materials)
 - [ ] Write tests
-
-### Phase 10: Multi-language Support (I18n)
-- [ ] Configure supported locales (`:en` and `:ar`) in Rails `application.rb` and set default locale.
-- [ ] Implement locale switcher UI in the application header/navigation.
-- [ ] Set up `ApplicationController` locale middleware to detect, persist, and apply the active locale.
-- [ ] Create translation keys and translation files `config/locales/en.yml` and `config/locales/ar.yml` for all user-facing copy.
-- [ ] Add RTL layout compatibility to `application.html.erb` by setting correct `dir` and `lang` HTML parameters based on locale.
-- [ ] Refactor UI direction styles using logical properties (like padding start/end, absolute start/end positioning).
-
-### Phase 11: Institution Adaptability
-- [ ] Define global configuration key `institution_type` representing `:university`, `:school`, `:course_platform`, or `:tech_community` (with Priority 1 focus on `:university` and `:school` configurations).
-- [ ] Implement translation lookup helpers for dynamic model names (College, Department, Subject) in views and logs.
-- [ ] Set up layout configurations to toggle features based on type (e.g., GPA/attendance analysis for universities/schools vs module progress trackers).
-- [ ] Configure translation layers to map Priority 2 (Online Course Platforms) and Priority 3 (Tech Communities) terminologies.
-- [ ] Adapt seed data configuration to dynamically initialize the database using the selected institution structure, prioritizing university/school setups first.
 
 ### Phase 12: Polish & Deploy
 - [ ] Mobile Polish:
