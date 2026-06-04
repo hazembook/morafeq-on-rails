@@ -9,7 +9,7 @@
       <%= render @messages %>
     </div>
 
-    <%= form_with model: [@room, Message.new], class: "border-t border-gray-200 p-4 flex gap-2" do |f| %>
+    <%= form_with model: [ @room, Message.new ], class: "border-t border-gray-200 p-4 flex gap-2" do |f| %>
       <%= f.text_field :content, placeholder: "Type a message...", class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", autocomplete: "off" %>
       <%= f.submit "Send", class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
     <% end %>

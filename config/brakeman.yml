@@ -1,0 +1,5 @@
+# Brakeman Configuration File
+# See https://brakemanscanner.org/docs/options/ for more options
+
+---
+quiet: true
