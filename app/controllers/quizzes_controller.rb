@@ -1,8 +1,8 @@
 class QuizzesController < ApplicationController
   before_action :require_authentication
   before_action :set_subject
-  before_action :require_teacher_or_admin, only: [ :new, :create, :grade, :grade_answers ]
-  before_action :set_quiz, only: [ :show, :grade, :grade_answers ]
+  before_action :require_teacher_or_admin, only: [ :new, :create, :edit, :update, :destroy, :grade, :grade_answers ]
+  before_action :set_quiz, only: [ :show, :edit, :update, :destroy, :grade, :grade_answers ]
 
   def show
     @questions = @quiz.quiz_questions
@@ -37,6 +37,26 @@ class QuizzesController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+
+  def edit
+  end
+
+  def update
+    @quiz.assign_attributes(quiz_params)
+    @quiz.total_points = @quiz.quiz_questions.map(&:points).compact.sum
+
+    if @quiz.save
+      redirect_to subject_quiz_path(@subject, @quiz), notice: "Quiz updated successfully."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @quiz.destroy
+    redirect_to subject_path(@subject), notice: "Quiz deleted successfully."
+  end
+
 
   def grade
     @answers_by_student = QuizAnswer.joins(:quiz_question)

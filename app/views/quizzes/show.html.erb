@@ -7,8 +7,10 @@
     </div>
     
     <% if Current.user.teacher? || Current.user.admin? %>
-      <div>
-        <%= link_to "Grade Submissions", grade_subject_quiz_path(@subject, @quiz), class: "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 shadow-sm" %>
+      <div class="flex gap-2 flex-wrap sm:shrink-0">
+        <%= link_to "Grade Submissions", grade_subject_quiz_path(@subject, @quiz), class: "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 shadow-sm transition" %>
+        <%= link_to "Edit Quiz", edit_subject_quiz_path(@subject, @quiz), class: "rounded-lg bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 transition" %>
+        <%= button_to "Delete Quiz", subject_quiz_path(@subject, @quiz), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this quiz?" }, class: "rounded-lg bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-100 transition cursor-pointer" %>
       </div>
     <% end %>
   </div>
@@ -75,21 +77,9 @@
                 <span class="text-xs text-gray-400 font-medium whitespace-nowrap"><%= q.points %> points</span>
               </div>
               
-              <% if q.question_type == 'true_false' %>
+              <% if q.question_type == 'true_false' || q.question_type == 'mcq' %>
                 <div class="space-y-2 mt-1">
-                  <div class="flex items-center gap-2">
-                    <%= radio_button_tag "answers[#{q.id}]", "True", false, id: "answers_#{q.id}_true", required: true, class: "h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" %>
-                    <%= label_tag "answers_#{q.id}_true", "True", class: "text-sm text-gray-700 font-medium cursor-pointer" %>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <%= radio_button_tag "answers[#{q.id}]", "False", false, id: "answers_#{q.id}_false", required: true, class: "h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" %>
-                    <%= label_tag "answers_#{q.id}_false", "False", class: "text-sm text-gray-700 font-medium cursor-pointer" %>
-                  </div>
-                </div>
-              
-              <% elsif q.question_type == 'mcq' %>
-                <div class="space-y-2 mt-1">
-                  <% (q.choices || []).each_with_index do |choice, c_idx| %>
+                  <% (q.choices || ["True", "False"]).each_with_index do |choice, c_idx| %>
                     <div class="flex items-center gap-2">
                       <%= radio_button_tag "answers[#{q.id}]", choice, false, id: "answers_#{q.id}_#{c_idx}", required: true, class: "h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" %>
                       <%= label_tag "answers_#{q.id}_#{c_idx}", choice, class: "text-sm text-gray-700 font-medium cursor-pointer" %>
@@ -117,14 +107,12 @@
               <p class="font-semibold text-xs text-gray-500 uppercase tracking-wide">Question <%= idx + 1 %> (<%= q.question_type.titleize %>)</p>
               <p class="text-sm text-gray-800 mt-1 font-medium"><%= q.question %></p>
               
-              <% if q.question_type == 'mcq' && q.choices.present? %>
+              <% if (q.question_type == 'mcq' || q.question_type == 'true_false') && q.choices.present? %>
                 <div class="mt-2 pl-4 border-l-2 border-gray-200 space-y-1">
                   <% q.choices.each do |choice| %>
                     <p class="text-xs text-gray-600 font-medium">• <%= choice %></p>
                   <% end %>
                 </div>
-              <% elsif q.question_type == 'true_false' %>
-                <p class="text-xs text-gray-500 mt-1 italic">Options: True, False</p>
               <% end %>
             </div>
             <span class="text-xs font-bold text-gray-500 whitespace-nowrap bg-white px-2.5 py-1 rounded border border-gray-200 shadow-sm"><%= q.points %> pts</span>

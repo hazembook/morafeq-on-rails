@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   resources :subjects, only: [ :index, :show ] do
     resources :materials, only: [ :index, :show, :new, :create, :destroy ]
-    resources :quizzes, only: [ :show, :new, :create ] do
+    resources :quizzes, only: [ :show, :new, :create, :edit, :update, :destroy ] do
       resources :quiz_answers, only: [ :create ]
       member do
         get :grade

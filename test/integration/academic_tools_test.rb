@@ -80,6 +80,37 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     assert_redirected_to grade_subject_quiz_path(@subject, quiz)
     follow_redirect!
     assert_match "Failed to update grades", response.body
+
+    # 4. Teacher edits the quiz
+    sign_in_as(@teacher)
+    get edit_subject_quiz_path(@subject, quiz)
+    assert_response :success
+
+    patch subject_quiz_path(@subject, quiz), params: {
+      quiz: {
+        title: "Midterm Exam Revised",
+        due_at: 3.days.from_now.to_s,
+        quiz_questions_attributes: [
+          { id: q1.id, question: "What is Ruby programming language?", question_type: "mcq", choices: [ "A Language", "A Gem", "Both" ], points: 12 },
+          { id: q2.id, question: "Rails is written in JavaScript?", question_type: "true_false", points: 8 }
+        ]
+      }
+    }
+
+    assert_redirected_to subject_quiz_path(@subject, quiz)
+    quiz.reload
+    assert_equal "Midterm Exam Revised", quiz.title
+    assert_equal 20, quiz.total_points
+    q1.reload
+    assert_equal "mcq", q1.question_type
+    assert_equal [ "A Language", "A Gem", "Both" ], q1.choices
+    assert_equal 12, q1.points
+
+    # 5. Teacher deletes the quiz
+    assert_difference "Quiz.count", -1 do
+      delete subject_quiz_path(@subject, quiz)
+    end
+    assert_redirected_to subject_path(@subject)
   end
 
   test "schedules: teacher manages weekly timetable" do
