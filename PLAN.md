@@ -331,16 +331,21 @@ To support a global user base (specifically English and Arabic languages), the s
 ## 6. Git Workflow
 
 ### Branching Model
-Single-branch development directly on the `main` branch.
+We use a **GitHub Flow** model:
+- `main` is the stable integration branch.
+- Short-lived feature/bugfix branches are created directly off `main` (e.g., `feat/profile-stats`, `fix/chat-scroll`).
+- There is no separate, long-lived `develop` branch.
+- Once a feature is verified and tests pass, it is merged directly back into `main`.
 
 ### Convention
+- **Branch names:** `feat/xxx`, `fix/xxx`, `chore/xxx`
 - **Commits:** Atomic — one logical change per commit. Prefix with type:
   - `feat: add post pinning for teachers`
   - `fix: prevent empty message send in chat`
   - `chore: add rubocop rails config`
   - `test: add feed scoping model tests`
-- Direct commits to `main` with robust local validation.
+- **Merges:** Squash-merge branches into `main` to keep the history clean.
 
 ### Local First
-- Run `rails test` and `rubocop` before committing to keep the `main` branch green and clean.
+- Run `rails test` and `rubocop` before merging any branch into `main` to ensure it stays green.
 - Use `rails db:seed` to reset demo data as needed.
