@@ -146,6 +146,10 @@ ar:
     admin: "مسؤول"
   chats:
     title: "محادثاتك"
+    tabs:
+      all: "الكل"
+      classes: "الصفوف"
+      dms: "الخاصة"
     private_message: "رسالة خاصة"
     class_chat: "محادثة المادة • %{code}"
     no_chats: "لا توجد محادثات نشطة بعد."

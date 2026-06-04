@@ -22,6 +22,31 @@
              placeholder="<%= t("chats.search_placeholder", default: "Search chats or users...") %>" 
              class="w-full ps-9 pe-4 py-2 rounded-lg border-0 bg-gray-100 focus:bg-white focus:ring-2 focus:ring-blue-500 text-sm placeholder-gray-400 transition-all duration-200">
     </div>
+
+    <!-- Segmented Tabs for Grouping -->
+    <div class="flex gap-1 bg-gray-100 p-0.5 rounded-lg">
+      <button type="button" 
+              data-chat-search-target="tab"
+              data-action="click->chat-search#changeTab" 
+              data-tab="all" 
+              class="flex-1 py-1.5 text-xs font-semibold rounded-md text-center bg-white text-blue-600 shadow-sm transition-all duration-200 focus:outline-none cursor-pointer">
+        <%= t("chats.tabs.all", default: "All") %>
+      </button>
+      <button type="button" 
+              data-chat-search-target="tab"
+              data-action="click->chat-search#changeTab" 
+              data-tab="group" 
+              class="flex-1 py-1.5 text-xs font-semibold rounded-md text-center text-gray-600 hover:text-gray-900 transition-all duration-200 focus:outline-none cursor-pointer">
+        <%= t("chats.tabs.classes", default: "Classes") %>
+      </button>
+      <button type="button" 
+              data-chat-search-target="tab"
+              data-action="click->chat-search#changeTab" 
+              data-tab="private" 
+              class="flex-1 py-1.5 text-xs font-semibold rounded-md text-center text-gray-600 hover:text-gray-900 transition-all duration-200 focus:outline-none cursor-pointer">
+        <%= t("chats.tabs.dms", default: "DMs") %>
+      </button>
+    </div>
   </div>
 
   <!-- Chat / Users List Scrollable Area -->
@@ -56,7 +81,9 @@
           ]
           gradient = gradients[room.id % gradients.size]
         %>
-        <div data-chat-search-target="room" data-search-name="<%= display_name %>">
+        <div data-chat-search-target="room" 
+             data-search-name="<%= display_name %>" 
+             data-chat-type="<%= room.is_private? ? 'private' : 'group' %>">
           <%= link_to room, class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 #{is_active ? 'bg-blue-50/70 hover:bg-blue-50/70 border-s-4 border-blue-600 ps-[12px]' : ''}" do %>
             <!-- Avatar -->
             <div class="w-11 h-11 rounded-full bg-gradient-to-tr <%= gradient %> flex items-center justify-center text-white text-sm font-semibold tracking-wider shadow-inner shrink-0 select-none">

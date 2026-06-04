@@ -146,6 +146,10 @@ en:
     admin: "Admin"
   chats:
     title: "Your Conversations"
+    tabs:
+      all: "All"
+      classes: "Classes"
+      dms: "DMs"
     private_message: "Private Message"
     class_chat: "Class Chat • %{code}"
     no_chats: "No active chats yet."

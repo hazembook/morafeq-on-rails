@@ -1,21 +1,46 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "room", "user", "roomsHeader", "usersHeader"]
+  static targets = ["input", "room", "user", "roomsHeader", "usersHeader", "tab"]
 
   connect() {
+    this.activeTab = "all"
+    this.filter()
+  }
+
+  changeTab(event) {
+    const selectedTab = event.currentTarget.getAttribute("data-tab")
+    this.activeTab = selectedTab
+
+    this.tabTargets.forEach(tab => {
+      const isCurrent = tab.getAttribute("data-tab") === selectedTab
+      if (isCurrent) {
+        tab.classList.remove("text-gray-600", "hover:text-gray-900")
+        tab.classList.add("bg-white", "text-blue-600", "shadow-sm")
+      } else {
+        tab.classList.remove("bg-white", "text-blue-600", "shadow-sm")
+        tab.classList.add("text-gray-600", "hover:text-gray-900")
+      }
+    })
+
     this.filter()
   }
 
   filter() {
     const query = this.inputTarget.value.toLowerCase().trim()
+    const activeTab = this.activeTab || "all"
     
     let visibleRooms = 0
     let visibleUsers = 0
 
     this.roomTargets.forEach(room => {
       const name = room.getAttribute("data-search-name").toLowerCase()
-      if (name.includes(query)) {
+      const type = room.getAttribute("data-chat-type")
+      
+      const matchesSearch = name.includes(query)
+      const matchesTab = (activeTab === "all") || (activeTab === type)
+
+      if (matchesSearch && matchesTab) {
         room.classList.remove("hidden")
         visibleRooms++
       } else {
