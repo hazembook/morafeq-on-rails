@@ -97,5 +97,43 @@
         </div>
       </nav>
     <% end %>
+
+    <%# Global Image Lightbox Modal %>
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/90 z-[100] items-center justify-center p-4 cursor-zoom-out" style="display: none;" onclick="closeLightbox()">
+      <img id="lightbox-img" src="" class="max-w-full max-h-full object-contain rounded shadow-2xl scale-95 opacity-0 transition-all duration-300">
+      <button class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-gray-300 cursor-pointer" onclick="closeLightbox()">&times;</button>
+    </div>
+
+    <script>
+      function showLightbox(src) {
+        const modal = document.getElementById('lightbox-modal');
+        const img = document.getElementById('lightbox-img');
+        if (!modal || !img) return;
+        img.src = src;
+        modal.style.display = 'flex';
+        setTimeout(() => {
+          img.classList.remove('scale-95', 'opacity-0');
+          img.classList.add('scale-100', 'opacity-100');
+        }, 10);
+      }
+
+      function closeLightbox() {
+        const modal = document.getElementById('lightbox-modal');
+        const img = document.getElementById('lightbox-img');
+        if (!modal || !img) return;
+        img.classList.remove('scale-100', 'opacity-100');
+        img.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+          modal.style.display = 'none';
+          img.src = '';
+        }, 300);
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeLightbox();
+        }
+      });
+    </script>
   </body>
 </html>

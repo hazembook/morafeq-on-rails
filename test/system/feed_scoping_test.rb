@@ -99,4 +99,37 @@ class FeedScopingTest < ApplicationSystemTestCase
     assert_text "System maintenance this Saturday at midnight."
     assert_text "General"
   end
+
+  test "teacher can create a post with image attachment that has lightbox markup" do
+    # Sign in as teacher
+    visit new_session_path
+    fill_in "email_address", with: @teacher.email_address
+    fill_in "password", with: "password123"
+    click_button "Sign in"
+
+    visit feed_index_path
+    assert_selector "h2", text: "Create Post"
+
+    # Compose post
+    fill_in "post[content]", with: "Look at this nice picture!"
+    select "CS101 - Intro to programming (Subject - CS Department)", from: "post[scope]"
+    attach_file "post[attachments][]", Rails.root.join("test/fixtures/files/test.gif")
+    click_button "Post"
+
+    assert_text "Post created."
+    assert_text "Look at this nice picture!"
+
+    # We should have an image element rendered within the lightbox zoom-in container
+    assert_selector "div.cursor-zoom-in img"
+    
+    # Verify that clicking it triggers showLightbox with the image source
+    zoom_container = find("div.cursor-zoom-in")
+    assert_match /showLightbox\(this\.querySelector\('img'\)\.src\)/, zoom_container[:onclick]
+
+    # Lightbox modal should be present but hidden by default
+    assert_selector "#lightbox-modal", visible: false
+    
+    # The image placeholder inside lightbox should be present but hidden
+    assert_selector "#lightbox-img", visible: false
+  end
 end

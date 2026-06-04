@@ -13,9 +13,9 @@
         <div class="mt-2 space-y-2">
           <% post.attachments.each do |attachment| %>
             <% if attachment.image? %>
-              <%= link_to attachment, target: "_blank", class: "block max-w-lg overflow-hidden rounded-lg border border-gray-200 mt-2" do %>
-                <%= image_tag attachment, class: "w-full max-h-72 object-cover hover:scale-[1.02] transition-transform duration-300 cursor-pointer" %>
-              <% end %>
+              <div class="block max-w-lg overflow-hidden rounded-lg border border-gray-200 mt-2 cursor-zoom-in" onclick="showLightbox(this.querySelector('img').src)">
+                <%= image_tag attachment, class: "w-full max-h-72 object-cover hover:scale-[1.02] transition-transform duration-300" %>
+              </div>
             <% else %>
               <div class="flex items-center gap-1.5 mt-1">
                 <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
