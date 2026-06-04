@@ -125,6 +125,16 @@ en:
     no_users: "No other users found."
     placeholder: "Type a message..."
     is_typing: "%{name} is typing..."
+    seen: "Seen"
+    sent: "Sent"
+    unsend_button: "Unsend"
+    confirm_unsend: "Are you sure you want to unsend this message?"
+    confirm_delete: "Are you sure you want to delete this message?"
+    unsent: "Message unsent."
+    deleted_by_moderator: "Message deleted by moderator."
+    send: "Send"
+    files_selected: "%{count} file(s) selected"
+    attach_files: "Attach files/images"
   home:
     welcome: "Welcome to Morafeq"
     subtitle: "Your university companion app. Stay connected with your courses, materials, and community."
@@ -198,14 +208,7 @@ en:
   lightbox:
     audio_player: "Audio Player"
 
-  chats:
-    seen: "Seen"
-    sent: "Sent"
-    unsend_button: "Unsend"
-    confirm_unsend: "Are you sure you want to unsend this message?"
-    confirm_delete: "Are you sure you want to delete this message?"
-    unsent: "Message unsent."
-    deleted_by_moderator: "Message deleted by moderator."
+
 
   common:
     cancel: "Cancel"

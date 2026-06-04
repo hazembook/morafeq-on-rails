@@ -49,7 +49,7 @@ class ChatRoomsController < ApplicationController
     Turbo::StreamsChannel.broadcast_replace_to(
       "chat_room_#{@room.id}",
       target: "message_#{last_message.id}_seen",
-      html: '<span class="text-[10px] text-blue-200">Seen</span>'
+      html: "<span class=\"text-[10px] text-blue-200\">#{I18n.t("chats.seen")}</span>"
     )
   end
 

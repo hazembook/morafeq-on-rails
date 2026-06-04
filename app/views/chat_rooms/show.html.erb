@@ -14,16 +14,16 @@
     <%= form_with model: [ @room, Message.new ], class: "border-t border-gray-200 p-4 flex gap-2 relative", data: { controller: "chat-typing", chat_typing_room_id_value: @room.id, chat_typing_url_value: typing_chat_room_path(@room) } do |f| %>
       <div id="file-count" class="text-xs text-blue-600 absolute -top-6 start-4 font-semibold" style="display: none;"></div>
       
-      <%= f.file_field :attachments, multiple: true, class: "hidden", id: "chat-file-input", onchange: "let cnt = document.getElementById('file-count'); if(this.files.length > 0) { cnt.innerText = this.files.length + ' file(s) selected'; cnt.style.display = 'block'; } else { cnt.style.display = 'none'; }" %>
+      <%= f.file_field :attachments, multiple: true, class: "hidden", id: "chat-file-input", data: { selected_template: t("chats.files_selected", count: "%{count}") }, onchange: "let cnt = document.getElementById('file-count'); if(this.files.length > 0) { cnt.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); cnt.style.display = 'block'; } else { cnt.style.display = 'none'; }" %>
       
-      <label for="chat-file-input" class="p-2.5 text-gray-400 hover:text-gray-600 rounded-md cursor-pointer flex items-center justify-center hover:bg-gray-50 border border-gray-200 transition-colors shrink-0" title="Attach files/images">
+      <label for="chat-file-input" class="p-2.5 text-gray-400 hover:text-gray-600 rounded-md cursor-pointer flex items-center justify-center hover:bg-gray-50 border border-gray-200 transition-colors shrink-0" title="<%= t("chats.attach_files") %>">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
         </svg>
       </label>
 
       <%= f.text_field :content, placeholder: t("chats.placeholder"), class: "flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm", autocomplete: "off", data: { action: "input->chat-typing#typing" } %>
-      <%= f.submit "Send", class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer shrink-0" %>
+      <%= f.submit t("chats.send"), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer shrink-0" %>
     <% end %>
   </div>
 </div>
