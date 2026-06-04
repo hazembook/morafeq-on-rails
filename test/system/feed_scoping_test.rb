@@ -57,7 +57,7 @@ class FeedScopingTest < ApplicationSystemTestCase
 
     # Compose post
     fill_in "post[content]", with: "Welcome to class! Please read this attached handbook."
-    select "CS101 - Intro to programming (Subject - CS Department)", from: "post[scope]"
+    select "#{@subject.code} - #{@subject.name} (Subject - #{@department.name})", from: "post[scope]"
     attach_file "post[attachments][]", Rails.root.join("test/fixtures/files/test.pdf")
     click_button "Post"
 
@@ -125,7 +125,7 @@ class FeedScopingTest < ApplicationSystemTestCase
 
     # Compose post
     fill_in "post[content]", with: "Look at this nice picture!"
-    select "CS101 - Intro to programming (Subject - CS Department)", from: "post[scope]"
+    select "#{@subject.code} - #{@subject.name} (Subject - #{@department.name})", from: "post[scope]"
     attach_file "post[attachments][]", Rails.root.join("test/fixtures/files/test.gif")
     click_button "Post"
 
@@ -146,5 +146,32 @@ class FeedScopingTest < ApplicationSystemTestCase
 
     # The image placeholder inside lightbox should be present but hidden
     assert_selector "#lightbox-img", visible: false
+  end
+
+  test "teacher can edit and delete their own post" do
+    post = Post.create!(author: @teacher, content: "Original content", scope: @subject)
+
+    # Sign in
+    visit new_session_path
+    fill_in "email_address", with: @teacher.email_address
+    fill_in "password", with: "password123"
+    click_button "Sign in"
+
+    visit feed_index_path
+    assert_text "Original content"
+
+    click_link "Edit"
+    
+    fill_in "post[content]", with: "Updated content by teacher"
+    click_button "Save"
+
+    assert_text "Post updated."
+    assert_text "Updated content by teacher"
+    assert_no_text "Original content"
+
+    click_button "Delete"
+
+    assert_text "Post deleted."
+    assert_no_text "Updated content by teacher"
   end
 end

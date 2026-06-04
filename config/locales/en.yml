@@ -187,6 +187,11 @@ en:
       subject: "Subject"
       department: "Department"
       college: "College"
+    edit_title: "Edit Post"
+    content_label: "Content"
+    scope_label: "Post Scope"
+    existing_attachments: "Existing Attachments"
+    add_attachments: "Add Attachments"
   datetime:
     time_ago: "%{time} ago"
   subjects:
@@ -290,6 +295,8 @@ en:
       save_failed: "Failed to save attendance: %{message}"
     feed:
       post_created: "Post created."
+      post_updated: "Post updated."
+      post_deleted: "Post deleted."
       only_teachers_admins: "Only teachers and admins can create posts."
     materials:
       uploaded: "Material uploaded."

@@ -23,8 +23,7 @@ Rails.application.routes.draw do
       get :record, on: :collection
     end
   end
-  get "feed", to: "feed#index", as: :feed_index
-  post "feed", to: "feed#create"
+  resources :feed, only: [ :index, :create, :edit, :update, :destroy ]
   resources :chat_rooms, only: [ :index, :show ] do
     post :create_private, on: :collection
     post :typing, on: :member

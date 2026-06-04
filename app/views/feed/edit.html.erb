@@ -1,0 +1,63 @@
+<div class="max-w-2xl mx-auto py-6">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h1 class="text-xl font-bold mb-4"><%= t("feed.edit_title") %></h1>
+    
+    <%= form_with model: @post, url: feed_path(@post), method: :patch, local: true, class: "space-y-4" do |f| %>
+      <% if @post.errors.any? %>
+        <div class="p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+          <%= @post.errors.full_messages.to_sentence %>
+        </div>
+      <% end %>
+
+      <div>
+        <%= f.label :content, t("feed.content_label"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_area :content, rows: 4, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", name: "post[content]" %>
+      </div>
+
+      <div>
+        <%= f.label :scope, t("feed.scope_label"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :scope, scope_options_for(Current.user), { selected: "#{@post.scope_type || 'General'}-#{@post.scope_id || 0}", prompt: t("feed.scope_prompt") }, class: "w-full rounded-md border-gray-300 text-sm", name: "post[scope]" %>
+      </div>
+
+      <% if @post.attachments.any? %>
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700"><%= t("feed.existing_attachments") %></label>
+          <div class="grid grid-cols-1 gap-2">
+            <% @post.attachments.each do |attachment| %>
+              <div class="flex items-center justify-between p-2 bg-gray-50 border rounded-lg text-xs">
+                <span class="truncate max-w-[80%]"><%= attachment.filename %></span>
+                <label class="flex items-center gap-1 text-red-600 cursor-pointer">
+                  <%= check_box_tag "remove_attachments[]", attachment.id, false, class: "rounded border-gray-300 text-red-600 focus:ring-red-500" %>
+                  <%= t("common.remove") %>
+                </label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"><%= t("feed.add_attachments") %></label>
+        <div class="flex items-center gap-3">
+          <%= f.file_field :attachments, multiple: true, class: "hidden", id: "post-attachments-input", name: "post[attachments][]", data: { selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") }, onchange: "let label = document.getElementById('post-attachments-label'); if(this.files.length > 0) { label.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); } else { label.innerText = this.getAttribute('data-placeholder'); }" %>
+          <label for="post-attachments-input" class="py-1.5 px-4 rounded-md border border-gray-300 text-xs font-semibold bg-white text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm">
+            <%= t("common.choose_file") %>
+          </label>
+          <span id="post-attachments-label" data-placeholder="<%= t("common.no_file_chosen") %>" class="text-xs text-gray-500"><%= t("common.no_file_chosen") %></span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <label class="flex items-center gap-1.5 text-sm text-gray-600">
+          <%= f.check_box :pinned, class: "rounded border-gray-300", name: "post[pinned]" %>
+          <%= t("feed.official") %>
+        </label>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <%= f.submit t("common.save"), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700 cursor-pointer" %>
+        <%= link_to t("common.cancel"), feed_index_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+      </div>
+    <% end %>
+  </div>
+</div>

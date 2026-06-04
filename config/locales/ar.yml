@@ -187,6 +187,11 @@ ar:
       subject: "مادة"
       department: "قسم"
       college: "كلية"
+    edit_title: "تعديل المنشور"
+    content_label: "المحتوى"
+    scope_label: "نطاق المنشور"
+    existing_attachments: "المرفقات الحالية"
+    add_attachments: "إضافة مرفقات"
   datetime:
     time_ago: "منذ %{time}"
   subjects:
@@ -290,6 +295,8 @@ ar:
       save_failed: "فشل حفظ سجل الحضور: %{message}"
     feed:
       post_created: "تم إنشاء المنشور بنجاح."
+      post_updated: "تم تحديث المنشور بنجاح."
+      post_deleted: "تم حذف المنشور بنجاح."
       only_teachers_admins: "يسمح فقط لأعضاء هيئة التدريس والمسؤولين بإنشاء المنشورات."
     materials:
       uploaded: "تم رفع المصدر بنجاح."
