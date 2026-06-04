@@ -1,11 +1,8 @@
 class ChatRoomsController < ApplicationController
   before_action :require_authentication
+  before_action :set_sidebar_data, only: [ :index, :show ]
 
   def index
-    public_rooms = ChatRoom.where(subject_id: available_subject_ids)
-    private_rooms = ChatRoom.joins(:chat_participants).where(is_private: true, chat_participants: { user_id: Current.user.id })
-    @rooms = ChatRoom.where(id: public_rooms.pluck(:id) + private_rooms.pluck(:id)).ordered
-    @users = User.where.not(id: Current.user.id).order(:full_name)
   end
 
   def show
@@ -65,5 +62,14 @@ class ChatRoomsController < ApplicationController
              .or(Subject.where(id: Enrollment.where(user_id: Current.user.id).select(:subject_id)))
              .pluck(:id)
     end
+  end
+
+  def set_sidebar_data
+    public_rooms = ChatRoom.where(subject_id: available_subject_ids)
+    private_rooms = ChatRoom.joins(:chat_participants).where(is_private: true, chat_participants: { user_id: Current.user.id })
+    @rooms = ChatRoom.where(id: public_rooms.pluck(:id) + private_rooms.pluck(:id))
+                     .ordered
+                     .includes(:subject, messages: :user)
+    @users = User.where.not(id: Current.user.id).order(:full_name)
   end
 end

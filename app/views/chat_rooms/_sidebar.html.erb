@@ -1,0 +1,126 @@
+<div class="flex flex-col h-full bg-white border-e border-gray-200" data-controller="chat-search">
+  <!-- Search / Header -->
+  <div class="p-4 border-b border-gray-100 space-y-3">
+    <div class="flex items-center justify-between">
+      <h1 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+        <%= t("chats.title") %>
+      </h1>
+    </div>
+    
+    <div class="relative">
+      <span class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-gray-400">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </span>
+      <input type="text" 
+             data-chat-search-target="input" 
+             data-action="input->chat-search#filter" 
+             placeholder="<%= t("chats.search_placeholder", default: "Search chats or users...") %>" 
+             class="w-full ps-9 pe-4 py-2 rounded-lg border-0 bg-gray-100 focus:bg-white focus:ring-2 focus:ring-blue-500 text-sm placeholder-gray-400 transition-all duration-200">
+    </div>
+  </div>
+
+  <!-- Chat / Users List Scrollable Area -->
+  <div class="flex-1 overflow-y-auto divide-y divide-gray-150">
+    <!-- Active Chats Section -->
+    <div data-chat-search-target="roomsHeader" class="px-4 py-2 text-xs font-bold text-gray-400 bg-gray-50/50 uppercase tracking-wider">
+      <%= t("chats.active_chats", default: "Chats") %>
+    </div>
+    
+    <div class="space-y-0.5">
+      <% @rooms.each do |room| %>
+        <% 
+          is_active = @room && @room.id == room.id
+          display_name = room.display_name(Current.user)
+          last_msg = room.messages.last
+          
+          # Initials
+          initials = if room.is_private?
+            other = room.participants.where.not(id: Current.user.id).first
+            other ? other.full_name.split.map(&:first).join("").first(2).upcase : "ME"
+          else
+            room.subject ? room.subject.code.first(4) : room.name.first(2).upcase
+          end
+
+          # Gradient colors
+          gradients = [
+            "from-blue-500 to-indigo-600",
+            "from-emerald-400 to-teal-600",
+            "from-purple-500 to-pink-600",
+            "from-amber-500 to-orange-600",
+            "from-rose-500 to-red-600"
+          ]
+          gradient = gradients[room.id % gradients.size]
+        %>
+        <div data-chat-search-target="room" data-search-name="<%= display_name %>">
+          <%= link_to room, class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 #{is_active ? 'bg-blue-50/70 hover:bg-blue-50/70 border-s-4 border-blue-600 ps-[12px]' : ''}" do %>
+            <!-- Avatar -->
+            <div class="w-11 h-11 rounded-full bg-gradient-to-tr <%= gradient %> flex items-center justify-center text-white text-sm font-semibold tracking-wider shadow-inner shrink-0 select-none">
+              <%= initials %>
+            </div>
+            <!-- Info -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-1 mb-0.5">
+                <h3 class="text-sm font-bold text-gray-900 truncate <%= is_active ? 'text-blue-900' : '' %>">
+                  <%= display_name %>
+                </h3>
+                <span class="text-[10px] text-gray-400 whitespace-nowrap">
+                  <%= last_msg ? time_ago_in_words(last_msg.created_at) : "" %>
+                </span>
+              </div>
+              <p class="text-xs text-gray-500 truncate">
+                <% if last_msg %>
+                  <span class="font-medium text-gray-700"><%= last_msg.user == Current.user ? t("chats.you", default: "You") : last_msg.user.full_name.split.first %>:</span>
+                  <%= last_msg.content.presence || t("chats.sent_file", default: "Sent an attachment") %>
+                <% else %>
+                  <span class="italic text-gray-400"><%= t("chats.no_messages", default: "No messages yet") %></span>
+                <% end %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Start Chat (Contacts Search Results) Section -->
+    <div data-chat-search-target="usersHeader" class="px-4 py-2 text-xs font-bold text-gray-400 bg-gray-50/50 uppercase tracking-wider hidden">
+      <%= t("chats.start_new_chat", default: "Contacts") %>
+    </div>
+    
+    <div class="space-y-0.5">
+      <% @users.each do |user| %>
+        <% 
+          initials = user.full_name.split.map(&:first).join("").first(2).upcase
+          gradients = [
+            "from-blue-500 to-indigo-600",
+            "from-emerald-400 to-teal-600",
+            "from-purple-500 to-pink-600",
+            "from-amber-500 to-orange-600",
+            "from-rose-500 to-red-600"
+          ]
+          gradient = gradients[user.id % gradients.size]
+        %>
+        <div data-chat-search-target="user" data-search-name="<%= user.full_name %>" class="hidden">
+          <%= button_to create_private_chat_rooms_path(user_id: user.id), method: :post, class: "w-full text-start flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 cursor-pointer border-0 bg-transparent" do %>
+            <!-- Avatar -->
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr <%= gradient %> flex items-center justify-center text-white text-xs font-semibold tracking-wider shadow-inner shrink-0 select-none">
+              <%= initials %>
+            </div>
+            <!-- Info -->
+            <div class="flex-1 min-w-0">
+              <h3 class="text-sm font-bold text-gray-900 truncate"><%= user.full_name %></h3>
+              <p class="text-xs text-gray-400 capitalize"><%= t("roles.#{user.role}") %></p>
+            </div>
+            <div class="text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 px-2.5 py-1 rounded">
+              <%= t("chats.chat_button") %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

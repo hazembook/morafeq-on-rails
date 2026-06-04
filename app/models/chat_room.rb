@@ -6,7 +6,11 @@ class ChatRoom < ApplicationRecord
 
   validates :name, presence: true, unless: :is_private?
 
-  scope :ordered, -> { order(created_at: :desc) }
+  scope :ordered, -> {
+    left_joins(:messages)
+      .group("chat_rooms.id")
+      .order(Arel.sql("COALESCE(MAX(messages.created_at), chat_rooms.created_at) DESC"))
+  }
 
   def display_name(current_user)
     if is_private?
