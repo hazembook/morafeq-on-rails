@@ -148,11 +148,14 @@ Morafeq is designed to be highly adaptable and configurable for various learning
 3. **Bootcamps & Training Centers:**
    - Hierarchy: Cohorts -> Modules/Tracks (e.g. Web Dev) -> Lessons/Projects
    - Roles: Program Managers -> Lead Instructors/Mentors -> Students/Fellows
+4. **Online Course Platforms / LMS Platforms:**
+   - Hierarchy: Categories/Topics -> Courses -> Chapters/Lessons
+   - Roles: Administrators -> Instructors/Creators -> Students/Learners
 
 To support this natively without altering the DB schema, the system will use a global configuration parameter `institution_type` (configured in config settings). This maps DB models to dynamic user-facing terms:
-- `college` translates to: `College` (University), `Stage` (School), `Cohort` (Bootcamp)
-- `department` translates to: `Department` (University), `Classroom` (School), `Module` (Bootcamp)
-- `subject` translates to: `Course/Subject` (University), `Class` (School), `Project` (Bootcamp)
+- `college` translates to: `College` (University), `Stage` (School), `Cohort` (Bootcamp), `Category` (Course Platform)
+- `department` translates to: `Department` (University), `Classroom` (School), `Module` (Bootcamp), `Course` (Course Platform)
+- `subject` translates to: `Course/Subject` (University), `Class` (School), `Project` (Bootcamp), `Chapter` (Course Platform)
 
 ## 4.6. Internationalization (I18n) & Localization (L10n)
 To support a global user base (specifically English and Arabic languages), the system implements standard Rails `I18n`:
