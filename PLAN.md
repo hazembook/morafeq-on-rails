@@ -188,7 +188,7 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
   - [x] File size validation (e.g., 50MB max)
 - [x] Implement File Browser/Download for Students (per enrolled subject)
 - [ ] Implement search via SQLite FTS5 virtual table
-- [ ] Write system tests for upload/download flows
+- [x] Write system tests for upload/download flows
 
 ### Phase 5: Real-time Chat
 - [x] Setup Solid Cable
