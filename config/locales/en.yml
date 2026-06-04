@@ -174,7 +174,7 @@ en:
     create_post: "Create Post"
     mind_placeholder: "What's on your mind?"
     scope_prompt: "Post to a subject..."
-    official: "Official"
+    official: "Official (Pin)"
     post_button: "Post"
     pinned_header: "Pinned"
     loading_more: "Loading more..."

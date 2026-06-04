@@ -174,7 +174,7 @@ ar:
     create_post: "إنشاء منشور"
     mind_placeholder: "ماذا يدور في ذهنك؟"
     scope_prompt: "انشر في مادة..."
-    official: "رسمي"
+    official: "رسمي (تثبيت)"
     post_button: "نشر"
     pinned_header: "منشورات مثبتة"
     loading_more: "جاري تحميل المزيد..."
