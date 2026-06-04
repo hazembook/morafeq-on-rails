@@ -51,10 +51,7 @@
 
   <!-- Chat / Users List Scrollable Area -->
   <div class="flex-1 overflow-y-auto divide-y divide-gray-150">
-    <!-- Active Chats Section -->
-    <div data-chat-search-target="roomsHeader" class="px-4 py-2 text-xs font-bold text-gray-400 bg-gray-50/50 uppercase tracking-wider">
-      <%= t("chats.active_chats", default: "Chats") %>
-    </div>
+
     
     <div class="space-y-0.5">
       <% @rooms.each do |room| %>

@@ -4,13 +4,35 @@ export default class extends Controller {
   static targets = ["input", "room", "user", "roomsHeader", "usersHeader", "tab"]
 
   connect() {
-    this.activeTab = "all"
+    // Restore search query
+    const savedQuery = sessionStorage.getItem("chat_search_query") || ""
+    if (this.hasInputTarget) {
+      this.inputTarget.value = savedQuery
+    }
+
+    // Restore active tab
+    const savedTab = sessionStorage.getItem("chat_active_tab") || "all"
+    this.activeTab = savedTab
+
+    // Apply restored active tab styling
+    this.tabTargets.forEach(tab => {
+      const isCurrent = tab.getAttribute("data-tab") === savedTab
+      if (isCurrent) {
+        tab.classList.remove("text-gray-600", "hover:text-gray-900")
+        tab.classList.add("bg-white", "text-blue-600", "shadow-sm")
+      } else {
+        tab.classList.remove("bg-white", "text-blue-600", "shadow-sm")
+        tab.classList.add("text-gray-600", "hover:text-gray-900")
+      }
+    })
+
     this.filter()
   }
 
   changeTab(event) {
     const selectedTab = event.currentTarget.getAttribute("data-tab")
     this.activeTab = selectedTab
+    sessionStorage.setItem("chat_active_tab", selectedTab)
 
     this.tabTargets.forEach(tab => {
       const isCurrent = tab.getAttribute("data-tab") === selectedTab
@@ -28,6 +50,8 @@ export default class extends Controller {
 
   filter() {
     const query = this.inputTarget.value.toLowerCase().trim()
+    sessionStorage.setItem("chat_search_query", this.inputTarget.value)
+    
     const activeTab = this.activeTab || "all"
     
     let visibleRooms = 0
