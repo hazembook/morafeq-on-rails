@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_03_233023) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_04_042209) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -112,8 +112,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_03_233023) do
     t.datetime "created_at", null: false
     t.datetime "discarded_at"
     t.boolean "pinned", default: false, null: false
-    t.integer "scope_id", null: false
-    t.string "scope_type", null: false
+    t.integer "scope_id"
+    t.string "scope_type"
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_posts_on_author_id"
     t.index ["discarded_at"], name: "index_posts_on_discarded_at"

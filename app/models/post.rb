@@ -2,11 +2,11 @@ class Post < ApplicationRecord
   include Discard::Model
 
   belongs_to :author, class_name: "User"
-  belongs_to :scope, polymorphic: true
+  belongs_to :scope, polymorphic: true, optional: true
   has_many_attached :attachments
 
   validates :content, presence: true
-  validates :scope_type, inclusion: { in: %w[College Department Subject] }
+  validates :scope_type, inclusion: { in: %w[College Department Subject] }, allow_nil: true
 
   scope :pinned_first, -> { order(pinned: :desc, created_at: :desc) }
   scope :not_pinned, -> { where(pinned: false) }
@@ -21,6 +21,7 @@ class Post < ApplicationRecord
     college_ids = Department.where(id: department_ids).select(:college_id)
 
     kept.where(
+      "scope_type IS NULL OR " \
       "(scope_type = 'Subject' AND scope_id IN (?)) OR " \
       "(scope_type = 'Department' AND scope_id IN (?)) OR " \
       "(scope_type = 'College' AND scope_id IN (?))",
