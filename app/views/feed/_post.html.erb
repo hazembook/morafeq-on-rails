@@ -16,8 +16,13 @@
           <% end %>
         </div>
       <% end %>
-      <div class="mt-2 text-xs text-gray-400">
-        <%= post.scope.name %>
+      <div class="mt-2 flex items-center gap-1.5 flex-wrap">
+        <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold tracking-wide uppercase <%= scope_badge_class(post.scope_type) %>">
+          <%= post.scope_type %>
+        </span>
+        <span class="text-xs text-gray-500 font-medium">
+          <%= post.scope.name %>
+        </span>
       </div>
     </div>
   </div>
