@@ -10,69 +10,94 @@
       </div>
       <p class="text-sm text-gray-700"><%= post.content %></p>
       <% if post.attachments.any? %>
+        <% images, files = post.attachments.partition(&:image?) %>
+        
         <div class="mt-2 space-y-2">
-          <% post.attachments.each do |attachment| %>
-            <% if attachment.image? %>
-              <div class="block max-w-lg overflow-hidden rounded-lg border border-gray-200 mt-2 cursor-zoom-in" onclick="showLightbox('<%= rails_storage_proxy_path(attachment, only_path: true) %>', '<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>', 'image', '<%= j attachment.filename.to_s %>')">
+          <%# Render Images Grid %>
+          <% if images.any? %>
+            <% if images.size == 1 %>
+              <% attachment = images.first %>
+              <div class="block max-w-lg overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in" onclick="showLightbox('<%= rails_storage_proxy_path(attachment, only_path: true) %>', '<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>', 'image', '<%= j attachment.filename.to_s %>')">
                 <%= image_tag attachment, class: "w-full max-h-72 object-cover hover:scale-[1.02] transition-transform duration-300" %>
               </div>
             <% else %>
-              <% if attachment.video? %>
-                <% preview_type = "video" %>
-              <% elsif attachment.audio? %>
-                <% preview_type = "audio" %>
-              <% elsif attachment.content_type == "application/pdf" %>
-                <% preview_type = "pdf" %>
-              <% else %>
-                <% preview_type = nil %>
-              <% end %>
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between max-w-lg p-3 bg-gray-50 hover:bg-gray-100/80 rounded-lg border border-gray-200/80 transition-colors mt-2 group gap-3">
-                <div class="flex items-center gap-3 min-w-0 flex-1 w-full">
-                  <div class="p-2 bg-white rounded-md border border-gray-200 text-gray-500 group-hover:text-blue-600 transition-colors shrink-0">
-                    <% if preview_type == "pdf" %>
-                      <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h1.5M9 13h6m-6 4h6"></path>
-                      </svg>
-                    <% elsif preview_type == "video" %>
-                      <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                      </svg>
-                    <% elsif preview_type == "audio" %>
-                      <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                      </svg>
-                    <% else %>
-                      <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              <div class="grid gap-1.5 max-w-lg <%= images.size == 2 ? "grid-cols-2" : "grid-cols-3" %> rounded-lg overflow-hidden border border-gray-200">
+                <% images.each_with_index do |attachment, idx| %>
+                  <div class="relative cursor-zoom-in aspect-square overflow-hidden bg-gray-100" onclick="showLightbox('<%= rails_storage_proxy_path(attachment, only_path: true) %>', '<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>', 'image', '<%= j attachment.filename.to_s %>')">
+                    <%= image_tag attachment, class: "w-full h-full object-cover hover:scale-105 transition-transform duration-300" %>
+                    <% if idx == 2 && images.size > 3 %>
+                      <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-lg pointer-events-none">
+                        +<%= images.size - 2 %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <% break if idx == 2 && images.size > 3 %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <%# Render Documents & Non-Images %>
+          <% if files.any? %>
+            <div class="grid grid-cols-1 gap-2 max-w-lg">
+              <% files.each do |attachment| %>
+                <% if attachment.video? %>
+                  <% preview_type = "video" %>
+                <% elsif attachment.audio? %>
+                  <% preview_type = "audio" %>
+                <% elsif attachment.content_type == "application/pdf" %>
+                  <% preview_type = "pdf" %>
+                <% else %>
+                  <% preview_type = nil %>
+                <% end %>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 hover:bg-gray-100/80 rounded-lg border border-gray-200/80 transition-colors mt-2 group gap-3">
+                  <div class="flex items-center gap-3 min-w-0 flex-1 w-full">
+                    <div class="p-2 bg-white rounded-md border border-gray-200 text-gray-500 group-hover:text-blue-600 transition-colors shrink-0">
+                      <% if preview_type == "pdf" %>
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h1.5M9 13h6m-6 4h6"></path>
+                        </svg>
+                      <% elsif preview_type == "video" %>
+                        <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                      <% elsif preview_type == "audio" %>
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                        </svg>
+                      <% else %>
+                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                      <% end %>
+                    </div>
+                    
+                    <div class="min-w-0 flex-1">
+                      <span class="block text-sm font-medium text-gray-700 truncate group-hover:text-blue-600 transition-colors">
+                        <%= attachment.filename %>
+                      </span>
+                      <span class="block text-[11px] text-gray-400">
+                        <%= number_to_human_size(attachment.byte_size) %>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                    <% if preview_type.present? %>
+                      <button class="px-2.5 py-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors cursor-pointer font-sans" onclick="showLightbox('<%= rails_storage_proxy_path(attachment, only_path: true) %>', '<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>', '<%= preview_type %>', '<%= j attachment.filename.to_s %>')">
+                        Preview
+                      </button>
+                    <% end %>
+                    <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "p-1.5 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 rounded border border-gray-200 transition-colors cursor-pointer", title: "Download", download: true do %>
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                       </svg>
                     <% end %>
                   </div>
-                  
-                  <div class="min-w-0 flex-1">
-                    <span class="block text-sm font-medium text-gray-700 truncate group-hover:text-blue-600 transition-colors">
-                      <%= attachment.filename %>
-                    </span>
-                    <span class="block text-[11px] text-gray-400">
-                      <%= number_to_human_size(attachment.byte_size) %>
-                    </span>
-                  </div>
                 </div>
-
-                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                  <% if preview_type.present? %>
-                    <button class="px-2.5 py-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors cursor-pointer font-sans" onclick="showLightbox('<%= rails_storage_proxy_path(attachment, only_path: true) %>', '<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>', '<%= preview_type %>', '<%= j attachment.filename.to_s %>')">
-                      Preview
-                    </button>
-                  <% end %>
-                  <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "p-1.5 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 rounded border border-gray-200 transition-colors cursor-pointer", title: "Download", download: true do %>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                    </svg>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
+              <% end %>
+            </div>
           <% end %>
         </div>
       <% end %>
