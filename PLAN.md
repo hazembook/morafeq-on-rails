@@ -157,6 +157,10 @@ To support this natively without altering the DB schema, the system will use a g
 - `department` translates to: `Department` (University), `Classroom` (School), `Module` (Bootcamp), `Course` (Course Platform)
 - `subject` translates to: `Course/Subject` (University), `Class` (School), `Project` (Bootcamp), `Chapter` (Course Platform)
 
+> [!IMPORTANT]
+> **Primary Focus:** The initial implementations, UI layouts, translation keys, and workflow designs will focus primarily on **Universities/Colleges** and **Schools (K-12)**. Bootcamp and Online Course Platform configurations are planned for long-term extensibility but will not be the primary testing focus initially.
+
+
 ## 4.6. Internationalization (I18n) & Localization (L10n)
 To support a global user base (specifically English and Arabic languages), the system implements standard Rails `I18n`:
 1. **Translation Files:**
