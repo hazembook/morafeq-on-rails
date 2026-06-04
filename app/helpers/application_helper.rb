@@ -7,6 +7,8 @@ module ApplicationHelper
       "bg-amber-100 text-amber-700"
     when "Subject"
       "bg-blue-100 text-blue-700"
+    when nil, "General"
+      "bg-green-100 text-green-700"
     else
       "bg-gray-100 text-gray-700"
     end

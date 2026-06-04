@@ -11,6 +11,10 @@ class FeedController < ApplicationController
     end
 
     scope_type, scope_id = params[:post][:scope].split("-")
+    if scope_type == "General"
+      scope_type = nil
+      scope_id = nil
+    end
 
     @post = Current.user.authored_posts.build(
       content: params[:post][:content],
