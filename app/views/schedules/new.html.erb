@@ -19,7 +19,7 @@
 
     <div>
       <%= f.label :day, t("schedules.new.day_label"), class: "block text-sm font-semibold text-gray-700 mb-1" %>
-      <%= f.select :day, [[t("subjects.days.sunday"), 0], [t("subjects.days.monday"), 1], [t("subjects.days.tuesday"), 2], [t("subjects.days.wednesday"), 3], [t("subjects.days.thursday"), 4], [t("subjects.days.friday"), 5], [t("subjects.days.saturday"), 6]], {}, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
+      <%= f.select :day, [ [ t("subjects.days.sunday"), 0 ], [ t("subjects.days.monday"), 1 ], [ t("subjects.days.tuesday"), 2 ], [ t("subjects.days.wednesday"), 3 ], [ t("subjects.days.thursday"), 4 ], [ t("subjects.days.friday"), 5 ], [ t("subjects.days.saturday"), 6 ] ], {}, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
     </div>
 
     <div class="grid grid-cols-2 gap-4">

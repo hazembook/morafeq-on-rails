@@ -45,7 +45,7 @@
                 <% if ans.any? %>
                   <% total_score = ans.map(&:score).compact.sum %>
                   <% all_graded = ans.all? { |a| a.score.present? } %>
-                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full <%= all_graded ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-yellow-100 text-yellow-800 border border-yellow-200' %>">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full <%= all_graded ? "bg-green-100 text-green-800 border border-green-200" : "bg-yellow-100 text-yellow-800 border border-yellow-200" %>">
                     <%= all_graded ? t("quizzes.index.completed_points", score: total_score, total: quiz.total_points) : t("quizzes.index.pending_grade") %>
                   </span>
                 <% else %>

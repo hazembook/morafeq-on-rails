@@ -17,7 +17,7 @@
             <div class="text-end">
               <% graded_count = answers.count { |a| a.score.present? } %>
               <% total_earned = answers.map(&:score).compact.sum %>
-              <span class="text-xs font-semibold px-2.5 py-1 rounded-full <%= graded_count == answers.size ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full <%= graded_count == answers.size ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800" %>">
                 <%= graded_count == answers.size ? t("quizzes.grade.status_fully_graded") : t("quizzes.grade.status_ungraded") %> (<%= total_earned %> / <%= @quiz.total_points %> <%= t("quizzes.grade.pts") %>)
               </span>
             </div>

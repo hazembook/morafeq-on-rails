@@ -50,7 +50,7 @@
               <div class="flex justify-between items-start gap-4">
                 <div>
                   <p class="font-medium text-sm text-gray-800"><%= t("quizzes.show.q_prefix", num: idx + 1) %>: <%= q.question %></p>
-                  <p class="text-xs text-gray-500 font-medium"><%= t("quizzes.show.type_prefix", type: q.question_type == 'true_false' ? t("quizzes.fields.true_false") : t("quizzes.fields.mcq")) %></p>
+                  <p class="text-xs text-gray-500 font-medium"><%= t("quizzes.show.type_prefix", type: q.question_type == "true_false" ? t("quizzes.fields.true_false") : t("quizzes.fields.mcq")) %></p>
                 </div>
                 <span class="text-xs font-semibold text-gray-500 whitespace-nowrap"><%= ans&.score || "-" %> / <%= q.points %> <%= t("quizzes.show.pts") %></span>
               </div>
@@ -105,7 +105,7 @@
               
               <% if q.question_type == 'true_false' || q.question_type == 'mcq' %>
                 <div class="space-y-2 mt-1">
-                  <% (q.choices || [t("quizzes.show.true_choice"), t("quizzes.show.false_choice")]).each_with_index do |choice, c_idx| %>
+                  <% (q.choices || [ t("quizzes.show.true_choice"), t("quizzes.show.false_choice") ]).each_with_index do |choice, c_idx| %>
                     <div class="flex items-center gap-2">
                       <%= radio_button_tag "answers[#{q.id}]", choice, false, id: "answers_#{q.id}_#{c_idx}", required: true, class: "h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" %>
                       <%= label_tag "answers_#{q.id}_#{c_idx}", choice, class: "text-sm text-gray-700 font-medium cursor-pointer" %>
@@ -130,7 +130,7 @@
         <% @questions.each_with_index do |q, idx| %>
           <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 flex justify-between items-start gap-4">
             <div class="space-y-1">
-              <p class="font-semibold text-xs text-gray-500 uppercase tracking-wide"><%= t("quizzes.show.q_prefix", num: idx + 1) %> (<%= q.question_type == 'true_false' ? t("quizzes.fields.true_false") : t("quizzes.fields.mcq") %>)</p>
+              <p class="font-semibold text-xs text-gray-500 uppercase tracking-wide"><%= t("quizzes.show.q_prefix", num: idx + 1) %> (<%= q.question_type == "true_false" ? t("quizzes.fields.true_false") : t("quizzes.fields.mcq") %>)</p>
               <p class="text-sm text-gray-800 mt-1 font-medium"><%= q.question %></p>
               
               <% if (q.question_type == 'mcq' || q.question_type == 'true_false') && q.choices.present? %>
