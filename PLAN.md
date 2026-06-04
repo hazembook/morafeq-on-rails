@@ -165,7 +165,7 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
   - Subject detail page shows "Upload Material" and "Manage Files" buttons for the assigned teacher
   - "My Subjects" tab in nav lists subjects the teacher teaches, with quick actions
   - No separate `/teacher` dashboard — teacher actions live in the main app UI
-- [ ] Write system tests for admin flows + teacher inline actions
+- [x] Write system tests for admin flows + teacher inline actions
 
 ### Phase 3: The Feed (Home)
 - [x] Create `Post` model with polymorphic scope, soft delete (`discard`)
