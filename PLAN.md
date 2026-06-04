@@ -120,6 +120,19 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
   - `read_at`: datetime (nullable)
   - Delivery via Solid Queue + Solid Cable for real-time badge updates.
 
+### Task Distribution (Moderators & TAs)
+- `task_distributions`:
+  - `user_id`: FK (moderator or TA)
+  - `scope_type`: string (polymorphic — "College", "Department", "Subject")
+  - `scope_id`: integer
+  - `assigned_by_id`: FK User (teacher for subjects, super admin for college/dept)
+  - `manage_posts`: boolean
+  - `manage_materials`: boolean (subject-only)
+  - `manage_quizzes`: boolean (subject-only)
+  - `manage_schedules`: boolean (subject-only)
+  - `manage_attendance`: boolean (subject-only)
+  - `manage_chat`: boolean (subject-only)
+
 ### Audit Log
 - `audit_logs`:
   - `action`: string
@@ -166,6 +179,7 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 - [x] UI: Mobile-style Feed with Infinite Scroll (Turbo Frames + pagination)
 - [x] Post creation (Teachers & Admins only): Compose posts scoped to their subjects, with optional "Official" flair toggle
 - [x] Pinned posts at top of feed (teachers can pin in their subjects)
+- [ ] Add file upload field to post composer (model supports attachments, form missing)
 - [ ] Write tests for feed scoping logic (model + system)
 
 ### Phase 4: Materials System
@@ -191,7 +205,41 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 - [ ] Moderation: Teachers can delete messages in their subject rooms
 - [ ] Write system tests + channel tests
 
-### Phase 6: Notifications System
+### Phase 6: Academic Tools
+- [ ] **Quiz system (structured model):**
+  - Quiz model with title, subject, due date, total points
+  - QuizQuestion model (question text, points)
+  - QuizAnswer model (user submission, teacher-assigned score)
+  - Teacher creates quizzes for their subjects
+  - Students submit answers, view grades
+  - Auto-calc total score, show on profile
+- [ ] **Schedule / Timetable:**
+  - Schedule model (subject, day, start/end time, room)
+  - Weekly timetable view per subject
+  - Teacher/admin manages schedule
+- [ ] **Attendance tracking:**
+  - Attendance model (user, subject, date, status, recorded_by)
+  - Teacher marks present/absent per session
+  - Students view attendance on profile
+  - Admin can view/edit any attendance
+- [ ] Write tests
+
+### Phase 7: Task Distribution & Role Expansion
+- [ ] Add `moderator` and `ta` roles to User enum
+- [ ] **TaskDistribution model:**
+  - Polymorphic scope (College, Department, Subject)
+  - `assigned_by_id` tracks who granted the assignment
+  - Per-action permission flags (posts, materials, quizzes, schedules, attendance, chat)
+- [ ] **Super Admin** — restricted to admin panel only (no feed/subjects/chats nav)
+- [ ] **Moderator** — assigned to College or Department, manages posts only
+- [ ] **Teaching Assistant** — assigned to Subject by teacher or super admin, granular permissions
+- [ ] Teachers can assign TAs to their own subjects (creates TaskDistribution)
+- [ ] Super admin manages all TaskDistributions via `/admin/task_distributions`
+- [ ] Update Pundit policies for all new roles
+- [ ] Seed moderator, TA, and task_distribution data
+- [ ] Write tests
+
+### Phase 8: Notifications System
 - [ ] Create `Notification` model (polymorphic)
 - [ ] Integration points:
   - New post in student's scope → notify enrolled students
@@ -204,7 +252,7 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 - [ ] Use Solid Queue for async notification delivery
 - [ ] Write tests
 
-### Phase 7: Search
+### Phase 9: Search
 - [ ] Add SQLite FTS5 virtual tables for:
   - Posts (full-text on content)
   - Subjects (name + code)
@@ -213,7 +261,7 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 - [ ] Results grouped by type (Subjects, Posts, Materials)
 - [ ] Write tests
 
-### Phase 8: Polish & Deploy
+### Phase 10: Polish & Deploy
 - [ ] Mobile Polish:
   - Bottom navigation bar (responsive: sidebar on desktop, bottom tabs on mobile)
   - Touch targets >= 44px
@@ -255,6 +303,6 @@ main          ─── Production releases. Only merged from `develop`.
 
 ### Local First
 - `rails new morafeq --css tailwind` auto-initializes a Git repo (no initial commit). Make the first commit yourself with the scaffolded app on `main`, then create a `develop` branch and work from there.
-- All development happens locally. No CI required until Phase 8.
+- All development happens locally. No CI required until Phase 10.
 - Run `rails test` and `rubocop` before committing.
 - Use `rails db:seed` to reset demo data as needed.
