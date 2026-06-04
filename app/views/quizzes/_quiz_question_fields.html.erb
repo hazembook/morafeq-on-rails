@@ -10,7 +10,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
       <%= q_form.label :question_type, "Question Type", class: "block text-xs font-medium text-gray-500 mb-1" %>
-      <%= q_form.select :question_type, [["Written Q&A", "written"], ["Multiple Choice (MCQ)", "mcq"], ["True / False", "true_false"], ["Matching Pairs", "match"]], {}, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
+      <%= q_form.select :question_type, [["Multiple Choice (MCQ)", "mcq"], ["True / False", "true_false"], ["Matching Pairs", "match"], ["Written Q&A", "written"]], {}, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
     </div>
     <div>
       <%= q_form.label :points, "Points Value", class: "block text-xs font-medium text-gray-500 mb-1" %>

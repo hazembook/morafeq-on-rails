@@ -85,12 +85,14 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
   test "quiz system with diverse question types: MCQ, True/False, Match, Written" do
     sign_in_as(@teacher)
 
-    # 1. Teacher creates a quiz with multiple question types
+    # 1. Teacher creates a quiz with multiple question types and a quiz_file
+    quiz_file = fixture_file_upload("test.pdf", "application/pdf")
     assert_difference "Quiz.count", 1 do
       post subject_quizzes_path(@subject), params: {
         quiz: {
           title: "Comprehensive Quiz",
           due_at: 2.days.from_now.to_s,
+          quiz_file: quiz_file,
           quiz_questions_attributes: [
             { question: "What is Ruby?", question_type: "mcq", choices_text: "A Gem\nA Language\nA Mineral", points: 5 },
             { question: "Rails is written in Ruby.", question_type: "true_false", points: 5 },
@@ -102,6 +104,7 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     end
 
     quiz = Quiz.last
+    assert quiz.quiz_file.attached?
     assert_equal 4, quiz.quiz_questions.count
     assert_equal 30, quiz.total_points
 
@@ -118,7 +121,9 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     sign_in_as(@student)
     get subject_quiz_path(@subject, quiz)
     assert_response :success
+    assert_match "Quiz Worksheet Attached", response.body
 
+    student_answer_file = fixture_file_upload("test.pdf", "application/pdf")
     # Submit diverse answer types
     assert_difference "QuizAnswer.count", 4 do
       post subject_quiz_quiz_answers_path(@subject, quiz), params: {
@@ -129,7 +134,10 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
             "France" => "Paris",
             "Spain" => "Madrid"
           },
-          q_written.id.to_s => "ActiveRecord is an ORM framework."
+          q_written.id.to_s => {
+            "text" => "",
+            "file" => student_answer_file
+          }
         }
       }
     end
@@ -144,11 +152,13 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     assert_match "Paris", response.body
     assert_match "Spain", response.body
     assert_match "Madrid", response.body
+    assert_match "Download Submitted File", response.body
 
     # 3. Teacher grades the quiz
     sign_in_as(@teacher)
     get grade_subject_quiz_path(@subject, quiz)
     assert_response :success
+    assert_match "Download Submitted File", response.body
 
     a_mcq = QuizAnswer.find_by(quiz_question: q_mcq, user: @student)
     a_tf = QuizAnswer.find_by(quiz_question: q_tf, user: @student)
@@ -157,6 +167,8 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
 
     # Verify matching answer is stored as JSON string
     assert_equal({ "France" => "Paris", "Spain" => "Madrid" }.to_json, a_match.answer)
+    assert_equal "", a_written.answer
+    assert a_written.file.attached?
 
     # Update grades
     post grade_answers_subject_quiz_path(@subject, quiz), params: {

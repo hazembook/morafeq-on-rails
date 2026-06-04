@@ -19,17 +19,29 @@ class QuizAnswersController < ApplicationController
     QuizAnswer.transaction do
       questions.each do |question|
         val = answers_params[question.id.to_s]
-        serialized_val = if val.is_a?(Hash) || val.is_a?(ActionController::Parameters)
-          val.to_unsafe_h.to_json
+
+        file_param = nil
+        text_val = ""
+
+        if val.is_a?(Hash) || val.is_a?(ActionController::Parameters)
+          val_h = val.to_unsafe_h
+          if val_h.key?("file") || val_h.key?("text")
+            file_param = val_h["file"]
+            text_val = val_h["text"].to_s
+          else
+            text_val = val_h.to_json
+          end
         else
-          val.to_s
+          text_val = val.to_s
         end
 
-        QuizAnswer.create!(
+        ans = QuizAnswer.new(
           quiz_question: question,
           user: Current.user,
-          answer: serialized_val
+          answer: text_val
         )
+        ans.file.attach(file_param) if file_param.present?
+        ans.save!
       end
     end
 

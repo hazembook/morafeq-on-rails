@@ -18,6 +18,10 @@ class QuizQuestion < ApplicationRecord
     self.question_type ||= "written"
   end
 
+  def question_type
+    super || "written"
+  end
+
   def choices_text
     @choices_text || if choices.is_a?(Array)
       choices.join("\n")
