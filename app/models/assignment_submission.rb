@@ -25,7 +25,20 @@ class AssignmentSubmission < ApplicationRecord
 
   MAX_FILE_SIZE = 50.megabytes
 
+  after_update_commit :broadcast_grade_update
+
   private
+
+  def broadcast_grade_update
+    if saved_change_to_score? || saved_change_to_feedback?
+      broadcast_replace_to(
+        "assignment_#{assignment_id}_user_#{user_id}",
+        target: "student_submission_status",
+        partial: "assignments/student_submission",
+        locals: { submission: self, assignment: assignment }
+      )
+    end
+  end
 
   def file_attached
     errors.add(:file, "must be attached to submit") unless file.attached?

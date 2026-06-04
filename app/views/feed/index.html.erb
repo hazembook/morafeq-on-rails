@@ -1,3 +1,22 @@
+<%
+  subject_ids = Current.user.enrollments.pluck(:subject_id)
+  if Current.user.teacher?
+    subject_ids = Current.user.taught_subjects.pluck(:id) + subject_ids
+  end
+  department_ids = Subject.where(id: subject_ids).pluck(:department_id).uniq
+  college_ids = Department.where(id: department_ids).pluck(:college_id).uniq
+%>
+<%= turbo_stream_from "posts_general" %>
+<% college_ids.each do |c_id| %>
+  <%= turbo_stream_from "posts_college_#{c_id}" %>
+<% end %>
+<% department_ids.each do |d_id| %>
+  <%= turbo_stream_from "posts_department_#{d_id}" %>
+<% end %>
+<% subject_ids.each do |s_id| %>
+  <%= turbo_stream_from "posts_subject_#{s_id}" %>
+<% end %>
+
 <div class="max-w-2xl mx-auto">
   <% if Current.user.teacher? || Current.user.admin? %>
     <div class="bg-white rounded-lg shadow p-4 mb-6">
@@ -39,7 +58,7 @@
   <% end %>
 
   <%= turbo_frame_tag "page_#{params[:page] || 1}" do %>
-    <div class="space-y-4">
+    <div id="posts" class="space-y-4">
       <%= render partial: "post", collection: @posts %>
     </div>
 

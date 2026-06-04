@@ -47,43 +47,10 @@
   </div>
 
   <% if Current.user.student? %>
+    <%= turbo_stream_from "assignment_#{@assignment.id}_user_#{Current.user.id}" %>
     <% if @submitted %>
       <!-- Submissions Display -->
-      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
-        <div class="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
-          <div>
-            <p class="text-sm font-semibold text-green-800"><%= t("assignments.show.submitted_title") %></p>
-            <p class="text-xs text-green-600"><%= t("assignments.show.submitted_hint") %></p>
-          </div>
-          <div class="text-right">
-            <% if @submission.score.present? %>
-              <span class="text-lg font-bold text-green-700"><%= @submission.score %> / <%= @assignment.total_points %> <%= t("assignments.show.pts") %></span>
-            <% else %>
-              <span class="text-sm font-semibold text-orange-600"><%= t("assignments.show.pending_grade") %></span>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          <h3 class="text-sm font-bold text-gray-800"><%= t("assignments.show.your_submission_heading") %></h3>
-          <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 space-y-3">
-            <div class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-              </svg>
-              <%= link_to t("assignments.show.download_solved", filename: @submission.file.filename), rails_blob_path(@submission.file, disposition: "attachment"), class: "text-sm font-semibold text-blue-600 hover:text-blue-800 underline", target: "_blank" %>
-            </div>
-            <p class="text-xs text-gray-400"><%= t("assignments.show.uploaded_ago", time: time_ago_in_words(@submission.created_at)) %></p>
-          </div>
-
-          <% if @submission.feedback.present? %>
-            <div class="p-4 bg-blue-50/50 rounded-lg border border-blue-100">
-              <h4 class="text-xs font-bold text-blue-900 uppercase"><%= t("assignments.show.feedback_heading") %></h4>
-              <p class="text-sm text-gray-700 mt-1 whitespace-pre-wrap"><%= @submission.feedback %></p>
-            </div>
-          <% end %>
-        </div>
-      </div>
+      <%= render partial: "assignments/student_submission", locals: { submission: @submission, assignment: @assignment } %>
     <% elsif @assignment.locked? %>
       <!-- Locked Display -->
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
@@ -114,7 +81,15 @@
     <% else %>
       <!-- Submit Solution Form -->
       <%= form_with model: [ @subject, @assignment, @new_submission ], class: "bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6" do |f| %>
-        <p class="text-sm text-gray-600 border-b border-gray-100 pb-4"><%= t("assignments.show.submit_instruction") %></p>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4" data-controller="countdown" data-countdown-due-at-value="<%= @assignment.due_at.iso8601 %>">
+          <p class="text-sm text-gray-600"><%= t("assignments.show.submit_instruction") %></p>
+          <div class="flex items-center gap-1.5 bg-red-50 text-red-700 px-3 py-1 rounded-lg border border-red-200 text-xs font-semibold self-start sm:self-auto">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span data-countdown-target="timer">--:--:--</span>
+          </div>
+        </div>
         
         <div class="space-y-4">
           <div class="bg-gray-50 p-6 rounded-xl border-2 border-dashed border-gray-300 text-center">
