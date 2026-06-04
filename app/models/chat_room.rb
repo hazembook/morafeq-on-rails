@@ -11,9 +11,9 @@ class ChatRoom < ApplicationRecord
   def display_name(current_user)
     if is_private?
       other_participant = participants.where.not(id: current_user.id).first
-      other_participant ? other_participant.full_name : "Self Chat"
+      other_participant ? other_participant.full_name : I18n.t("chats.self_chat", default: "Self Chat")
     else
-      name
+      subject ? subject.name : name
     end
   end
 

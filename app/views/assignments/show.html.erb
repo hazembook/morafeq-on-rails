@@ -121,7 +121,13 @@
             <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
             </svg>
-            <%= f.file_field :file, required: true, class: "block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" %>
+            <%= f.file_field :file, required: true, class: "hidden", id: "assignment-file-input", data: { selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") }, onchange: "let label = document.getElementById('assignment-file-label'); if(this.files.length > 0) { label.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); } else { label.innerText = this.getAttribute('data-placeholder'); }" %>
+            <div class="flex flex-col items-center gap-2 mt-2">
+              <label for="assignment-file-input" class="py-1.5 px-4 rounded-md border border-gray-300 text-xs font-semibold bg-white text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm">
+                <%= t("common.choose_file") %>
+              </label>
+              <span id="assignment-file-label" data-placeholder="<%= t("common.no_file_chosen") %>" class="text-[11px] text-gray-500"><%= t("common.no_file_chosen") %></span>
+            </div>
             <p class="text-xxs text-gray-400 mt-2"><%= t("assignments.show.accepted_formats") %></p>
           </div>
         </div>

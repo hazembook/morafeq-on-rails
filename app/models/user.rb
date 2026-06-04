@@ -19,5 +19,10 @@ class User < ApplicationRecord
   validates :full_name, presence: true
   validates :role, presence: true
 
+  def full_name
+    return super if super.blank?
+    I18n.t("db.users.#{super.parameterize(separator: '_')}", default: super)
+  end
+
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 end

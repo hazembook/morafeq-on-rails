@@ -43,7 +43,13 @@
             </div>
           <% end %>
           <div class="flex-1 min-w-0">
-            <%= f.file_field :avatar, class: "block w-full text-xs text-slate-500 file:me-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" %>
+            <div class="flex items-center gap-3">
+              <%= f.file_field :avatar, class: "hidden", id: "profile-avatar-input", data: { selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") }, onchange: "let label = document.getElementById('profile-avatar-label'); if(this.files.length > 0) { label.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); } else { label.innerText = this.getAttribute('data-placeholder'); }" %>
+              <label for="profile-avatar-input" class="py-1.5 px-4 rounded-xl border border-gray-300 text-xs font-semibold bg-white text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm">
+                <%= t("common.choose_file") %>
+              </label>
+              <span id="profile-avatar-label" data-placeholder="<%= t("common.no_file_chosen") %>" class="text-xs text-gray-500"><%= t("common.no_file_chosen") %></span>
+            </div>
             <p class="text-xxs text-gray-400 mt-1.5"><%= t("profile.avatar_hint") %></p>
           </div>
         </div>

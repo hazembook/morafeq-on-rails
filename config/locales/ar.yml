@@ -22,6 +22,15 @@ ar:
       PH201: "الكهرومغناطيسية"
       CH101: "الكيمياء العامة"
       EN101: "مقدمة في الشعر"
+    users:
+      admin_user: "المسؤول"
+      dr_ahmed_hassan: "د. أحمد حسن"
+      dr_sara_ali: "د. سارة علي"
+      dr_khaled_omar: "د. خالد عمر"
+      omar_youssef: "عمر يوسف"
+      layla_mahmoud: "ليلى محمود"
+      yassin_nour: "ياسين نور"
+      nadia_ibrahim: "نادية إبراهيم"
   nav:
     home: "الرئيسية"
     subjects: "المواد"
@@ -156,6 +165,7 @@ ar:
     send: "إرسال"
     files_selected: "تم اختيار %{count} ملف(ات)"
     attach_files: "إرفاق ملفات/صور"
+    self_chat: "ملاحظة لنفسي"
   home:
     welcome: "مرحباً بك في مرافق"
     subtitle: "تطبيقك الجامعي المفضل. ابقَ على اتصال بموادك الدراسية، ومصادرك العلمية، ومجتمعك التعليمي."
@@ -172,6 +182,11 @@ ar:
     preview: "معاينة"
     scope_general: "عام"
     scope_univ: "على مستوى الجامعة"
+    scope_general_option: "عام (على مستوى الجامعة)"
+    scopes:
+      subject: "مادة"
+      department: "قسم"
+      college: "كلية"
   datetime:
     time_ago: "منذ %{time}"
   subjects:
@@ -242,6 +257,8 @@ ar:
     preview: "معاينة"
     not_authorized: "غير مصرح."
     confirm_delete: "هل أنت متأكد؟"
+    choose_file: "اختر ملفاً"
+    no_file_chosen: "لم يتم اختيار ملف"
 
   flash:
     admin:

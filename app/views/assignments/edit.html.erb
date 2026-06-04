@@ -55,9 +55,15 @@
       <% end %>
       
       <div>
-        <%= f.label :file, @assignment.file.attached? ? t("assignments.edit.replace_file_label") : t("assignments.new.file_label"), class: "block text-xs font-semibold text-blue-900 uppercase tracking-wide mb-1" %>
-        <%= f.file_field :file, class: "w-full rounded-lg border border-gray-300 bg-white shadow-sm text-sm p-1.5 focus:border-blue-500 focus:ring-blue-500 cursor-pointer" %>
-        <p class="text-[10px] text-blue-700 mt-1"><%= t("assignments.edit.file_hint") %></p>
+        <%= f.label :file, @assignment.file.attached? ? t("assignments.edit.replace_file_label") : t("assignments.new.file_label"), class: "block text-xs font-semibold text-blue-900 uppercase tracking-wide mb-1.5" %>
+        <div class="flex items-center gap-3">
+          <%= f.file_field :file, class: "hidden", id: "assignment-edit-file-input", data: { selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") }, onchange: "let label = document.getElementById('assignment-edit-file-label'); if(this.files.length > 0) { label.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); } else { label.innerText = this.getAttribute('data-placeholder'); }" %>
+          <label for="assignment-edit-file-input" class="py-1.5 px-4 rounded-md border border-gray-300 text-xs font-semibold bg-white text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm">
+            <%= t("common.choose_file") %>
+          </label>
+          <span id="assignment-edit-file-label" data-placeholder="<%= t("common.no_file_chosen") %>" class="text-xs text-gray-500"><%= t("common.no_file_chosen") %></span>
+        </div>
+        <p class="text-[10px] text-blue-700 mt-1.5"><%= t("assignments.edit.file_hint") %></p>
       </div>
     </div>
 

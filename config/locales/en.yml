@@ -22,6 +22,15 @@ en:
       PH201: "Electromagnetism"
       CH101: "General Chemistry"
       EN101: "Introduction to Poetry"
+    users:
+      admin_user: "Admin User"
+      dr_ahmed_hassan: "Dr. Ahmed Hassan"
+      dr_sara_ali: "Dr. Sara Ali"
+      dr_khaled_omar: "Dr. Khaled Omar"
+      omar_youssef: "Omar Youssef"
+      layla_mahmoud: "Layla Mahmoud"
+      yassin_nour: "Yassin Nour"
+      nadia_ibrahim: "Nadia Ibrahim"
   nav:
     home: "Home"
     subjects: "Subjects"
@@ -156,6 +165,7 @@ en:
     send: "Send"
     files_selected: "%{count} file(s) selected"
     attach_files: "Attach files/images"
+    self_chat: "Self Chat"
   home:
     welcome: "Welcome to Morafeq"
     subtitle: "Your university companion app. Stay connected with your courses, materials, and community."
@@ -172,6 +182,11 @@ en:
     preview: "Preview"
     scope_general: "General"
     scope_univ: "University-wide"
+    scope_general_option: "General (University-wide)"
+    scopes:
+      subject: "Subject"
+      department: "Department"
+      college: "College"
   datetime:
     time_ago: "%{time} ago"
   subjects:
@@ -242,6 +257,8 @@ en:
     preview: "Preview"
     not_authorized: "Not authorized."
     confirm_delete: "Are you sure?"
+    choose_file: "Choose File"
+    no_file_chosen: "No file chosen"
 
   flash:
     admin:
