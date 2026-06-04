@@ -24,34 +24,31 @@ Morafeq is a university companion app built as a **Rails 8 Monolith**. This appr
 1. **Phase 1 (PWA):** Responsive, installable via `manifest.json`. Lives on home screen.
 2. **Phase 2 (Hotwire Native):** (Future) Wrap Rails views in iOS/Android Turbo Native shell for push notifications and native navigation.
 
-## 3. User Roles & Permissions
+### 3. User Roles & Permissions
 Single `User` model with `role` enum. Authorization enforced via Pundit policies.
 
 1. **Student:**
    - View Feed (filtered by their scope).
    - Chat in public subject rooms and private DMs.
    - Download materials for enrolled subjects.
-2. **Teacher:**
+2. **Teacher / Professor:**
    - All Student capabilities.
    - **Posts:** Create posts (with optional "Official" flair); pin/unpin posts in their subjects.
    - **Materials:** Upload/manage materials for their subjects.
    - **Chat:** Moderate (delete) messages in their subject rooms.
-3. **Super Admin:**
+   - **Timetables & Attendance:** Manage class schedules and record student attendance.
+   - **TAs:** Assign TAs to their subjects and configure their specific permission flags.
+3. **Dean (College Level) & Department Head (Department Level):**
+   - Faculty members who are registered with the base `teacher` role but assigned a `Moderator` task distribution scoped to their specific **College** or **Department**.
+   - Oversee and moderate feeds, announcements, and files for their respective organizational unit.
+4. **Super Admin:**
    - Full CRUD via `/admin` back-office (Users, Subjects, Departments, Colleges, Global Settings, Task Distributions).
    - Access to audit logs.
-   - Sees only the admin panel (no feed, subjects, chats).
-4. **Teacher:**
-   - All Student capabilities.
-   - **Posts:** Create posts (with optional "Official" flair); pin/unpin posts in their subjects.
-   - **Materials:** Upload/manage materials for their subjects.
-   - **Chat:** Moderate (delete) messages in their subject rooms.
-   - Can assign TAs to their own subjects.
-
-5. **Moderator:**
+   - Restricted to the admin panel only (no feed, subject courses, or chat views).
+5. **Moderator (Standard):**
    - Assigned to a **College** or **Department** via TaskDistribution.
-   - Can manage **posts** scoped to that College/Department.
-   - No access to materials, quizzes, attendance, or chat.
-
+   - Can manage **posts** and announcements scoped to that College/Department.
+   - No access to course materials, quizzes, class timetables, attendance, or student chats.
 6. **Teaching Assistant (TA):**
    - Assigned to a **Subject** via TaskDistribution by the subject teacher or super admin.
    - Granular permissions per Subject (posts, materials, quizzes, schedules, attendance, chat) — controlled by TaskDistribution flags.
@@ -139,6 +136,35 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
   - `auditable_type` / `auditable_id`: Polymorphic
   - `user_id`: who performed it
   - `changes`: jsonb (before/after diff)
+
+## 4.5. Multi-Institution Adaptability
+Morafeq is designed to be highly adaptable and configurable for various learning institutions, including:
+1. **Universities & Colleges (Default):**
+   - Hierarchy: Colleges -> Departments -> Subjects
+   - Roles: Deans -> Department Heads -> Professors/TAs -> Students
+2. **Schools (K-12):**
+   - Hierarchy: Stages/Grades (e.g. High School) -> Classrooms (e.g. 10-A) -> Courses (e.g. Algebra)
+   - Roles: Principals -> Grade Coordinators -> Teachers -> Students
+3. **Bootcamps & Training Centers:**
+   - Hierarchy: Cohorts -> Modules/Tracks (e.g. Web Dev) -> Lessons/Projects
+   - Roles: Program Managers -> Lead Instructors/Mentors -> Students/Fellows
+
+To support this natively without altering the DB schema, the system will use a global configuration parameter `institution_type` (configured in config settings). This maps DB models to dynamic user-facing terms:
+- `college` translates to: `College` (University), `Stage` (School), `Cohort` (Bootcamp)
+- `department` translates to: `Department` (University), `Classroom` (School), `Module` (Bootcamp)
+- `subject` translates to: `Course/Subject` (University), `Class` (School), `Project` (Bootcamp)
+
+## 4.6. Internationalization (I18n) & Localization (L10n)
+To support a global user base (specifically English and Arabic languages), the system implements standard Rails `I18n`:
+1. **Translation Files:**
+   - English: `config/locales/en.yml` (and scoped locale files).
+   - Arabic: `config/locales/ar.yml` containing correct Arabic grammar and academic terminology.
+2. **Locale Switching:**
+   - Locale is set via a query parameter `?locale=ar` or `?locale=en` and persisted in the user session or stored on `User#preferred_locale`.
+   - `ApplicationController` hook automatically applies `I18n.locale = params[:locale] || session[:locale] || I18n.default_locale`.
+3. **RTL (Right-To-Left) Support:**
+   - Layout files include a dynamic direction indicator: `<html lang="<%= I18n.locale %>" dir="<%= I18n.locale == :ar ? 'rtl' : 'ltr' %>">`.
+   - Layout styling uses logical properties (e.g., `ps-4`, `pe-2`, `start-0`, `end-0`) instead of directional classes (`pl-4`, `pr-2`, `left-0`, `right-0`) to automatically flip layouts on RTL environments.
 
 ## 5. Implementation Roadmap
 
@@ -261,7 +287,21 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 - [ ] Results grouped by type (Subjects, Posts, Materials)
 - [ ] Write tests
 
-### Phase 10: Polish & Deploy
+### Phase 10: Multi-language Support (I18n)
+- [ ] Configure supported locales (`:en` and `:ar`) in Rails `application.rb` and set default locale.
+- [ ] Implement locale switcher UI in the application header/navigation.
+- [ ] Set up `ApplicationController` locale middleware to detect, persist, and apply the active locale.
+- [ ] Create translation keys and translation files `config/locales/en.yml` and `config/locales/ar.yml` for all user-facing copy.
+- [ ] Add RTL layout compatibility to `application.html.erb` by setting correct `dir` and `lang` HTML parameters based on locale.
+- [ ] Refactor UI direction styles using logical properties (like padding start/end, absolute start/end positioning).
+
+### Phase 11: Institution Adaptability
+- [ ] Define global configuration key `institution_type` representing `:university`, `:school`, or `:bootcamp`.
+- [ ] Implement translation lookup helpers for dynamic model names (College, Department, Subject) in views and logs.
+- [ ] Set up layout configurations to toggle features based on type (e.g., GPA analysis for universities vs stages/credits for bootcamps).
+- [ ] Adapt seed data configuration to dynamically initialize the database using the selected institution structure.
+
+### Phase 12: Polish & Deploy
 - [ ] Mobile Polish:
   - Bottom navigation bar (responsive: sidebar on desktop, bottom tabs on mobile)
   - Touch targets >= 44px
