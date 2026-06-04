@@ -144,13 +144,13 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 
 ### Phase 1: Setup & Foundations
 - [x] Initialize Rails 8 app with `rails new morafeq --css tailwind`
-- [ ] Setup RuboCop, Brakeman, ERB Lint config
+- [x] Setup RuboCop, Brakeman, ERB Lint config
 - [x] Setup PWA: `manifest.json`, icons, service worker
 - [x] Implement Authentication (Rails 8 `generate authentication`)
 - [x] Add password reset flow (included in generator)
 - [x] Create `User` model with Role enum (`student`/`teacher`/`admin`) and Avatar (ActiveStorage)
 - [x] Setup FactoryBot + Shoulda Matchers; write User model tests
-- [ ] Setup dotenv for local env vars, Rails credentials for secrets
+- [x] Setup dotenv for local env vars, Rails credentials for secrets
 - [x] Write comprehensive seed data (`db/seeds.rb`) — demo colleges, departments, subjects, users
 
 ### Phase 2: Academic & Admin Core
