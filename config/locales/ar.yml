@@ -1,6 +1,27 @@
 ar:
   hello: "مرحباً بك"
   app_name: "مرافق"
+  db:
+    colleges:
+      faculty_of_engineering: "كلية الهندسة"
+      faculty_of_science: "كلية العلوم"
+      faculty_of_arts: "كلية الآداب"
+    departments:
+      computer_science: "علوم الحاسب"
+      mechanical_engineering: "الهندسة الميكانيكية"
+      physics: "الفيزياء"
+      chemistry: "الكيمياء"
+      english_literature: "الأدب الإنجليزي"
+    subjects:
+      CS101: "مقدمة في البرمجة"
+      CS201: "بنى المعطيات"
+      CS301: "أنظمة قواعد البيانات"
+      ME101: "ميكانيكا هندسية"
+      ME201: "الديناميكا الحرارية"
+      PH101: "الميكانيكا الكلاسيكية"
+      PH201: "الكهرومغناطيسية"
+      CH101: "الكيمياء العامة"
+      EN101: "مقدمة في الشعر"
   nav:
     home: "الرئيسية"
     subjects: "المواد"

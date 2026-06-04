@@ -1,6 +1,27 @@
 en:
   hello: "Hello world"
   app_name: "Morafeq"
+  db:
+    colleges:
+      faculty_of_engineering: "Faculty of Engineering"
+      faculty_of_science: "Faculty of Science"
+      faculty_of_arts: "Faculty of Arts"
+    departments:
+      computer_science: "Computer Science"
+      mechanical_engineering: "Mechanical Engineering"
+      physics: "Physics"
+      chemistry: "Chemistry"
+      english_literature: "English Literature"
+    subjects:
+      CS101: "Introduction to Programming"
+      CS201: "Data Structures"
+      CS301: "Database Systems"
+      ME101: "Engineering Mechanics"
+      ME201: "Thermodynamics"
+      PH101: "Classical Mechanics"
+      PH201: "Electromagnetism"
+      CH101: "General Chemistry"
+      EN101: "Introduction to Poetry"
   nav:
     home: "Home"
     subjects: "Subjects"

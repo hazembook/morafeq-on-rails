@@ -14,6 +14,11 @@ class Subject < ApplicationRecord
   validates :name, presence: true
   validates :code, presence: true, uniqueness: true
 
+  def name
+    return super if code.blank?
+    I18n.t("db.subjects.#{code}", default: super)
+  end
+
   after_create_commit :create_chat_room
 
   private
