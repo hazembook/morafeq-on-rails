@@ -1,4 +1,4 @@
-<div class="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3 relative" data-nested-form-wrapper="true">
+<div class="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3 relative" data-nested-form-wrapper="true" data-controller="question-editor" data-question-editor-index-value="<%= q_form.index %>">
   <div class="flex items-center justify-between">
     <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide" data-question-label="true">Question</span>
     <%= q_form.hidden_field :_destroy %>
@@ -10,7 +10,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
       <%= q_form.label :question_type, "Question Type", class: "block text-xs font-medium text-gray-500 mb-1" %>
-      <%= q_form.select :question_type, [["Multiple Choice (MCQ)", "mcq"], ["True / False", "true_false"], ["Matching Pairs", "match"], ["Written Q&A", "written"]], {}, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
+      <%= q_form.select :question_type, [["Multiple Choice (MCQ)", "mcq"], ["True / False", "true_false"]], {}, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm", data: { question_editor_target: "typeSelect", action: "change->question-editor#changeType" } %>
     </div>
     <div>
       <%= q_form.label :points, "Points Value", class: "block text-xs font-medium text-gray-500 mb-1" %>
@@ -23,8 +23,44 @@
     <%= q_form.text_area :question, rows: 2, placeholder: "Type the question here...", class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
   </div>
 
-  <div>
-    <%= q_form.label :choices_text, "Options / Choices (leave blank for Written Q&A or True/False)", class: "block text-xs font-medium text-gray-500 mb-1" %>
-    <%= q_form.text_area :choices_text, rows: 3, placeholder: "MCQ: One option per line (e.g. Option A)\nMatch: Left item : Right match per line (e.g. Paris : France)", class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
+  <!-- MCQ Options Container -->
+  <div data-question-editor-target="mcqOptionsContainer" class="hidden space-y-2">
+    <div class="flex items-center justify-between">
+      <label class="block text-xs font-medium text-gray-500 uppercase tracking-wide">Options</label>
+      <button type="button" data-action="click->question-editor#addOption" class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out cursor-pointer">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add Option
+      </button>
+    </div>
+
+    <!-- Options List -->
+    <div class="options-list space-y-2 mb-2">
+      <% if q_form.object.choices.is_a?(Array) %>
+        <% q_form.object.choices.each do |choice| %>
+          <div class="flex items-center gap-2" data-option-wrapper="true">
+            <input type="text" name="quiz[quiz_questions_attributes][<%= q_form.index %>][choices][]" value="<%= choice %>" placeholder="Enter option text..." class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" required>
+            <button type="button" data-action="click->question-editor#removeOption" class="text-gray-400 hover:text-red-500 p-1 cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Template for new option inputs -->
+    <template data-question-editor-target="optionTemplate">
+      <div class="flex items-center gap-2" data-option-wrapper="true">
+        <input type="text" name="quiz[quiz_questions_attributes][<%= q_form.index %>][choices][]" placeholder="Enter option text..." class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" required>
+        <button type="button" data-action="click->question-editor#removeOption" class="text-gray-400 hover:text-red-500 p-1 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+        </button>
+      </div>
+    </template>
   </div>
 </div>

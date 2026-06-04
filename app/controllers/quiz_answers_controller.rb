@@ -20,28 +20,11 @@ class QuizAnswersController < ApplicationController
       questions.each do |question|
         val = answers_params[question.id.to_s]
 
-        file_param = nil
-        text_val = ""
-
-        if val.is_a?(Hash) || val.is_a?(ActionController::Parameters)
-          val_h = val.to_unsafe_h
-          if val_h.key?("file") || val_h.key?("text")
-            file_param = val_h["file"]
-            text_val = val_h["text"].to_s
-          else
-            text_val = val_h.to_json
-          end
-        else
-          text_val = val.to_s
-        end
-
-        ans = QuizAnswer.new(
+        QuizAnswer.create!(
           quiz_question: question,
           user: Current.user,
-          answer: text_val
+          answer: val.to_s
         )
-        ans.file.attach(file_param) if file_param.present?
-        ans.save!
       end
     end
 

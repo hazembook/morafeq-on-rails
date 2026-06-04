@@ -7,26 +7,25 @@ class QuizQuestion < ApplicationRecord
 
   validates :question, presence: true
   validates :points, presence: true, numericality: { greater_than: 0 }
-  validates :question_type, presence: true, inclusion: { in: %w[written mcq true_false match] }
+  validates :question_type, presence: true, inclusion: { in: %w[mcq true_false] }
+  validate :choices_count_valid, if: -> { question_type == "mcq" }
 
   after_initialize :set_default_question_type, if: :new_record?
-  before_validation :parse_choices_text
+  before_validation :clean_and_parse_choices
   after_save :recalculate_quiz_total_points
   after_destroy :recalculate_quiz_total_points
 
   def set_default_question_type
-    self.question_type ||= "written"
+    self.question_type ||= "mcq"
   end
 
   def question_type
-    super || "written"
+    super || "mcq"
   end
 
   def choices_text
     @choices_text || if choices.is_a?(Array)
       choices.join("\n")
-                     elsif choices.is_a?(Hash)
-      choices.map { |k, v| "#{k}: #{v}" }.join("\n")
                      else
       ""
                      end
@@ -37,9 +36,7 @@ class QuizQuestion < ApplicationRecord
     when "true_false"
       [ "True", "False" ]
     when "mcq"
-      [ "", "", "", "" ]
-    when "match"
-      {}
+      [ "", "" ]
     else
       nil
     end
@@ -47,25 +44,22 @@ class QuizQuestion < ApplicationRecord
 
   private
 
-  def parse_choices_text
+  def choices_count_valid
+    if choices.blank? || !choices.is_a?(Array) || choices.size < 2
+      errors.add(:choices, "must have at least 2 options")
+    end
+  end
+
+  def clean_and_parse_choices
     case question_type
-    when "mcq"
-      if @choices_text.present?
-        self.choices = @choices_text.split("\n").map(&:strip).reject(&:blank?)
-      end
-    when "match"
-      if @choices_text.present?
-        hash = {}
-        @choices_text.split("\n").each do |line|
-          parts = line.split(":", 2)
-          if parts.size == 2
-            hash[parts[0].strip] = parts[1].strip
-          end
-        end
-        self.choices = hash
-      end
     when "true_false"
       self.choices = [ "True", "False" ]
+    when "mcq"
+      if choices.is_a?(Array)
+        self.choices = choices.map(&:strip).reject(&:blank?)
+      elsif @choices_text.present?
+        self.choices = @choices_text.split("\n").map(&:strip).reject(&:blank?)
+      end
     else
       self.choices = nil
     end

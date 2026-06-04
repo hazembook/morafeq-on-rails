@@ -22,10 +22,8 @@ class QuizzesController < ApplicationController
 
   def new
     @quiz = @subject.quizzes.new
-    @quiz.quiz_questions.build(question_type: "mcq", points: 5, question: "Question 1: MCQ Sample", choices_text: "Option A\nOption B")
+    @quiz.quiz_questions.build(question_type: "mcq", points: 5, question: "Question 1: MCQ Sample", choices: [ "Option A", "Option B" ])
     @quiz.quiz_questions.build(question_type: "true_false", points: 5, question: "Question 2: True/False Sample")
-    @quiz.quiz_questions.build(question_type: "match", points: 10, question: "Question 3: Matching Sample", choices_text: "Left A: Right A\nLeft B: Right B")
-    @quiz.quiz_questions.build(question_type: "written", points: 10, question: "Question 4: Written Q&A Sample")
   end
 
   def create
@@ -79,6 +77,6 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(:title, :due_at, :quiz_file, quiz_questions_attributes: [ :id, :question, :points, :question_type, :choices_text, :_destroy ])
+    params.require(:quiz).permit(:title, :due_at, :quiz_file, quiz_questions_attributes: [ :id, :question, :points, :question_type, :_destroy, choices: [] ])
   end
 end

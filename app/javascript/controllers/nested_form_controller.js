@@ -60,21 +60,21 @@ export default class extends Controller {
     let questions = []
     if (templateName === 'quick_check') {
       questions = [
-        { type: 'mcq', points: 5, question: 'Sample MCQ: What is the main capital of France?', choices: 'Paris\nLyon\nMarseille' },
-        { type: 'true_false', points: 5, question: 'Sample True/False: Ruby on Rails is built with Ruby.', choices: '' }
+        { type: 'mcq', points: 5, question: 'Sample MCQ: What is the main capital of France?', choices: ['Paris', 'Lyon', 'Marseille'] },
+        { type: 'true_false', points: 5, question: 'Sample True/False: Ruby on Rails is built with Ruby.' }
       ]
     } else if (templateName === 'mcq_quiz') {
       questions = [
-        { type: 'mcq', points: 5, question: 'Question 1: Which language is Rails written in?', choices: 'Python\nRuby\nJavaScript\nGo' },
-        { type: 'mcq', points: 5, question: 'Question 2: What command runs Rails migrations?', choices: 'rails server\nrails db:migrate\nrails test\nrails new' },
-        { type: 'mcq', points: 5, question: 'Question 3: What does ORM stand for?', choices: 'Object-Relational Mapping\nOptimal Route Manager\nOrdinary Resource Model' }
+        { type: 'mcq', points: 5, question: 'Question 1: Which language is Rails written in?', choices: ['Python', 'Ruby', 'JavaScript', 'Go'] },
+        { type: 'mcq', points: 5, question: 'Question 2: What command runs Rails migrations?', choices: ['rails server', 'rails db:migrate', 'rails test', 'rails new'] },
+        { type: 'mcq', points: 5, question: 'Question 3: What does ORM stand for?', choices: ['Object-Relational Mapping', 'Optimal Route Manager', 'Ordinary Resource Model'] }
       ]
-    } else if (templateName === 'comprehensive') {
+    } else if (templateName === 'mixed_quiz') {
       questions = [
-        { type: 'mcq', points: 5, question: 'Sample MCQ: Which of the following is a database?', choices: 'HTML\nCSS\nSQLite\nHTTP' },
-        { type: 'true_false', points: 5, question: 'Sample True/False: SQLite database files are saved as single files.', choices: '' },
-        { type: 'match', points: 10, question: 'Sample Matching: Match the countries to their capitals.', choices: 'France: Paris\nSpain: Madrid\nItaly: Rome' },
-        { type: 'written', points: 10, question: 'Sample Written: Explain the MVC architecture pattern.', choices: '' }
+        { type: 'mcq', points: 5, question: 'Question 1: Which of the following is a lightweight file-based database?', choices: ['PostgreSQL', 'MySQL', 'SQLite', 'Oracle'] },
+        { type: 'true_false', points: 5, question: 'Question 2: SQLite database files are saved as single files.' },
+        { type: 'mcq', points: 5, question: 'Question 3: What command starts the rails dev server?', choices: ['rails new', 'rails db:seed', 'rails server', 'rails console'] },
+        { type: 'true_false', points: 5, question: 'Question 4: True or False: ActiveStorage is a built-in Rails framework.' }
       ]
     }
 
@@ -86,7 +86,10 @@ export default class extends Controller {
       const wrapper = this.containerTarget.lastElementChild
       
       const typeSelect = wrapper.querySelector('select[name*="[question_type]"]')
-      if (typeSelect) typeSelect.value = q.type
+      if (typeSelect) {
+        typeSelect.value = q.type
+        typeSelect.dispatchEvent(new Event('change'))
+      }
 
       const pointsInput = wrapper.querySelector('input[name*="[points]"]')
       if (pointsInput) pointsInput.value = q.points
@@ -94,8 +97,23 @@ export default class extends Controller {
       const questionText = wrapper.querySelector('textarea[name*="[question]"]')
       if (questionText) questionText.value = q.question
 
-      const choicesText = wrapper.querySelector('textarea[name*="[choices_text]"]')
-      if (choicesText) choicesText.value = q.choices
+      // If it is MCQ, populate choices
+      if (q.type === 'mcq' && q.choices) {
+        const optionsList = wrapper.querySelector('.options-list')
+        const optionTemplate = wrapper.querySelector('[data-question-editor-target="optionTemplate"]')
+        if (optionsList && optionTemplate) {
+          optionsList.innerHTML = "" // Clear any default options added during change event initialization
+          
+          q.choices.forEach(choiceText => {
+            const optionHtml = optionTemplate.innerHTML
+            optionsList.insertAdjacentHTML('beforeend', optionHtml)
+            const addedInput = optionsList.lastElementChild.querySelector('input')
+            if (addedInput) {
+              addedInput.value = choiceText
+            }
+          })
+        }
+      }
     })
 
     this.updateLabels()
