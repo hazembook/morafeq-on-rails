@@ -121,14 +121,14 @@ class FeedScopingTest < ApplicationSystemTestCase
 
     # We should have an image element rendered within the lightbox zoom-in container
     assert_selector "div.cursor-zoom-in img"
-    
+
     # Verify that clicking it triggers showLightbox with the image source
     zoom_container = find("div.cursor-zoom-in")
     assert_match /showLightbox\(this\.querySelector\('img'\)\.src\)/, zoom_container[:onclick]
 
     # Lightbox modal should be present but hidden by default
     assert_selector "#lightbox-modal", visible: false
-    
+
     # The image placeholder inside lightbox should be present but hidden
     assert_selector "#lightbox-img", visible: false
   end
