@@ -264,4 +264,70 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to subject_assignments_path(@subject)
   end
+
+  test "locking quiz and assignment blocks submission" do
+    # 1. Teacher creates a quiz
+    sign_in_as(@teacher)
+    post subject_quizzes_path(@subject), params: {
+      quiz: {
+        title: "Test Lock Quiz",
+        due_at: 2.days.from_now.to_s,
+        quiz_questions_attributes: [
+          { question: "Q1", question_type: "true_false", points: 5 }
+        ]
+      }
+    }
+    quiz = Quiz.last
+    q1 = quiz.quiz_questions.first
+
+    # Teacher locks the quiz
+    patch subject_quiz_path(@subject, quiz), params: {
+      quiz: {
+        locked: true
+      }
+    }
+    assert quiz.reload.locked?
+
+    # Student attempts to submit answers and gets redirected
+    sign_in_as(@student)
+    post subject_quiz_quiz_answers_path(@subject, quiz), params: {
+      answers: {
+        q1.id => "True"
+      }
+    }
+    assert_redirected_to subject_quiz_path(@subject, quiz)
+    follow_redirect!
+    assert_match "locked or past its due date", response.body
+
+    # 2. Teacher creates an assignment
+    sign_in_as(@teacher)
+    post subject_assignments_path(@subject), params: {
+      assignment: {
+        title: "Test Lock Assignment",
+        due_at: 2.days.from_now.to_s,
+        total_points: 50
+      }
+    }
+    assignment = Assignment.last
+
+    # Teacher locks assignment
+    patch subject_assignment_path(@subject, assignment), params: {
+      assignment: {
+        locked: true
+      }
+    }
+    assert assignment.reload.locked?
+
+    # Student attempts to submit and gets redirected
+    sign_in_as(@student)
+    student_solution = fixture_file_upload("test.pdf", "application/pdf")
+    post subject_assignment_assignment_submissions_path(@subject, assignment), params: {
+      assignment_submission: {
+        file: student_solution
+      }
+    }
+    assert_redirected_to subject_assignment_path(@subject, assignment)
+    follow_redirect!
+    assert_match "locked or past its due date", response.body
+  end
 end

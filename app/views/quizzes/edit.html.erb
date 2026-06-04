@@ -27,6 +27,11 @@
       <%= f.datetime_local_field :due_at, required: true, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
     </div>
 
+    <div class="flex items-center gap-2">
+      <%= f.check_box :locked, class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+      <%= f.label :locked, "Lock Submission (Immediately closes the quiz for students)", class: "text-sm text-gray-700 font-semibold cursor-pointer" %>
+    </div>
+
     <div class="border-t border-gray-100 pt-6">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-bold text-gray-800">Quiz Questions</h2>

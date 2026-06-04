@@ -12,4 +12,18 @@ class Quiz < ApplicationRecord
   def recalculate_total_points!
     update!(total_points: quiz_questions.sum(:points))
   end
+
+  def status
+    if locked?
+      "locked"
+    elsif due_at < Time.current
+      "ended"
+    else
+      "open"
+    end
+  end
+
+  def ended?
+    due_at < Time.current
+  end
 end

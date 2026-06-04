@@ -20,6 +20,20 @@ class Assignment < ApplicationRecord
     image/png image/jpeg image/gif image/webp
   ].freeze
 
+  def status
+    if locked?
+      "locked"
+    elsif due_at < Time.current
+      "ended"
+    else
+      "open"
+    end
+  end
+
+  def ended?
+    due_at < Time.current
+  end
+
   MAX_FILE_SIZE = 50.megabytes
 
   private

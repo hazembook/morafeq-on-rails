@@ -26,6 +26,14 @@
                 <span>Max Points: <%= quiz.total_points %> pts</span>
                 <span class="text-gray-300">•</span>
                 <span>Questions: <%= quiz.quiz_questions.count %></span>
+                <span class="text-gray-300">•</span>
+                <% if quiz.locked? %>
+                  <span class="inline-flex items-center rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Locked</span>
+                <% elsif quiz.ended? %>
+                  <span class="inline-flex items-center rounded bg-gray-50 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">Ended</span>
+                <% else %>
+                  <span class="inline-flex items-center rounded bg-green-50 px-1.5 py-0.5 text-[10px] font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Open</span>
+                <% end %>
               </div>
             </div>
 

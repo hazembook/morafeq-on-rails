@@ -108,7 +108,19 @@
               <div class="py-3 flex items-center justify-between gap-4">
                 <div class="min-w-0 flex-1">
                   <%= link_to quiz.title, subject_quiz_path(@subject, quiz), class: "font-semibold text-sm text-gray-900 hover:text-blue-600 block truncate" %>
-                  <p class="text-xs text-gray-400 mt-0.5">Due: <%= quiz.due_at.strftime("%b %d, %Y %I:%M %p") %> &middot; Max points: <%= quiz.total_points %></p>
+                  <p class="text-xs text-gray-400 mt-0.5 flex flex-wrap items-center gap-1.5">
+                    <span>Due: <%= quiz.due_at.strftime("%b %d, %Y %I:%M %p") %></span>
+                    <span class="text-gray-300">&middot;</span>
+                    <span>Max points: <%= quiz.total_points %></span>
+                    <span class="text-gray-300">&middot;</span>
+                    <% if quiz.locked? %>
+                      <span class="inline-flex items-center rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Locked</span>
+                    <% elsif quiz.ended? %>
+                      <span class="inline-flex items-center rounded bg-gray-50 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">Ended</span>
+                    <% else %>
+                      <span class="inline-flex items-center rounded bg-green-50 px-1.5 py-0.5 text-[10px] font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Open</span>
+                    <% end %>
+                  </p>
                 </div>
                 
                 <div class="shrink-0 text-right">
@@ -153,7 +165,19 @@
               <div class="py-3 flex items-center justify-between gap-4">
                 <div class="min-w-0 flex-1">
                   <%= link_to assignment.title, subject_assignment_path(@subject, assignment), class: "font-semibold text-sm text-gray-900 hover:text-blue-600 block truncate" %>
-                  <p class="text-xs text-gray-400 mt-0.5">Due: <%= assignment.due_at.strftime("%b %d, %Y %I:%M %p") %> &middot; Max points: <%= assignment.total_points %></p>
+                  <p class="text-xs text-gray-400 mt-0.5 flex flex-wrap items-center gap-1.5">
+                    <span>Due: <%= assignment.due_at.strftime("%b %d, %Y %I:%M %p") %></span>
+                    <span class="text-gray-300">&middot;</span>
+                    <span>Max points: <%= assignment.total_points %></span>
+                    <span class="text-gray-300">&middot;</span>
+                    <% if assignment.locked? %>
+                      <span class="inline-flex items-center rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Locked</span>
+                    <% elsif assignment.ended? %>
+                      <span class="inline-flex items-center rounded bg-gray-50 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">Ended</span>
+                    <% else %>
+                      <span class="inline-flex items-center rounded bg-green-50 px-1.5 py-0.5 text-[10px] font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Open</span>
+                    <% end %>
+                  </p>
                 </div>
                 
                 <div class="shrink-0 text-right">
