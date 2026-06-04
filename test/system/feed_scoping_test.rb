@@ -68,7 +68,9 @@ class FeedScopingTest < ApplicationSystemTestCase
     # Verify preview and download controls exist for the PDF
     assert_selector "button", text: "Preview"
     preview_btn = find("button", text: "Preview")
-    assert_match /showLightbox\(.*, .*, 'pdf', 'test\.pdf'\)/, preview_btn[:onclick]
+    assert_match /openLightboxGallery\(this\)/, preview_btn[:onclick]
+    assert_equal "pdf", preview_btn["data-type"]
+    assert_equal "test.pdf", preview_btn["data-title"]
 
     # Verify download icon link exists
     assert_selector "a[title='Download']"
@@ -135,7 +137,9 @@ class FeedScopingTest < ApplicationSystemTestCase
 
     # Verify that clicking it triggers showLightbox with the image source
     zoom_container = find("div.cursor-zoom-in")
-    assert_match /showLightbox\(.*, .*, 'image', 'test\.gif'\)/, zoom_container[:onclick]
+    assert_match /openLightboxGallery\(this\)/, zoom_container[:onclick]
+    assert_equal "image", zoom_container["data-type"]
+    assert_equal "test.gif", zoom_container["data-title"]
 
     # Lightbox modal should be present but hidden by default
     assert_selector "#lightbox-modal", visible: false
