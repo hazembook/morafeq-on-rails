@@ -43,7 +43,7 @@ class TeacherInlineActionsTest < ApplicationSystemTestCase
     # Verify Preview button and download controls
     assert_selector "button", text: "Preview"
     preview_btn = find("button", text: "Preview")
-    assert_match /showLightbox\(.*, 'pdf', 'Syllabus 2026'\)/, preview_btn[:onclick]
+    assert_match /showLightbox\(.*, .*, 'pdf', 'Syllabus 2026'\)/, preview_btn[:onclick]
     assert_link "Download"
 
     # We are redirected to Materials Index page where Delete button is present

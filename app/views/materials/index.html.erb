@@ -59,7 +59,7 @@
             
             <div class="min-w-0 flex-1">
               <% if preview_type.present? %>
-                <button class="text-left font-medium block w-full truncate hover:text-blue-600 cursor-pointer font-sans" onclick="showLightbox('<%= rails_blob_path(material.file, only_path: true) %>', '<%= preview_type %>', '<%= j material.title %>')">
+                <button class="text-left font-medium block w-full truncate hover:text-blue-600 cursor-pointer font-sans" onclick="showLightbox('<%= rails_storage_proxy_path(material.file, only_path: true) %>', '<%= subject_material_path(@subject, material, download: true) %>', '<%= preview_type %>', '<%= j material.title %>')">
                   <%= material.title %>
                 </button>
               <% else %>
@@ -76,7 +76,7 @@
           </div>
           <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
             <% if preview_type.present? %>
-              <button class="rounded-md bg-blue-50 px-3 py-1.5 text-blue-700 text-sm font-medium hover:bg-blue-100 border border-blue-200 transition-colors cursor-pointer font-sans" onclick="showLightbox('<%= rails_blob_path(material.file, only_path: true) %>', '<%= preview_type %>', '<%= j material.title %>')">
+              <button class="rounded-md bg-blue-50 px-3 py-1.5 text-blue-700 text-sm font-medium hover:bg-blue-100 border border-blue-200 transition-colors cursor-pointer font-sans" onclick="showLightbox('<%= rails_storage_proxy_path(material.file, only_path: true) %>', '<%= subject_material_path(@subject, material, download: true) %>', '<%= preview_type %>', '<%= j material.title %>')">
                 Preview
               </button>
             <% end %>
