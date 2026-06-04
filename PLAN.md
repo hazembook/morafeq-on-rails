@@ -179,8 +179,8 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 - [x] UI: Mobile-style Feed with Infinite Scroll (Turbo Frames + pagination)
 - [x] Post creation (Teachers & Admins only): Compose posts scoped to their subjects, with optional "Official" flair toggle
 - [x] Pinned posts at top of feed (teachers can pin in their subjects)
-- [ ] Add file upload field to post composer (model supports attachments, form missing)
-- [ ] Write tests for feed scoping logic (model + system)
+- [x] Add file upload field to post composer (model supports attachments, form missing)
+- [x] Write tests for feed scoping logic (model + system)
 
 ### Phase 4: Materials System
 - [x] Implement File Uploads (ActiveStorage) for Teachers
