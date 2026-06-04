@@ -106,6 +106,10 @@ en:
     reset_success: "Password has been reset."
     mismatch: "Passwords did not match."
     invalid_link: "Password reset link is invalid or has expired."
+    mailer:
+      reset_instruction: "You can reset your password on"
+      reset_link_text: "this password reset page"
+      expires_in: "This link will expire in %{time}."
   roles:
     student: "Student"
     teacher: "Teacher"
@@ -120,6 +124,7 @@ en:
     chat_button: "Chat"
     no_users: "No other users found."
     placeholder: "Type a message..."
+    is_typing: "%{name} is typing..."
   home:
     welcome: "Welcome to Morafeq"
     subtitle: "Your university companion app. Stay connected with your courses, materials, and community."
