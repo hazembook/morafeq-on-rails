@@ -36,6 +36,16 @@ class TeacherInlineActionsTest < ApplicationSystemTestCase
     assert_text "Material uploaded."
     assert_text "Syllabus 2026"
 
+    # Verify dynamic PDF icon and size metadata are rendered
+    assert_selector "svg.text-red-500"
+    assert_text "58 Bytes"
+
+    # Verify Preview button and download controls
+    assert_selector "button", text: "Preview"
+    preview_btn = find("button", text: "Preview")
+    assert_match /showLightbox\(.*, 'pdf', 'Syllabus 2026'\)/, preview_btn[:onclick]
+    assert_link "Download"
+
     # We are redirected to Materials Index page where Delete button is present
     click_button "Delete"
     assert_text "Material removed."

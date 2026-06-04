@@ -64,6 +64,17 @@ class FeedScopingTest < ApplicationSystemTestCase
     assert_text "Post created."
     assert_text "Welcome to class! Please read this attached handbook."
     assert_text "test.pdf"
+
+    # Verify preview and download controls exist for the PDF
+    assert_selector "button", text: "Preview"
+    preview_btn = find("button", text: "Preview")
+    assert_match /showLightbox\(.*, 'pdf', 'test\.pdf'\)/, preview_btn[:onclick]
+
+    # Verify download icon link exists
+    assert_selector "a[title='Download']"
+
+    # Verify lightbox iframe placeholder is present but hidden
+    assert_selector "#lightbox-pdf", visible: false
   end
 
   test "admin can create a General post and all users see it" do
@@ -124,7 +135,7 @@ class FeedScopingTest < ApplicationSystemTestCase
 
     # Verify that clicking it triggers showLightbox with the image source
     zoom_container = find("div.cursor-zoom-in")
-    assert_match /showLightbox\(this\.querySelector\('img'\)\.src\)/, zoom_container[:onclick]
+    assert_match /showLightbox\(this\.querySelector\('img'\)\.src,\s*'image'\)/, zoom_container[:onclick]
 
     # Lightbox modal should be present but hidden by default
     assert_selector "#lightbox-modal", visible: false

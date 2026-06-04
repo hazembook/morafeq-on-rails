@@ -98,34 +98,120 @@
       </nav>
     <% end %>
 
-    <%# Global Image Lightbox Modal %>
-    <div id="lightbox-modal" class="fixed inset-0 bg-black/90 z-[100] items-center justify-center p-4 cursor-zoom-out" style="display: none;" onclick="closeLightbox()">
-      <img id="lightbox-img" src="" class="max-w-full max-h-full object-contain rounded shadow-2xl scale-95 opacity-0 transition-all duration-300">
-      <button class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-gray-300 cursor-pointer" onclick="closeLightbox()">&times;</button>
+    <%# Global Media Lightbox Modal %>
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/90 z-[100] items-center justify-center p-4 cursor-zoom-out" style="display: none;" onclick="closeLightbox(event)">
+      <div class="relative w-full h-full max-w-5xl max-h-[90vh] flex items-center justify-center pointer-events-none" onclick="event.stopPropagation()">
+        <!-- Close button -->
+        <button class="absolute -top-10 right-0 md:top-2 md:-right-10 text-white text-4xl font-light hover:text-gray-300 cursor-pointer pointer-events-auto transition-colors" onclick="closeLightbox(event)">&times;</button>
+        
+        <!-- Image Container -->
+        <img id="lightbox-img" src="" class="hidden max-w-full max-h-[85vh] object-contain rounded shadow-2xl scale-95 opacity-0 transition-all duration-300 pointer-events-auto" style="display: none;">
+        
+        <!-- PDF Container -->
+        <iframe id="lightbox-pdf" src="" class="hidden w-full h-[85vh] rounded shadow-2xl opacity-0 scale-95 transition-all duration-300 pointer-events-auto bg-white" style="display: none;"></iframe>
+        
+        <!-- Video Container -->
+        <video id="lightbox-video" src="" controls class="hidden max-w-full max-h-[85vh] rounded shadow-2xl opacity-0 scale-95 transition-all duration-300 pointer-events-auto" style="display: none;"></video>
+        
+        <!-- Audio Container -->
+        <div id="lightbox-audio-container" class="hidden w-full max-w-md bg-white rounded-lg p-6 shadow-2xl opacity-0 scale-95 transition-all duration-300 pointer-events-auto flex flex-col items-center gap-4" style="display: none;">
+          <svg class="w-16 h-16 text-blue-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+          </svg>
+          <div class="text-sm font-medium text-gray-800 text-center truncate w-full" id="lightbox-audio-title">Audio Player</div>
+          <audio id="lightbox-audio" src="" controls class="w-full"></audio>
+        </div>
+      </div>
     </div>
 
     <script>
-      function showLightbox(src) {
+      function showLightbox(src, type, title = '') {
         const modal = document.getElementById('lightbox-modal');
         const img = document.getElementById('lightbox-img');
-        if (!modal || !img) return;
-        img.src = src;
+        const pdf = document.getElementById('lightbox-pdf');
+        const video = document.getElementById('lightbox-video');
+        const audioContainer = document.getElementById('lightbox-audio-container');
+        const audio = document.getElementById('lightbox-audio');
+        const audioTitle = document.getElementById('lightbox-audio-title');
+        
+        if (!modal) return;
+        
+        // Hide all containers and reset src
+        [img, pdf, video].forEach(el => {
+          if (el) {
+            el.style.display = 'none';
+            el.src = '';
+            el.classList.add('scale-95', 'opacity-0');
+            el.classList.remove('scale-100', 'opacity-100');
+          }
+        });
+        if (audioContainer && audio) {
+          audioContainer.style.display = 'none';
+          audio.src = '';
+          audioContainer.classList.add('scale-95', 'opacity-0');
+          audioContainer.classList.remove('scale-100', 'opacity-100');
+        }
+        
+        let targetEl = null;
+        
+        if (type === 'image') {
+          img.src = src;
+          img.style.display = 'block';
+          targetEl = img;
+        } else if (type === 'pdf') {
+          pdf.src = src;
+          pdf.style.display = 'block';
+          targetEl = pdf;
+        } else if (type === 'video') {
+          video.src = src;
+          video.style.display = 'block';
+          targetEl = video;
+        } else if (type === 'audio') {
+          audio.src = src;
+          audioTitle.textContent = title || 'Audio Player';
+          audioContainer.style.display = 'flex';
+          targetEl = audioContainer;
+        }
+        
+        if (!targetEl) return;
+        
         modal.style.display = 'flex';
         setTimeout(() => {
-          img.classList.remove('scale-95', 'opacity-0');
-          img.classList.add('scale-100', 'opacity-100');
+          targetEl.classList.remove('scale-95', 'opacity-0');
+          targetEl.classList.add('scale-100', 'opacity-100');
         }, 10);
       }
 
-      function closeLightbox() {
+      function closeLightbox(event) {
+        if (event && event.stopPropagation) {
+          const modal = document.getElementById('lightbox-modal');
+          if (event.target !== modal && !event.target.closest('button')) {
+            return;
+          }
+        }
+
         const modal = document.getElementById('lightbox-modal');
         const img = document.getElementById('lightbox-img');
-        if (!modal || !img) return;
-        img.classList.remove('scale-100', 'opacity-100');
-        img.classList.add('scale-95', 'opacity-0');
+        const pdf = document.getElementById('lightbox-pdf');
+        const video = document.getElementById('lightbox-video');
+        const audioContainer = document.getElementById('lightbox-audio-container');
+        const audio = document.getElementById('lightbox-audio');
+        
+        if (!modal) return;
+        
+        const activeEl = [img, pdf, video, audioContainer].find(el => el && el.style.display !== 'none');
+        if (activeEl) {
+          activeEl.classList.remove('scale-100', 'opacity-100');
+          activeEl.classList.add('scale-95', 'opacity-0');
+        }
+        
+        if (video) video.pause();
+        if (audio) audio.pause();
+        
         setTimeout(() => {
           modal.style.display = 'none';
-          img.src = '';
+          [img, pdf, video].forEach(el => { if (el) el.src = ''; });
+          if (audio) audio.src = '';
         }, 300);
       }
 
