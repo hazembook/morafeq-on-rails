@@ -17,55 +17,97 @@
   <%= turbo_stream_from "posts_subject_#{s_id}" %>
 <% end %>
 
-<div class="max-w-2xl mx-auto">
-  <% if Current.user.teacher? || Current.user.admin? %>
-    <div class="bg-white rounded-lg shadow p-4 mb-6">
-      <h2 class="text-lg font-semibold mb-3"><%= t("feed.create_post") %></h2>
-      <%= form_with url: feed_index_path, local: true, class: "space-y-3" do |f| %>
-        <div>
-          <%= f.text_area :content, placeholder: t("feed.mind_placeholder"), rows: 3, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", name: "post[content]" %>
-        </div>
-        <div>
-          <div class="flex items-center gap-3">
-            <%= f.file_field :attachments, multiple: true, class: "hidden", id: "post-attachments-input", name: "post[attachments][]", data: { selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") }, onchange: "let label = document.getElementById('post-attachments-label'); if(this.files.length > 0) { label.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); } else { label.innerText = this.getAttribute('data-placeholder'); }" %>
-            <label for="post-attachments-input" class="py-1.5 px-4 rounded-md border border-gray-300 text-xs font-semibold bg-white text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm">
-              <%= t("common.choose_file") %>
-            </label>
-            <span id="post-attachments-label" data-placeholder="<%= t("common.no_file_chosen") %>" class="text-xs text-gray-500"><%= t("common.no_file_chosen") %></span>
+<div class="max-w-5xl mx-auto flex gap-6 items-start">
+  <!-- Left Side: Main Feed (Posts & Creator) -->
+  <div class="flex-1 min-w-0 max-w-2xl mx-auto lg:mx-0">
+    <% if Current.user.teacher? || Current.user.admin? %>
+      <div class="bg-white rounded-xl border border-gray-200 p-5 mb-6 shadow-sm">
+        <h2 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+          <%= t("feed.create_post") %>
+        </h2>
+        <%= form_with url: feed_index_path, local: true, class: "space-y-4" do |f| %>
+          <div>
+            <%= f.text_area :content, placeholder: t("feed.mind_placeholder"), rows: 3, class: "w-full rounded-lg border-gray-300 shadow-inner focus:border-blue-500 focus:ring-blue-500 text-sm p-3 bg-gray-50 focus:bg-white transition-all", name: "post[content]" %>
           </div>
-        </div>
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          <div class="flex-1">
-            <%= f.select :scope, scope_options_for(Current.user), { prompt: t("feed.scope_prompt") }, class: "w-full rounded-md border-gray-300 text-sm", name: "post[scope]" %>
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+            <div class="flex items-center gap-3">
+              <%= f.file_field :attachments, multiple: true, class: "hidden", id: "post-attachments-input", name: "post[attachments][]", data: { selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") }, onchange: "let label = document.getElementById('post-attachments-label'); if(this.files.length > 0) { label.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); } else { label.innerText = this.getAttribute('data-placeholder'); }" %>
+              <label for="post-attachments-input" class="py-1.5 px-3 rounded-full border border-gray-300 text-xs font-bold bg-white text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm flex items-center gap-1.5 transition-colors">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <%= t("common.choose_file") %>
+              </label>
+              <span id="post-attachments-label" data-placeholder="<%= t("common.no_file_chosen") %>" class="text-xs text-gray-400 truncate max-w-[150px]"><%= t("common.no_file_chosen") %></span>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div class="min-w-[150px]">
+                <%= f.select :scope, scope_options_for(Current.user), { prompt: t("feed.scope_prompt") }, class: "w-full rounded-lg border-gray-300 text-xs py-1.5 bg-white", name: "post[scope]" %>
+              </div>
+              <div class="flex items-center justify-between gap-3">
+                <label class="flex items-center gap-1.5 text-xs text-gray-600 font-medium cursor-pointer">
+                  <%= f.check_box :pinned, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500", name: "post[pinned]" %>
+                  <%= t("feed.official") %>
+                </label>
+                <%= f.submit t("feed.post_button"), class: "rounded-full bg-blue-600 px-4 py-1.5 text-white text-xs font-bold hover:bg-blue-700 cursor-pointer shadow transition-all hover:scale-102 border-0" %>
+              </div>
+            </div>
           </div>
-          <div class="flex items-center gap-3">
-            <label class="flex items-center gap-1.5 text-sm text-gray-600">
-              <%= f.check_box :pinned, class: "rounded border-gray-300", name: "post[pinned]" %>
-              <%= t("feed.official") %>
-            </label>
-            <%= f.submit t("feed.post_button"), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
+        <% end %>
+      </div>
+    <% end %>
 
-  <% if @pinned_posts.any? %>
-    <div class="mb-6 space-y-4">
-      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide"><%= t("feed.pinned_header") %></h2>
-      <%= render partial: "post", collection: @pinned_posts %>
-    </div>
-  <% end %>
+    <% if @pinned_posts.any? %>
+      <div class="mb-6 space-y-4">
+        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1">
+          <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+          <%= t("feed.pinned_header") %>
+        </h2>
+        <%= render partial: "post", collection: @pinned_posts %>
+      </div>
+    <% end %>
 
-  <%= turbo_frame_tag "page_#{params[:page] || 1}" do %>
-    <div id="posts" class="space-y-4">
-      <%= render partial: "post", collection: @posts %>
-    </div>
+    <%= turbo_frame_tag "page_#{params[:page] || 1}" do %>
+      <div id="posts" class="space-y-4">
+        <%= render partial: "post", collection: @posts %>
+      </div>
 
-    <% if @posts.next_page %>
-      <%= turbo_frame_tag "page_#{@posts.next_page}", src: feed_index_path(page: @posts.next_page), loading: :lazy do %>
-        <div class="text-center py-4 text-gray-500"><%= t("feed.loading_more") %></div>
+      <% if @posts.next_page %>
+        <%= turbo_frame_tag "page_#{@posts.next_page}", src: feed_index_path(page: @posts.next_page), loading: :lazy do %>
+          <div class="text-center py-6 text-xs text-gray-400 font-semibold"><%= t("feed.loading_more") %></div>
+        <% end %>
       <% end %>
     <% end %>
-  <% end %>
+  </div>
+
+  <!-- Right Side: Reddit style sidebar (Desktop only) -->
+  <div class="hidden lg:block w-80 shrink-0 space-y-4 select-none">
+    <!-- Community Details Card -->
+    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+      <div class="h-12 bg-blue-500 rounded-t-lg -mx-4 -mt-4 mb-3 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+      <h3 class="font-bold text-sm text-gray-900 mb-1">Morafeq Portal</h3>
+      <p class="text-xs text-gray-500 mb-4 leading-relaxed"><%= t("feed.sidebar.about", default: "Welcome to your academic home feed. Here you can find official pinned announcements and course-related posts.") %></p>
+      <div class="text-xs text-gray-600 space-y-2.5 pt-3 border-t border-gray-100">
+        <div class="flex justify-between">
+          <span class="text-gray-400"><%= t("feed.sidebar.created", default: "Created") %></span>
+          <span class="font-semibold text-gray-800">June 2026</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400"><%= t("feed.sidebar.members", default: "Members") %></span>
+          <span class="font-semibold text-gray-800"><%= User.count %> users</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rules / Guidelines Card -->
+    <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm text-xs">
+      <h3 class="font-bold text-gray-900 mb-3 uppercase tracking-wider text-[10px] text-gray-400"><%= t("feed.sidebar.guidelines_title", default: "Portal Guidelines") %></h3>
+      <ol class="list-decimal list-inside space-y-2 text-gray-600 font-medium">
+        <li><%= t("feed.sidebar.rule1", default: "Be respectful and constructive") %></li>
+        <li><%= t("feed.sidebar.rule2", default: "Post academic content only") %></li>
+        <li><%= t("feed.sidebar.rule3", default: "No cheating or spamming") %></li>
+        <li><%= t("feed.sidebar.rule4", default: "Follow teacher guidelines") %></li>
+      </ol>
+    </div>
+  </div>
 </div>
