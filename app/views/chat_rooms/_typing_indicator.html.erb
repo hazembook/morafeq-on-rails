@@ -1,4 +1,4 @@
-<div id="typing_indicator" data-controller="typing-indicator" data-typer-id="<%= typing ? user.id : "" %>" class="text-xs text-gray-400 italic px-4 py-1 min-h-[1.5rem] transition-opacity duration-300">
+<div id="typing_indicator" data-controller="typing-indicator" data-typer-id="<%= typing ? user.id : "" %>" class="text-xs text-gray-500 bg-white/70 backdrop-blur-sm px-4 py-1 min-h-[1.5rem] transition-opacity duration-300 z-10 border-t border-gray-100/50">
   <% if typing %>
     <%= t("chats.is_typing", name: user.full_name) %>
   <% end %>

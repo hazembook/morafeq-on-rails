@@ -24,7 +24,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-gray-50 pb-16 md:pb-0" style="padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px))">
+  <body class="bg-gray-50 <%= content_for?(:body_class) ? yield(:body_class) : "pb-16 md:pb-0" %>" style="<%= content_for?(:body_style) ? yield(:body_style) : "padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px))" %>">
     <%# Desktop top nav %>
     <nav class="hidden md:block bg-white border-b border-gray-200 fixed top-0 w-full z-50">
       <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -73,7 +73,7 @@
     <% end %>
 
     <%# Main content %>
-    <main class="md:mt-20 mx-auto px-4 py-4">
+    <main class="<%= content_for?(:main_class) ? yield(:main_class) : "md:mt-20 mx-auto px-4 py-4" %>">
       <%= yield %>
     </main>
 

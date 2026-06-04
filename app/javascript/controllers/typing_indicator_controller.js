@@ -16,9 +16,10 @@ export default class extends Controller {
   checkVisibility() {
     const currentUserIdMeta = document.head.querySelector("meta[name='current-user-id']")
     const currentUserId = currentUserIdMeta ? parseInt(currentUserIdMeta.content) : null
-    const typerId = parseInt(this.element.getAttribute("data-typer-id"))
+    const typerIdAttr = this.element.getAttribute("data-typer-id")
+    const typerId = typerIdAttr ? parseInt(typerIdAttr) : null
 
-    if (typerId && currentUserId && typerId === currentUserId) {
+    if (!typerId || (currentUserId && typerId === currentUserId)) {
       this.element.style.display = "none"
     } else {
       this.element.style.display = ""
