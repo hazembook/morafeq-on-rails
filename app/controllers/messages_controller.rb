@@ -3,29 +3,43 @@ class MessagesController < ApplicationController
 
   def create
     @room = ChatRoom.find(params[:chat_room_id])
-    @message = @room.messages.build(content: params[:message][:content], user: Current.user)
+    @message = @room.messages.build(message_params.merge(user: Current.user))
 
     if @message.save
       broadcast_message
       redirect_to @room
     else
-      redirect_to @room, alert: "Message cannot be blank."
+      redirect_to @room, alert: @message.errors.full_messages.to_sentence
     end
   end
 
   def destroy
     @message = Message.find(params[:id])
-    if @message.user == Current.user && @message.created_at > 5.minutes.ago
+    room = @message.chat_room
+
+    is_author_recent = @message.user == Current.user && @message.created_at > 5.minutes.ago
+    is_teacher = !room.is_private? && room.subject&.teacher == Current.user
+    is_admin = Current.user.admin?
+
+    if is_author_recent || is_teacher || is_admin
       @message.discard
       broadcast_destroy
+      flash[:notice] = is_author_recent ? "Message unsent." : "Message deleted by moderator."
+    else
+      flash[:alert] = "You are not authorized to delete this message."
     end
-    redirect_to @message.chat_room
+
+    redirect_to room
   end
 
   private
 
   def require_authentication
     redirect_to new_session_path unless authenticated?
+  end
+
+  def message_params
+    params.require(:message).permit(:content, attachments: [])
   end
 
   def broadcast_message

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_04_042209) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_04_051911) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -48,6 +48,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_042209) do
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_audit_logs_on_user_id"
+  end
+
+  create_table "chat_participants", force: :cascade do |t|
+    t.integer "chat_room_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "last_read_message_id"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["chat_room_id"], name: "index_chat_participants_on_chat_room_id"
+    t.index ["user_id", "chat_room_id"], name: "index_chat_participants_on_user_id_and_chat_room_id", unique: true
+    t.index ["user_id"], name: "index_chat_participants_on_user_id"
   end
 
   create_table "chat_rooms", force: :cascade do |t|
@@ -155,6 +166,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_042209) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "audit_logs", "users"
+  add_foreign_key "chat_participants", "chat_rooms"
+  add_foreign_key "chat_participants", "users"
   add_foreign_key "chat_rooms", "subjects"
   add_foreign_key "departments", "colleges"
   add_foreign_key "enrollments", "subjects"

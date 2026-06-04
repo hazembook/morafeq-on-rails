@@ -1,0 +1,5 @@
+<div id="typing_indicator" data-controller="typing-indicator" data-typer-id="<%= typing ? user.id : "" %>" class="text-xs text-gray-400 italic px-4 py-1 min-h-[1.5rem] transition-opacity duration-300">
+  <% if typing %>
+    <%= user.full_name %> is typing...
+  <% end %>
+</div>

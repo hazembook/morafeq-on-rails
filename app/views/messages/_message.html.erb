@@ -1,12 +1,111 @@
 <div id="<%= dom_id(message) %>" class="flex gap-2 <%= message.user == Current.user ? "justify-end" : "" %>">
-  <div class="<%= message.user == Current.user ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-900" %> rounded-lg px-3 py-2 max-w-[75%]">
-    <p class="text-xs font-medium <%= message.user == Current.user ? "text-blue-200" : "text-gray-500" %>"><%= message.user.full_name %></p>
-    <p class="text-sm"><%= message.content %></p>
-    <div class="flex items-center justify-between gap-4 mt-0.5">
-      <span class="text-xs <%= message.user == Current.user ? "text-blue-200" : "text-gray-400" %>"><%= time_ago_in_words(message.created_at) %> ago</span>
-      <% if message.user == Current.user && message.created_at > 5.minutes.ago %>
-        <%= button_to "Unsend", chat_room_message_path(message.chat_room, message), method: :delete, class: "text-[10px] text-red-200 hover:text-red-100 underline focus:outline-none cursor-pointer", data: { turbo_confirm: "Are you sure you want to unsend this message?" } %>
-      <% end %>
+  <div class="<%= message.user == Current.user ? "bg-blue-600 text-white animate-fade-in-up" : "bg-gray-100 text-gray-900 animate-fade-in-up" %> rounded-2xl px-4 py-2.5 max-w-[75%] shadow-sm">
+    <p class="text-[11px] font-semibold <%= message.user == Current.user ? "text-blue-200" : "text-gray-500" %> mb-0.5"><%= message.user.full_name %></p>
+    
+    <% if message.content.present? %>
+      <p class="text-sm leading-relaxed break-words"><%= message.content %></p>
+    <% end %>
+
+    <% if message.attachments.attached? && message.attachments.any? %>
+      <% images, files = message.attachments.partition(&:image?) %>
+
+      <div class="mt-2 space-y-2" data-lightbox-gallery="message-<%= message.id %>">
+        <%# Render Images Grid %>
+        <% if images.any? %>
+          <div class="grid gap-1 max-w-sm rounded-lg overflow-hidden border border-gray-200">
+            <% images.each do |attachment| %>
+              <div class="relative cursor-zoom-in aspect-square overflow-hidden bg-gray-100 lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" onclick="openLightboxGallery(this)">
+                <%= image_tag attachment, class: "w-full h-full object-cover hover:scale-105 transition-transform duration-300" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <%# Render Documents & Non-Images %>
+        <% if files.any? %>
+          <div class="grid grid-cols-1 gap-2 max-w-xs">
+            <% files.each do |attachment| %>
+              <% if attachment.video? %>
+                <% preview_type = "video" %>
+              <% elsif attachment.audio? %>
+                <% preview_type = "audio" %>
+              <% elsif attachment.content_type == "application/pdf" %>
+                <% preview_type = "pdf" %>
+              <% else %>
+                <% preview_type = nil %>
+              <% end %>
+              <div class="flex items-center justify-between p-2 bg-white rounded-lg border border-gray-200 transition-colors group gap-2 text-gray-900">
+                <div class="flex items-center gap-2 min-w-0 flex-1">
+                  <div class="p-1.5 bg-gray-50 rounded-md border border-gray-100 text-gray-500 shrink-0">
+                    <% if preview_type == "pdf" %>
+                      <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                      </svg>
+                    <% elsif preview_type == "video" %>
+                      <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                      </svg>
+                    <% elsif preview_type == "audio" %>
+                      <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                      </svg>
+                    <% else %>
+                      <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                    <% end %>
+                  </div>
+                  
+                  <div class="min-w-0 flex-1">
+                    <span class="block text-xs font-medium text-gray-700 truncate">
+                      <%= attachment.filename %>
+                    </span>
+                    <span class="block text-[9px] text-gray-400">
+                      <%= number_to_human_size(attachment.byte_size) %>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-1 shrink-0">
+                  <% if preview_type.present? %>
+                    <button class="px-1.5 py-0.5 text-[10px] font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors cursor-pointer lightbox-trigger font-sans" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="<%= preview_type %>" data-title="<%= j attachment.filename.to_s %>" onclick="openLightboxGallery(this)">
+                      Preview
+                    </button>
+                  <% end %>
+                  <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "p-1 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 rounded border border-gray-200 transition-colors cursor-pointer", title: "Download", download: true do %>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="flex items-center justify-between gap-4 mt-1 border-t border-white/10 pt-1">
+      <span class="text-[10px] <%= message.user == Current.user ? "text-blue-200" : "text-gray-400" %> font-light"><%= time_ago_in_words(message.created_at) %> ago</span>
+      
+      <div class="flex items-center gap-2">
+        <% if message.user == Current.user %>
+          <span id="message_<%= message.id %>_seen" class="text-[10px] text-blue-200 font-light">
+            <% if message.seen_by?(Current.user) %>
+              Seen
+            <% else %>
+              Sent
+            <% end %>
+          </span>
+        <% end %>
+
+        <% is_author_recent = message.user == Current.user && message.created_at > 5.minutes.ago %>
+        <% is_teacher = !message.chat_room.is_private? && message.chat_room.subject&.teacher == Current.user %>
+        <% is_admin = Current.user.admin? %>
+        <% if is_author_recent || is_teacher || is_admin %>
+          <%= button_to is_author_recent ? "Unsend" : "Delete", chat_room_message_path(message.chat_room, message), method: :delete, class: "text-[10px] #{message.user == Current.user ? 'text-red-200 hover:text-red-100' : 'text-red-600 hover:text-red-800'} underline focus:outline-none cursor-pointer bg-transparent border-0 p-0", data: { turbo_confirm: "Are you sure you want to #{is_author_recent ? 'unsend' : 'delete'} this message?" } %>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

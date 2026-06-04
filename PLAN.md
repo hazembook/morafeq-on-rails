@@ -193,17 +193,17 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 ### Phase 5: Real-time Chat
 - [x] Setup Solid Cable
 - [x] Create Public Rooms (auto-created per Subject via `after_create` callback)
-- [ ] Create Private DMs (User-to-User, created on first message)
+- [x] Create Private DMs (User-to-User, created on first message)
 - [x] UI: Chat Interface with:
-  - [ ] Auto-scroll to bottom on load / new message
+  - [x] Auto-scroll to bottom on load / new message
   - [x] Live append via Turbo Streams from Solid Cable
-  - [ ] Typing indicators (via Cable)
-  - [ ] File/image attachment support in messages
+  - [x] Typing indicators (via Cable)
+  - [x] File/image attachment support in messages
   - [x] "Unsend" within 5 minutes (soft delete)
-  - [ ] Read receipts (seen_by tracking)
-- [ ] Chat push notifications via Notifications system
-- [ ] Moderation: Teachers can delete messages in their subject rooms
-- [ ] Write system tests + channel tests
+  - [x] Read receipts (seen_by tracking)
+- [ ] Chat push notifications via Notifications system (to be built in Phase 8)
+- [x] Moderation: Teachers can delete messages in their subject rooms
+- [x] Write system tests + channel tests
 
 ### Phase 6: Academic Tools
 - [ ] **Quiz system (structured model):**
