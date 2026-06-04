@@ -7,6 +7,11 @@ class FeedController < ApplicationController
     @posts = Post.feed_for(Current.user).not_pinned.page(params[:page]).per(10)
   end
 
+  def show
+    @post = Post.feed_for(Current.user).find(params[:id])
+    @comments = @post.comments.includes(:user)
+  end
+
   def create
     unless Current.user.teacher? || Current.user.admin?
       redirect_to feed_index_path, alert: t("flash.feed.only_teachers_admins")

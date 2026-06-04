@@ -9,15 +9,18 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  around_action :switch_locale
+  before_action :set_locale
 
-  def switch_locale(&action)
-    locale = params[:locale] || session[:locale] || I18n.default_locale
+  def set_locale
+    locale = params[:locale] || cookies[:locale] || session[:locale] || I18n.default_locale
     if I18n.available_locales.map(&:to_s).include?(locale.to_s)
       session[:locale] = locale.to_s
-      I18n.with_locale(locale, &action)
+      cookies.permanent[:locale] = { value: locale.to_s, path: "/" }
+      I18n.locale = locale.to_sym
     else
-      I18n.with_locale(I18n.default_locale, &action)
+      session[:locale] = I18n.default_locale.to_s
+      cookies.permanent[:locale] = { value: I18n.default_locale.to_s, path: "/" }
+      I18n.locale = I18n.default_locale
     end
   end
 

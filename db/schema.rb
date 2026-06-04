@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_04_094000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_04_153524) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -113,6 +113,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_094000) do
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_colleges_on_name", unique: true
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.integer "post_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["post_id"], name: "index_comments_on_post_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "departments", force: :cascade do |t|
@@ -258,6 +268,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_094000) do
   add_foreign_key "chat_participants", "chat_rooms"
   add_foreign_key "chat_participants", "users"
   add_foreign_key "chat_rooms", "subjects"
+  add_foreign_key "comments", "posts"
+  add_foreign_key "comments", "users"
   add_foreign_key "departments", "colleges"
   add_foreign_key "enrollments", "subjects"
   add_foreign_key "enrollments", "users"

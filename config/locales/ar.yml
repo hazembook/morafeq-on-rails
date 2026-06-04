@@ -207,6 +207,10 @@ ar:
     scope_label: "نطاق المنشور"
     existing_attachments: "المرفقات الحالية"
     add_attachments: "إضافة مرفقات"
+    back_to_feed: "← العودة إلى المنشورات"
+    comment_placeholder: "ما رأيك؟"
+    add_comment: "تعليق"
+    no_comments: "لا توجد تعليقات بعد. كن أول من يشارك برأيه!"
   datetime:
     time_ago: "منذ %{time}"
   subjects:
@@ -318,6 +322,8 @@ ar:
       removed: "تم حذف المصدر بنجاح."
     profile:
       updated: "تم تحديث الملف الشخصي بنجاح."
+    comments:
+      created: "تم إضافة التعليق بنجاح."
     quizzes:
       submitted: "تم تسليم إجابات الاختبار بنجاح."
       created: "تم إنشاء الاختبار بنجاح."

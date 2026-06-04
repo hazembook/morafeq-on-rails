@@ -207,6 +207,10 @@ en:
     scope_label: "Post Scope"
     existing_attachments: "Existing Attachments"
     add_attachments: "Add Attachments"
+    back_to_feed: "← Back to Feed"
+    comment_placeholder: "What are your thoughts?"
+    add_comment: "Comment"
+    no_comments: "No comments yet. Be the first to share your thoughts!"
   datetime:
     time_ago: "%{time} ago"
   subjects:
@@ -318,6 +322,8 @@ en:
       removed: "Material removed."
     profile:
       updated: "Profile updated."
+    comments:
+      created: "Comment added successfully."
     quizzes:
       submitted: "Your answers have been submitted successfully."
       created: "Quiz created successfully."

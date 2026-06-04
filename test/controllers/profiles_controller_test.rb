@@ -97,16 +97,29 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match "تعديل الملف الشخصي", response.body
     assert_equal "ar", session[:locale]
+    assert_equal "ar", cookies[:locale]
 
-    # 3. Request without param should persist Arabic from session
+    # 3. Request without param should persist Arabic from session/cookie
     get profile_path
     assert_response :success
     assert_match "تعديل الملف الشخصي", response.body
 
-    # 4. Switch back to English via params
+    # 4. Request another page (feed_index_path) without param and verify it's still Arabic
+    get feed_index_path
+    assert_response :success
+    assert_match "الرئيسية", response.body # 'الرئيسية' is 'Home' in Arabic navbar
+
+    # 5. Clear session to simulate a new session, but the persistent cookie should keep it Arabic
+    session.clear
+    get profile_path
+    assert_response :success
+    assert_match "تعديل الملف الشخصي", response.body
+
+    # 6. Switch back to English via params
     get profile_path, params: { locale: "en" }
     assert_response :success
     assert_match "Edit Profile", response.body
     assert_equal "en", session[:locale]
+    assert_equal "en", cookies[:locale]
   end
 end

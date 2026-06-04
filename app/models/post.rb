@@ -4,6 +4,7 @@ class Post < ApplicationRecord
   belongs_to :author, class_name: "User"
   belongs_to :scope, polymorphic: true, optional: true
   has_many_attached :attachments
+  has_many :comments, -> { order(created_at: :asc) }, dependent: :destroy
 
   validates :content, presence: true
   validates :scope_type, inclusion: { in: %w[College Department Subject] }, allow_nil: true
