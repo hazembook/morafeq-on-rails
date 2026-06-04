@@ -16,7 +16,8 @@ class FeedController < ApplicationController
       content: params[:post][:content],
       scope_type: scope_type,
       scope_id: scope_id,
-      pinned: params[:post][:pinned] == "1"
+      pinned: params[:post][:pinned] == "1",
+      attachments: params[:post][:attachments]
     )
 
     if @post.save
