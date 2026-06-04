@@ -1,25 +1,58 @@
-<div class="max-w-md mx-auto">
-  <h1 class="text-xl font-bold mb-6">Edit Profile</h1>
-
-  <%= form_with model: @user, url: profile_path, local: true, class: "space-y-4" do |f| %>
-    <div>
-      <%= f.label :full_name, class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%= f.text_field :full_name, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+<div class="max-w-xl mx-auto px-4 py-8">
+  <div class="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden">
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 px-6 py-8 border-b border-white/5 relative overflow-hidden">
+      <!-- Glow effect -->
+      <div class="absolute -right-10 -top-10 w-32 h-32 rounded-full bg-indigo-500/20 blur-2xl pointer-events-none"></div>
+      <div class="relative z-10">
+        <h1 class="text-2xl font-extrabold text-white tracking-tight">Edit Profile</h1>
+        <p class="text-xs text-indigo-300 font-medium mt-1">Update your personal details, biography, and profile picture.</p>
+      </div>
     </div>
 
-    <div>
-      <%= f.label :bio, class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%= f.text_area :bio, rows: 3, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
-    </div>
+    <%= form_with model: @user, url: profile_path, local: true, class: "p-6 sm:p-8 space-y-6" do |f| %>
+      <% if @user.errors.any? %>
+        <div class="p-4 bg-red-50 border border-red-200 text-red-700 text-sm font-semibold rounded-2xl">
+          <p class="font-bold mb-1">Please correct the errors below:</p>
+          <ul class="list-disc pl-5 space-y-0.5 text-xs text-red-600">
+            <% @user.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-    <div>
-      <%= f.label :avatar, class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%= f.file_field :avatar, class: "w-full text-sm" %>
-    </div>
+      <div class="space-y-1.5">
+        <%= f.label :full_name, class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
+        <%= f.text_field :full_name, required: true, class: "w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium py-2.5 px-3.5 transition" %>
+      </div>
 
-    <div class="flex gap-3">
-      <%= f.submit "Save", class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
-      <%= link_to "Cancel", profile_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
-    </div>
-  <% end %>
+      <div class="space-y-1.5">
+        <%= f.label :bio, class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
+        <%= f.text_area :bio, rows: 4, placeholder: "Tell others a bit about yourself...", class: "w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium py-2.5 px-3.5 transition" %>
+      </div>
+
+      <div class="space-y-2">
+        <%= f.label :avatar, "Profile Picture", class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
+        
+        <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-gray-100">
+          <% if @user.avatar.attached? %>
+            <%= image_tag @user.avatar, class: "w-16 h-16 rounded-full object-cover border border-gray-200 shadow-inner shrink-0" %>
+          <% else %>
+            <div class="w-16 h-16 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-xl font-bold text-indigo-500 shrink-0">
+              <%= @user.full_name.first %>
+            </div>
+          <% end %>
+          <div class="flex-1 min-w-0">
+            <%= f.file_field :avatar, class: "block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" %>
+            <p class="text-xxs text-gray-400 mt-1.5">PNG, JPG, JPEG or GIF (Square dimension recommended)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+        <%= f.submit "Save Changes", class: "rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-white text-sm font-bold hover:from-blue-700 hover:to-indigo-700 transition cursor-pointer shadow-md" %>
+        <%= link_to "Cancel", profile_path, class: "rounded-xl bg-slate-100 px-6 py-3 text-slate-700 text-sm font-semibold hover:bg-slate-200 transition text-center" %>
+      </div>
+    <% end %>
+  </div>
 </div>

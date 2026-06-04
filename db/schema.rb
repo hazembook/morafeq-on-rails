@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_04_070947) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_04_094000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -51,6 +51,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_070947) do
   end
 
   create_table "assignments", force: :cascade do |t|
+    t.boolean "closed", default: false, null: false
     t.datetime "created_at", null: false
     t.text "description"
     t.datetime "due_at", null: false
@@ -191,6 +192,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_070947) do
   end
 
   create_table "quizzes", force: :cascade do |t|
+    t.boolean "closed", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "due_at", null: false
     t.boolean "locked", default: false, null: false

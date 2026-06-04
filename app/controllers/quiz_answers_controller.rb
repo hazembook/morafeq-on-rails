@@ -11,7 +11,7 @@ class QuizAnswersController < ApplicationController
       return
     end
 
-    if @quiz.locked? || @quiz.due_at < Time.current
+    if @quiz.locked? || @quiz.ended?
       redirect_to subject_quiz_path(@subject, @quiz), alert: "This quiz is locked or past its due date."
       return
     end

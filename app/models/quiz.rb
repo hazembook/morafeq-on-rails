@@ -16,6 +16,8 @@ class Quiz < ApplicationRecord
   def status
     if locked?
       "locked"
+    elsif closed?
+      "closed"
     elsif due_at < Time.current
       "ended"
     else
@@ -24,6 +26,6 @@ class Quiz < ApplicationRecord
   end
 
   def ended?
-    due_at < Time.current
+    due_at < Time.current || closed?
   end
 end

@@ -8,7 +8,7 @@ class AssignmentSubmissionsController < ApplicationController
       return
     end
 
-    if @assignment.locked? || @assignment.due_at < Time.current
+    if @assignment.locked? || @assignment.ended?
       redirect_to subject_assignment_path(@subject, @assignment), alert: "This assignment is locked or past its due date."
       return
     end

@@ -115,6 +115,8 @@
                     <span class="text-gray-300">&middot;</span>
                     <% if quiz.locked? %>
                       <span class="inline-flex items-center rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Locked</span>
+                    <% elsif quiz.closed? %>
+                      <span class="inline-flex items-center rounded bg-orange-50 px-1.5 py-0.5 text-[10px] font-medium text-orange-700 ring-1 ring-inset ring-orange-600/10">Closed</span>
                     <% elsif quiz.ended? %>
                       <span class="inline-flex items-center rounded bg-gray-50 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">Ended</span>
                     <% else %>
@@ -172,6 +174,8 @@
                     <span class="text-gray-300">&middot;</span>
                     <% if assignment.locked? %>
                       <span class="inline-flex items-center rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Locked</span>
+                    <% elsif assignment.closed? %>
+                      <span class="inline-flex items-center rounded bg-orange-50 px-1.5 py-0.5 text-[10px] font-medium text-orange-700 ring-1 ring-inset ring-orange-600/10">Closed</span>
                     <% elsif assignment.ended? %>
                       <span class="inline-flex items-center rounded bg-gray-50 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">Ended</span>
                     <% else %>

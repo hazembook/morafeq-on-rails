@@ -23,6 +23,8 @@ class Assignment < ApplicationRecord
   def status
     if locked?
       "locked"
+    elsif closed?
+      "closed"
     elsif due_at < Time.current
       "ended"
     else
@@ -31,7 +33,7 @@ class Assignment < ApplicationRecord
   end
 
   def ended?
-    due_at < Time.current
+    due_at < Time.current || closed?
   end
 
   MAX_FILE_SIZE = 50.megabytes
