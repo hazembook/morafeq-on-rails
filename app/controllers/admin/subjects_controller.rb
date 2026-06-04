@@ -19,6 +19,7 @@ module Admin
     def create
       @subject = Subject.new(subject_params)
       if @subject.save
+        log_audit("create", @subject)
         redirect_to admin_subjects_path, notice: "Subject created."
       else
         render :new, status: :unprocessable_entity
@@ -27,6 +28,7 @@ module Admin
 
     def update
       if @subject.update(subject_params)
+        log_audit("update", @subject)
         redirect_to admin_subjects_path, notice: "Subject updated."
       else
         render :edit, status: :unprocessable_entity
@@ -34,7 +36,9 @@ module Admin
     end
 
     def destroy
+      changes = @subject.attributes.except("updated_at", "created_at").to_json
       @subject.destroy
+      log_audit("destroy", @subject, changes)
       redirect_to admin_subjects_path, notice: "Subject deleted."
     end
 

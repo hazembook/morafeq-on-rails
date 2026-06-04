@@ -102,7 +102,7 @@ subject_data = {
   "PH101" => { name: "Classical Mechanics", department: physics, teacher: teacher3 },
   "PH201" => { name: "Electromagnetism", department: physics, teacher: teacher3 },
   "CH101" => { name: "General Chemistry", department: chemistry, teacher: teacher2 },
-  "EN101" => { name: "Introduction to Poetry", department: literature, teacher: teacher1 },
+  "EN101" => { name: "Introduction to Poetry", department: literature, teacher: teacher1 }
 }
 
 subjects = subject_data.map do |code, attrs|

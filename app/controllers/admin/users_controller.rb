@@ -19,6 +19,7 @@ module Admin
     def create
       @user = User.new(user_params)
       if @user.save
+        log_audit("create", @user)
         redirect_to admin_users_path, notice: "User created."
       else
         render :new, status: :unprocessable_entity
@@ -27,6 +28,7 @@ module Admin
 
     def update
       if @user.update(user_params)
+        log_audit("update", @user)
         redirect_to admin_users_path, notice: "User updated."
       else
         render :edit, status: :unprocessable_entity
@@ -37,7 +39,9 @@ module Admin
       if @user == Current.user
         redirect_to admin_users_path, alert: "Cannot delete yourself."
       else
+        changes = @user.attributes.except("updated_at", "created_at", "password_digest").to_json
         @user.destroy
+        log_audit("destroy", @user, changes)
         redirect_to admin_users_path, notice: "User deleted."
       end
     end
