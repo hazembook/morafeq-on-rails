@@ -150,6 +150,7 @@ class FeedScopingTest < ApplicationSystemTestCase
 
   test "teacher can edit and delete their own post" do
     post = Post.create!(author: @teacher, content: "Original content", scope: @subject)
+    post.attachments.attach(io: File.open(Rails.root.join("test/fixtures/files/test.pdf")), filename: "test.pdf", content_type: "application/pdf")
 
     # Sign in
     visit new_session_path
@@ -159,15 +160,20 @@ class FeedScopingTest < ApplicationSystemTestCase
 
     visit feed_index_path
     assert_text "Original content"
+    assert_text "test.pdf"
 
     click_link "Edit"
     
+    assert_text "test.pdf"
+    check "remove_attachments[]"
+
     fill_in "post[content]", with: "Updated content by teacher"
     click_button "Save"
 
     assert_text "Post updated."
     assert_text "Updated content by teacher"
     assert_no_text "Original content"
+    assert_no_text "test.pdf"
 
     click_button "Delete"
 

@@ -57,7 +57,7 @@ class FeedController < ApplicationController
 
     if params[:remove_attachments].present?
       params[:remove_attachments].each do |attachment_id|
-        @post.attachments.find_by(id: attachment_id)&.purge
+        @post.attachments_attachments.find_by(id: attachment_id)&.purge
       end
     end
 
