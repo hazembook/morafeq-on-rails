@@ -173,6 +173,28 @@ To support a global user base (specifically English and Arabic languages), the s
    - Layout files include a dynamic direction indicator: `<html lang="<%= I18n.locale %>" dir="<%= I18n.locale == :ar ? 'rtl' : 'ltr' %>">`.
    - Layout styling uses logical properties (e.g., `ps-4`, `pe-2`, `start-0`, `end-0`) instead of directional classes (`pl-4`, `pr-2`, `left-0`, `right-0`) to automatically flip layouts on RTL environments.
 
+## 4.7. Git Workflow
+
+### Branching Model
+We use a **GitHub Flow** model:
+- `main` is the stable integration branch.
+- Short-lived feature/bugfix branches are created directly off `main` (e.g., `feat/profile-stats`, `fix/chat-scroll`).
+- There is no separate, long-lived `develop` branch.
+- Once a feature is verified and tests pass, it is merged directly back into `main`.
+
+### Convention
+- **Branch names:** `feat/xxx`, `fix/xxx`, `chore/xxx`
+- **Commits:** Atomic — one logical change per commit. Prefix with type:
+  - `feat: add post pinning for teachers`
+  - `fix: prevent empty message send in chat`
+  - `chore: add rubocop rails config`
+  - `test: add feed scoping model tests`
+- **Merges:** Squash-merge branches into `main` to keep the history clean.
+
+### Local First
+- Run `rails test` and `rubocop` before merging any branch into `main` to ensure it stays green.
+- Use `rails db:seed` to reset demo data as needed.
+
 ## 5. Implementation Roadmap
 
 ### Phase 1: Setup & Foundations
@@ -328,24 +350,3 @@ To support a global user base (specifically English and Arabic languages), the s
 - [ ] Deploy to VPS via Kamal
 - [ ] Final smoke tests post-deploy
 
-## 6. Git Workflow
-
-### Branching Model
-We use a **GitHub Flow** model:
-- `main` is the stable integration branch.
-- Short-lived feature/bugfix branches are created directly off `main` (e.g., `feat/profile-stats`, `fix/chat-scroll`).
-- There is no separate, long-lived `develop` branch.
-- Once a feature is verified and tests pass, it is merged directly back into `main`.
-
-### Convention
-- **Branch names:** `feat/xxx`, `fix/xxx`, `chore/xxx`
-- **Commits:** Atomic — one logical change per commit. Prefix with type:
-  - `feat: add post pinning for teachers`
-  - `fix: prevent empty message send in chat`
-  - `chore: add rubocop rails config`
-  - `test: add feed scoping model tests`
-- **Merges:** Squash-merge branches into `main` to keep the history clean.
-
-### Local First
-- Run `rails test` and `rubocop` before merging any branch into `main` to ensure it stays green.
-- Use `rails db:seed` to reset demo data as needed.
