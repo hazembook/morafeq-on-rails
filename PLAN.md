@@ -206,23 +206,23 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 - [x] Write system tests + channel tests
 
 ### Phase 6: Academic Tools
-- [ ] **Quiz system (structured model):**
+- [x] **Quiz system (structured model):**
   - Quiz model with title, subject, due date, total points
   - QuizQuestion model (question text, points)
   - QuizAnswer model (user submission, teacher-assigned score)
   - Teacher creates quizzes for their subjects
   - Students submit answers, view grades
   - Auto-calc total score, show on profile
-- [ ] **Schedule / Timetable:**
+- [x] **Schedule / Timetable:**
   - Schedule model (subject, day, start/end time, room)
   - Weekly timetable view per subject
   - Teacher/admin manages schedule
-- [ ] **Attendance tracking:**
+- [x] **Attendance tracking:**
   - Attendance model (user, subject, date, status, recorded_by)
   - Teacher marks present/absent per session
   - Students view attendance on profile
   - Admin can view/edit any attendance
-- [ ] Write tests
+- [x] Write tests
 
 ### Phase 7: Task Distribution & Role Expansion
 - [ ] Add `moderator` and `ta` roles to User enum
