@@ -29,13 +29,15 @@
     </div>
   <% end %>
 
-  <div id="posts" class="space-y-4">
-    <%= render partial: "post", collection: @posts %>
-  </div>
+  <%= turbo_frame_tag "page_#{params[:page] || 1}" do %>
+    <div class="space-y-4">
+      <%= render partial: "post", collection: @posts %>
+    </div>
 
-  <% if @posts.next_page %>
-    <%= turbo_frame_tag "page_#{@posts.next_page}", src: feed_index_path(page: @posts.next_page), loading: :lazy do %>
-      <div class="text-center py-4 text-gray-500">Loading more...</div>
+    <% if @posts.next_page %>
+      <%= turbo_frame_tag "page_#{@posts.next_page}", src: feed_index_path(page: @posts.next_page), loading: :lazy do %>
+        <div class="text-center py-4 text-gray-500">Loading more...</div>
+      <% end %>
     <% end %>
   <% end %>
 </div>
