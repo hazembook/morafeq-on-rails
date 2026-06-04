@@ -1,0 +1,99 @@
+<div class="max-w-3xl mx-auto px-4 py-6">
+  <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <%= link_to "← Back to Subject", subject_path(@subject), class: "text-sm text-blue-600 hover:text-blue-800" %>
+      <h1 class="text-2xl font-bold mt-2 text-gray-900"><%= @quiz.title %></h1>
+      <p class="text-sm text-gray-500">Max Points: <%= @quiz.total_points %> &middot; Due: <%= @quiz.due_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+    </div>
+    
+    <% if Current.user.teacher? || Current.user.admin? %>
+      <div>
+        <%= link_to "Grade Submissions", grade_subject_quiz_path(@subject, @quiz), class: "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 shadow-sm" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if Current.user.student? %>
+    <% if @submitted %>
+      <!-- Submissions Display -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+        <div class="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-green-800">Quiz Completed</p>
+            <p class="text-xs text-green-600">Your answers were successfully submitted.</p>
+          </div>
+          <div class="text-right">
+            <% total_score = @answers.map(&:score).compact.sum %>
+            <% all_graded = @answers.all? { |a| a.score.present? } %>
+            <% if all_graded %>
+              <span class="text-lg font-bold text-green-700"><%= total_score %> / <%= @quiz.total_points %> pts</span>
+            <% else %>
+              <span class="text-sm font-semibold text-orange-600">Pending Grade</span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <% @questions.each_with_index do |q, idx| %>
+            <% ans = @answers.find { |a| a.quiz_question_id == q.id } %>
+            <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 space-y-2">
+              <div class="flex justify-between items-start">
+                <p class="font-medium text-sm text-gray-800">Q<%= idx + 1 %>: <%= q.question %></p>
+                <span class="text-xs font-semibold text-gray-500 whitespace-nowrap"><%= ans&.score || "-" %> / <%= q.points %> pts</span>
+              </div>
+              <div class="bg-white p-3 rounded border border-gray-200 text-sm text-gray-700 whitespace-pre-wrap">
+                <%= ans&.answer %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% elsif @quiz.due_at < Time.current %>
+      <!-- Past Due Display -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
+        <svg class="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+        <p class="text-gray-700 font-semibold">Quiz Past Due</p>
+        <p class="text-sm text-gray-500 mt-1">This quiz was due on <%= @quiz.due_at.strftime("%B %d, %Y at %I:%M %p") %> and is no longer accepting answers.</p>
+      </div>
+    <% else %>
+      <!-- Take Quiz Form -->
+      <%= form_with url: subject_quiz_quiz_answers_path(@subject, @quiz), method: :post, class: "bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6" do |f| %>
+        <p class="text-sm text-gray-600 border-b border-gray-100 pb-4">Please read each question carefully and provide your answer in the text field.</p>
+        
+        <div class="space-y-6">
+          <% @questions.each_with_index do |q, idx| %>
+            <div class="space-y-2">
+              <div class="flex justify-between items-start">
+                <label class="block text-sm font-semibold text-gray-800">Question <%= idx + 1 %>: <span class="font-normal text-gray-700"><%= q.question %></span></label>
+                <span class="text-xs text-gray-400 font-medium whitespace-nowrap"><%= q.points %> points</span>
+              </div>
+              <%= text_area_tag "answers[#{q.id}]", "", rows: 3, placeholder: "Type your answer here...", required: true, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="flex justify-end pt-4 border-t border-gray-100">
+          <%= f.submit "Submit Answers", class: "px-6 py-2.5 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm cursor-pointer", data: { turbo_confirm: "Are you sure you want to submit? You cannot edit your answers after submitting." } %>
+        </div>
+      <% end %>
+    <% end %>
+  <% else %>
+    <!-- Teacher Details View -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
+      <h2 class="text-lg font-bold text-gray-800 mb-2">Quiz Questions & Details</h2>
+      <div class="space-y-4">
+        <% @questions.each_with_index do |q, idx| %>
+          <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 flex justify-between items-start gap-4">
+            <div>
+              <p class="font-semibold text-sm text-gray-500 uppercase tracking-wide">Question <%= idx + 1 %></p>
+              <p class="text-sm text-gray-800 mt-1"><%= q.question %></p>
+            </div>
+            <span class="text-xs font-bold text-gray-500 whitespace-nowrap bg-white px-2.5 py-1 rounded border border-gray-200 shadow-sm"><%= q.points %> pts</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -4,6 +4,17 @@ Rails.application.routes.draw do
 
   resources :subjects, only: [ :index, :show ] do
     resources :materials, only: [ :index, :show, :new, :create, :destroy ]
+    resources :quizzes, only: [ :show, :new, :create ] do
+      resources :quiz_answers, only: [ :create ]
+      member do
+        get :grade
+        post :grade_answers
+      end
+    end
+    resources :schedules, only: [ :index, :new, :create, :destroy ]
+    resources :attendances, only: [ :index, :create ] do
+      get :record, on: :collection
+    end
   end
   get "feed", to: "feed#index", as: :feed_index
   post "feed", to: "feed#create"

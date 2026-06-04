@@ -1,0 +1,111 @@
+<div class="max-w-4xl mx-auto px-4 py-6">
+  <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <%= link_to "← Back to Subject", subject_path(@subject), class: "text-sm text-blue-600 hover:text-blue-800" %>
+      <h1 class="text-2xl font-bold mt-2 text-gray-900">Attendance Tracking</h1>
+      <p class="text-sm text-gray-500">Subject: <%= @subject.name %> (<%= @subject.code %>)</p>
+    </div>
+    
+    <% if Current.user.teacher? || Current.user.admin? %>
+      <div>
+        <%= link_to "Record Attendance", record_subject_attendances_path(@subject), class: "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 shadow-sm" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if Current.user.student? %>
+    <!-- Student View -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 text-center">
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Attendance rate</span>
+        <h2 class="text-4xl font-bold text-blue-600 mt-2 font-sans"><%= @percentage %>%</h2>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 text-center col-span-2">
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Summary</span>
+        <div class="grid grid-cols-3 gap-4 mt-4">
+          <div>
+            <p class="text-sm text-gray-500 font-medium">Present</p>
+            <p class="text-2xl font-bold text-green-600 font-sans"><%= @present %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500 font-medium">Absent</p>
+            <p class="text-2xl font-bold text-red-600 font-sans"><%= @absent %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500 font-medium">Excused</p>
+            <p class="text-2xl font-bold text-yellow-600 font-sans"><%= @excused %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if @attendances.any? %>
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Recorded By</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-150 bg-white">
+            <% @attendances.each do |att| %>
+              <tr>
+                <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= att.date.strftime("%B %d, %Y") %></td>
+                <td class="px-6 py-4 text-sm">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide
+                    <%= case att.status
+                        when "present" then "bg-green-100 text-green-800"
+                        when "absent" then "bg-red-100 text-red-800"
+                        when "excused" then "bg-yellow-100 text-yellow-800"
+                        end %>">
+                    <%= att.status %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500"><%= att.recorded_by.full_name %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
+        <p class="text-gray-500">No attendance history available yet.</p>
+      </div>
+    <% end %>
+  <% else %>
+    <!-- Teacher View -->
+    <% if @students.any? %>
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Student Name</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Sessions Present</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Attendance Rate</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-150 bg-white">
+            <% @students.each do |student| %>
+              <% stats = @attendance_stats[student.id] %>
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm font-semibold text-gray-900"><%= student.full_name %></td>
+                <td class="px-6 py-4 text-sm text-gray-500"><%= student.email_address %></td>
+                <td class="px-6 py-4 text-sm text-gray-700"><%= stats[:present] %> / <%= stats[:total] %></td>
+                <td class="px-6 py-4 text-sm font-bold <%= stats[:percentage] >= 80 ? 'text-green-600' : 'text-red-600' %>">
+                  <%= stats[:percentage] %>%
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
+        <p class="text-gray-500">No students enrolled in this subject.</p>
+      </div>
+    <% end %>
+  <% end %>
+</div>

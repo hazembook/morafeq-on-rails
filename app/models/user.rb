@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :chat_participants, dependent: :destroy
   has_many :chat_rooms, through: :chat_participants
   has_many :messages, dependent: :destroy
+  has_many :quiz_answers, dependent: :destroy
+  has_many :attendances, dependent: :destroy
   has_one_attached :avatar
 
   enum :role, { student: 0, teacher: 1, admin: 2 }

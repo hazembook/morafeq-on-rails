@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_04_051911) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_04_053553) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -37,6 +37,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_051911) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "attendances", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "date", null: false
+    t.integer "recorded_by_id", null: false
+    t.string "status", null: false
+    t.integer "subject_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["recorded_by_id"], name: "index_attendances_on_recorded_by_id"
+    t.index ["subject_id"], name: "index_attendances_on_subject_id"
+    t.index ["user_id", "subject_id", "date"], name: "index_attendances_on_user_id_and_subject_id_and_date", unique: true
+    t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
   create_table "audit_logs", force: :cascade do |t|
@@ -131,6 +145,47 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_051911) do
     t.index ["scope_type", "scope_id"], name: "index_posts_on_scope_type_and_scope_id"
   end
 
+  create_table "quiz_answers", force: :cascade do |t|
+    t.text "answer", null: false
+    t.datetime "created_at", null: false
+    t.integer "quiz_question_id", null: false
+    t.integer "score"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["quiz_question_id"], name: "index_quiz_answers_on_quiz_question_id"
+    t.index ["user_id"], name: "index_quiz_answers_on_user_id"
+  end
+
+  create_table "quiz_questions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "points", null: false
+    t.text "question", null: false
+    t.integer "quiz_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quiz_id"], name: "index_quiz_questions_on_quiz_id"
+  end
+
+  create_table "quizzes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "due_at", null: false
+    t.integer "subject_id", null: false
+    t.string "title", null: false
+    t.integer "total_points", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["subject_id"], name: "index_quizzes_on_subject_id"
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "day", null: false
+    t.time "end_time", null: false
+    t.string "room", null: false
+    t.time "start_time", null: false
+    t.integer "subject_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subject_id"], name: "index_schedules_on_subject_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -165,6 +220,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_051911) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attendances", "subjects"
+  add_foreign_key "attendances", "users"
+  add_foreign_key "attendances", "users", column: "recorded_by_id"
   add_foreign_key "audit_logs", "users"
   add_foreign_key "chat_participants", "chat_rooms"
   add_foreign_key "chat_participants", "users"
@@ -176,6 +234,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_051911) do
   add_foreign_key "messages", "chat_rooms"
   add_foreign_key "messages", "users"
   add_foreign_key "posts", "users", column: "author_id"
+  add_foreign_key "quiz_answers", "quiz_questions"
+  add_foreign_key "quiz_answers", "users"
+  add_foreign_key "quiz_questions", "quizzes"
+  add_foreign_key "quizzes", "subjects"
+  add_foreign_key "schedules", "subjects"
   add_foreign_key "sessions", "users"
   add_foreign_key "subjects", "departments"
   add_foreign_key "subjects", "users", column: "teacher_id"

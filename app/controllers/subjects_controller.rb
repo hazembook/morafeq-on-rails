@@ -12,6 +12,23 @@ class SubjectsController < ApplicationController
   end
 
   def show
+    @materials = @subject.materials.kept.order(created_at: :desc).limit(5)
+    @quizzes = @subject.quizzes.order(due_at: :desc)
+    @schedules = @subject.schedules.order(:day, :start_time)
+    @posts = Post.kept.where(scope_type: "Subject", scope_id: @subject.id).order(pinned: :desc, created_at: :desc).limit(5)
+
+    if Current.user.student?
+      @student_attendances = @subject.attendances.where(user: Current.user)
+      total = @student_attendances.count
+      if total > 0
+        present = @student_attendances.where(status: "present").count
+        @attendance_rate = ((present.to_f / total) * 100).round(1)
+      else
+        @attendance_rate = nil
+      end
+    else
+      @student_count = @subject.students.count
+    end
   end
 
   private

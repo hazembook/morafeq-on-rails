@@ -6,6 +6,9 @@ class Subject < ApplicationRecord
   has_many :materials, dependent: :destroy
 
   has_one :chat_room, dependent: :destroy
+  has_many :quizzes, dependent: :destroy
+  has_many :schedules, dependent: :destroy
+  has_many :attendances, dependent: :destroy
 
   validates :name, presence: true
   validates :code, presence: true, uniqueness: true
