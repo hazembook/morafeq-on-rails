@@ -36,10 +36,25 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
    - **Posts:** Create posts (with optional "Official" flair); pin/unpin posts in their subjects.
    - **Materials:** Upload/manage materials for their subjects.
    - **Chat:** Moderate (delete) messages in their subject rooms.
-3. **Admin:**
-   - All Teacher capabilities.
-   - Full CRUD via `/admin` back-office (Users, Subjects, Departments, Colleges, Global Settings).
+3. **Super Admin:**
+   - Full CRUD via `/admin` back-office (Users, Subjects, Departments, Colleges, Global Settings, Task Distributions).
    - Access to audit logs.
+   - Sees only the admin panel (no feed, subjects, chats).
+4. **Teacher:**
+   - All Student capabilities.
+   - **Posts:** Create posts (with optional "Official" flair); pin/unpin posts in their subjects.
+   - **Materials:** Upload/manage materials for their subjects.
+   - **Chat:** Moderate (delete) messages in their subject rooms.
+   - Can assign TAs to their own subjects.
+
+5. **Moderator:**
+   - Assigned to a **College** or **Department** via TaskDistribution.
+   - Can manage **posts** scoped to that College/Department.
+   - No access to materials, quizzes, attendance, or chat.
+
+6. **Teaching Assistant (TA):**
+   - Assigned to a **Subject** via TaskDistribution by the subject teacher or super admin.
+   - Granular permissions per Subject (posts, materials, quizzes, schedules, attendance, chat) — controlled by TaskDistribution flags.
 
 ## 4. Database Schema
 
@@ -75,6 +90,26 @@ Single `User` model with `role` enum. Authorization enforced via Pundit policies
 - `messages`: `content`, `user_id`, `chat_room_id`
   - `deleted_at`: datetime (soft delete — "unsend" within 5 min)
   - *Attachments:* images/files (ActiveStorage, optional).
+
+### Academic Tools
+- `quizzes`: `title`, `subject_id`, `due_at` (datetime), `total_points` (integer)
+  - `quiz_questions`: `quiz_id`, `question` (text), `points` (integer)
+  - `quiz_answers`: `quiz_question_id`, `user_id`, `answer` (text), `score` (integer, nullable)
+- `schedules`: `subject_id`, `day` (integer, 0-6), `start_time` (time), `end_time` (time), `room` (string)
+- `attendances`: `user_id`, `subject_id`, `date` (date), `status` (string: present/absent/excused), `recorded_by` (User)
+
+### Task Distribution (Moderators & TAs)
+- `task_distributions`:
+  - `user_id`: FK (moderator or TA)
+  - `scope_type`: string (polymorphic — "College", "Department", "Subject")
+  - `scope_id`: integer
+  - `assigned_by_id`: FK User (teacher for subjects, super admin for college/dept)
+  - `manage_posts`: boolean
+  - `manage_materials`: boolean (subject-only)
+  - `manage_quizzes`: boolean (subject-only)
+  - `manage_schedules`: boolean (subject-only)
+  - `manage_attendance`: boolean (subject-only)
+  - `manage_chat`: boolean (subject-only)
 
 ### Notifications
 - `notifications`:
