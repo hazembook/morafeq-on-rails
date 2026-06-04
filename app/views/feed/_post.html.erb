@@ -1,6 +1,6 @@
 <div class="bg-white rounded-lg shadow p-4">
   <div class="flex items-start gap-3">
-    <div class="flex-1">
+    <div class="flex-1 min-w-0">
       <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-1">
         <span class="font-medium text-sm"><%= post.author.full_name %></span>
         <span class="text-xs text-gray-400"><%= time_ago_in_words(post.created_at) %> ago</span>
@@ -26,8 +26,8 @@
               <% else %>
                 <% preview_type = nil %>
               <% end %>
-              <div class="flex items-center justify-between max-w-lg p-3 bg-gray-50 hover:bg-gray-100/80 rounded-lg border border-gray-200/80 transition-colors mt-2 group">
-                <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between max-w-lg p-3 bg-gray-50 hover:bg-gray-100/80 rounded-lg border border-gray-200/80 transition-colors mt-2 group gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1 w-full">
                   <div class="p-2 bg-white rounded-md border border-gray-200 text-gray-500 group-hover:text-blue-600 transition-colors shrink-0">
                     <% if preview_type == "pdf" %>
                       <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,7 @@
                   </div>
                 </div>
 
-                <div class="flex items-center gap-2 ml-4">
+                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
                   <% if preview_type.present? %>
                     <button class="px-2.5 py-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors cursor-pointer font-sans" onclick="showLightbox('<%= rails_storage_proxy_path(attachment, only_path: true) %>', '<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>', '<%= preview_type %>', '<%= j attachment.filename.to_s %>')">
                       Preview
