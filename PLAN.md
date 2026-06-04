@@ -331,25 +331,16 @@ To support a global user base (specifically English and Arabic languages), the s
 ## 6. Git Workflow
 
 ### Branching Model
-```
-main          ─── Production releases. Only merged from `develop`.
-  develop     ─── Integration branch. Feature branches PR here.
-    feat/xxx  ─── New features. Branch off `develop`.
-    fix/xxx   ─── Bug fixes. Branch off `develop`.
-    chore/xxx ─── Tooling, config, refactors. Branch off `develop`.
-```
+Single-branch development directly on the `main` branch.
 
 ### Convention
-- **Branch names:** `feat/feed-scoping`, `fix/chat-scroll`, `chore/rubocop-rules`
 - **Commits:** Atomic — one logical change per commit. Prefix with type:
   - `feat: add post pinning for teachers`
   - `fix: prevent empty message send in chat`
   - `chore: add rubocop rails config`
   - `test: add feed scoping model tests`
-- **PRs:** squash-merge into `develop`. Keep history clean — no WIP or fixup commits on `develop`.
+- Direct commits to `main` with robust local validation.
 
 ### Local First
-- `rails new morafeq --css tailwind` auto-initializes a Git repo (no initial commit). Make the first commit yourself with the scaffolded app on `main`, then create a `develop` branch and work from there.
-- All development happens locally. No CI required until Phase 10.
-- Run `rails test` and `rubocop` before committing.
+- Run `rails test` and `rubocop` before committing to keep the `main` branch green and clean.
 - Use `rails db:seed` to reset demo data as needed.
