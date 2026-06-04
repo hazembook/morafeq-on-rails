@@ -1,5 +1,6 @@
 class MessagesController < ApplicationController
   before_action :require_authentication
+  rescue_from Pundit::NotAuthorizedError, with: :message_not_authorized
 
   def create
     @room = ChatRoom.find(params[:chat_room_id])
@@ -15,20 +16,15 @@ class MessagesController < ApplicationController
 
   def destroy
     @message = Message.find(params[:id])
+    authorize @message
+
     room = @message.chat_room
+    is_author = @message.user_id == Current.user.id
 
-    is_author_recent = @message.user == Current.user && @message.created_at > 5.minutes.ago
-    is_teacher = !room.is_private? && room.subject&.teacher == Current.user
-    is_admin = Current.user.admin?
+    @message.discard
+    broadcast_destroy
 
-    if is_author_recent || is_teacher || is_admin
-      @message.discard
-      broadcast_destroy
-      flash[:notice] = is_author_recent ? "Message unsent." : "Message deleted by moderator."
-    else
-      flash[:alert] = "You are not authorized to delete this message."
-    end
-
+    flash[:notice] = is_author ? "Message unsent." : "Message deleted by moderator."
     redirect_to room
   end
 
@@ -36,6 +32,11 @@ class MessagesController < ApplicationController
 
   def require_authentication
     redirect_to new_session_path unless authenticated?
+  end
+
+  def message_not_authorized
+    room = ChatRoom.find_by(id: params[:chat_room_id])
+    redirect_to(room || chat_rooms_path, alert: "You are not authorized to perform this action.")
   end
 
   def message_params
