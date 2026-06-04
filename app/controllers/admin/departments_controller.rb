@@ -20,7 +20,7 @@ module Admin
       @department = Department.new(department_params)
       if @department.save
         log_audit("create", @department)
-        redirect_to admin_departments_path, notice: "Department created."
+        redirect_to admin_departments_path, notice: t("flash.admin.department_created")
       else
         render :new, status: :unprocessable_entity
       end
@@ -29,7 +29,7 @@ module Admin
     def update
       if @department.update(department_params)
         log_audit("update", @department)
-        redirect_to admin_departments_path, notice: "Department updated."
+        redirect_to admin_departments_path, notice: t("flash.admin.department_updated")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -39,7 +39,7 @@ module Admin
       changes = @department.attributes.except("updated_at", "created_at").to_json
       @department.destroy
       log_audit("destroy", @department, changes)
-      redirect_to admin_departments_path, notice: "Department deleted."
+      redirect_to admin_departments_path, notice: t("flash.admin.department_deleted")
     end
 
     private

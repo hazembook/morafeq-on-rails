@@ -24,7 +24,7 @@ class AssignmentsController < ApplicationController
     @assignment = @subject.assignments.new(assignment_params)
 
     if @assignment.save
-      redirect_to subject_assignments_path(@subject), notice: "Assignment created successfully."
+      redirect_to subject_assignments_path(@subject), notice: t("flash.assignments.created")
     else
       render :new, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class AssignmentsController < ApplicationController
 
   def update
     if @assignment.update(assignment_params)
-      redirect_to params[:redirect_to].presence || subject_assignment_path(@subject, @assignment), notice: "Assignment updated successfully."
+      redirect_to params[:redirect_to].presence || subject_assignment_path(@subject, @assignment), notice: t("flash.assignments.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -43,7 +43,7 @@ class AssignmentsController < ApplicationController
 
   def destroy
     @assignment.destroy
-    redirect_to subject_assignments_path(@subject), notice: "Assignment deleted successfully."
+    redirect_to subject_assignments_path(@subject), notice: t("flash.assignments.deleted")
   end
 
   def grade
@@ -62,9 +62,9 @@ class AssignmentsController < ApplicationController
       end
     end
 
-    redirect_to grade_subject_assignment_path(@subject, @assignment), notice: "Submissions graded successfully."
+    redirect_to grade_subject_assignment_path(@subject, @assignment), notice: t("flash.assignments.graded")
   rescue ActiveRecord::RecordInvalid => e
-    redirect_to grade_subject_assignment_path(@subject, @assignment), alert: "Failed to grade submissions: #{e.message}"
+    redirect_to grade_subject_assignment_path(@subject, @assignment), alert: t("flash.assignments.grade_failed", message: e.message)
   end
 
   private
@@ -79,7 +79,7 @@ class AssignmentsController < ApplicationController
 
   def require_teacher_or_admin
     unless Current.user.admin? || @subject.teacher == Current.user
-      redirect_to @subject, alert: "Not authorized."
+      redirect_to @subject, alert: t("common.not_authorized")
     end
   end
 

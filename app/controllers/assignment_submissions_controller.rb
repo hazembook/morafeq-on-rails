@@ -4,12 +4,12 @@ class AssignmentSubmissionsController < ApplicationController
 
   def create
     if @assignment.assignment_submissions.exists?(user_id: Current.user.id)
-      redirect_to subject_assignment_path(@subject, @assignment), alert: "You have already submitted this assignment."
+      redirect_to subject_assignment_path(@subject, @assignment), alert: t("flash.assignments.already_submitted")
       return
     end
 
     if @assignment.locked? || @assignment.ended?
-      redirect_to subject_assignment_path(@subject, @assignment), alert: "This assignment is locked or past its due date."
+      redirect_to subject_assignment_path(@subject, @assignment), alert: t("flash.assignments.locked_or_due")
       return
     end
 
@@ -17,9 +17,9 @@ class AssignmentSubmissionsController < ApplicationController
     @submission.user = Current.user
 
     if @submission.save
-      redirect_to subject_assignment_path(@subject, @assignment), notice: "Your assignment has been submitted successfully."
+      redirect_to subject_assignment_path(@subject, @assignment), notice: t("flash.assignments.submitted")
     else
-      redirect_to subject_assignment_path(@subject, @assignment), alert: "Submission failed: #{@submission.errors.full_messages.join(', ')}"
+      redirect_to subject_assignment_path(@subject, @assignment), alert: t("flash.assignments.submission_failed", errors: @submission.errors.full_messages.join(", "))
     end
   end
 

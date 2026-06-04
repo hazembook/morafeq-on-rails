@@ -7,12 +7,12 @@ class QuizAnswersController < ApplicationController
 
     questions = @quiz.quiz_questions
     if QuizAnswer.where(quiz_question_id: questions.select(:id), user_id: Current.user.id).any?
-      redirect_to subject_quiz_path(@subject, @quiz), alert: "You have already submitted answers for this quiz."
+      redirect_to subject_quiz_path(@subject, @quiz), alert: t("flash.quizzes.already_submitted")
       return
     end
 
     if @quiz.locked? || @quiz.ended?
-      redirect_to subject_quiz_path(@subject, @quiz), alert: "This quiz is locked or past its due date."
+      redirect_to subject_quiz_path(@subject, @quiz), alert: t("flash.quizzes.locked_or_due")
       return
     end
 
@@ -28,9 +28,9 @@ class QuizAnswersController < ApplicationController
       end
     end
 
-    redirect_to subject_quiz_path(@subject, @quiz), notice: "Your answers have been submitted successfully."
+    redirect_to subject_quiz_path(@subject, @quiz), notice: t("flash.quizzes.submitted")
   rescue ActiveRecord::RecordInvalid => e
-    redirect_to subject_quiz_path(@subject, @quiz), alert: "Submission failed: #{e.message}"
+    redirect_to subject_quiz_path(@subject, @quiz), alert: t("flash.quizzes.submission_failed", message: e.message)
   end
 
   private

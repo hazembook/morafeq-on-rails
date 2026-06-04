@@ -51,9 +51,9 @@ class AttendancesController < ApplicationController
       end
     end
 
-    redirect_to subject_attendances_path(@subject), notice: "Attendance for #{@date} saved successfully."
+    redirect_to subject_attendances_path(@subject), notice: t("flash.attendance.saved")
   rescue => e
-    redirect_to record_subject_attendances_path(@subject, date: params[:date]), alert: "Failed to save attendance: #{e.message}"
+    redirect_to record_subject_attendances_path(@subject, date: params[:date]), alert: t("flash.attendance.save_failed", message: e.message)
   end
 
   private
@@ -64,7 +64,7 @@ class AttendancesController < ApplicationController
 
   def require_teacher_or_admin
     unless Current.user.admin? || @subject.teacher == Current.user
-      redirect_to @subject, alert: "Not authorized."
+      redirect_to @subject, alert: t("common.not_authorized")
     end
   end
 end

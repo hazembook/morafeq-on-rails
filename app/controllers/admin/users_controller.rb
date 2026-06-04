@@ -20,7 +20,7 @@ module Admin
       @user = User.new(user_params)
       if @user.save
         log_audit("create", @user)
-        redirect_to admin_users_path, notice: "User created."
+        redirect_to admin_users_path, notice: t("flash.admin.user_created")
       else
         render :new, status: :unprocessable_entity
       end
@@ -29,7 +29,7 @@ module Admin
     def update
       if @user.update(user_params)
         log_audit("update", @user)
-        redirect_to admin_users_path, notice: "User updated."
+        redirect_to admin_users_path, notice: t("flash.admin.user_updated")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -37,12 +37,12 @@ module Admin
 
     def destroy
       if @user == Current.user
-        redirect_to admin_users_path, alert: "Cannot delete yourself."
+        redirect_to admin_users_path, alert: t("flash.admin.cannot_delete_self")
       else
         changes = @user.attributes.except("updated_at", "created_at", "password_digest").to_json
         @user.destroy
         log_audit("destroy", @user, changes)
-        redirect_to admin_users_path, notice: "User deleted."
+        redirect_to admin_users_path, notice: t("flash.admin.user_deleted")
       end
     end
 

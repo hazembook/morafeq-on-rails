@@ -154,7 +154,7 @@
           <svg class="w-16 h-16 text-blue-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
           </svg>
-          <div class="text-sm font-medium text-gray-800 text-center truncate w-full" id="lightbox-audio-title">Audio Player</div>
+          <div class="text-sm font-medium text-gray-800 text-center truncate w-full" id="lightbox-audio-title"><%= t("lightbox.audio_player") %></div>
           <audio id="lightbox-audio" src="" controls class="w-full"></audio>
         </div>
       </div>
@@ -288,7 +288,7 @@
           audio.src = item.src;
           audioContainer.style.display = 'flex';
           const audioTitle = document.getElementById('lightbox-audio-title');
-          if (audioTitle) audioTitle.textContent = item.title || 'Audio Player';
+          if (audioTitle) audioTitle.textContent = item.title || '<%= j t("lightbox.audio_player") %>';
           targetEl = audioContainer;
         }
         

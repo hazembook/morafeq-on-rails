@@ -1,24 +1,24 @@
 <div class="max-w-2xl mx-auto">
   <% if Current.user.teacher? || Current.user.admin? %>
     <div class="bg-white rounded-lg shadow p-4 mb-6">
-      <h2 class="text-lg font-semibold mb-3">Create Post</h2>
+      <h2 class="text-lg font-semibold mb-3"><%= t("feed.create_post") %></h2>
       <%= form_with url: feed_index_path, local: true, class: "space-y-3" do |f| %>
         <div>
-          <%= f.text_area :content, placeholder: "What's on your mind?", rows: 3, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", name: "post[content]" %>
+          <%= f.text_area :content, placeholder: t("feed.mind_placeholder"), rows: 3, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", name: "post[content]" %>
         </div>
         <div>
-          <%= f.file_field :attachments, multiple: true, class: "w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100", name: "post[attachments][]" %>
+          <%= f.file_field :attachments, multiple: true, class: "w-full text-xs text-gray-500 file:me-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100", name: "post[attachments][]" %>
         </div>
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div class="flex-1">
-            <%= f.select :scope, scope_options_for(Current.user), { prompt: "Post to a subject..." }, class: "w-full rounded-md border-gray-300 text-sm", name: "post[scope]" %>
+            <%= f.select :scope, scope_options_for(Current.user), { prompt: t("feed.scope_prompt") }, class: "w-full rounded-md border-gray-300 text-sm", name: "post[scope]" %>
           </div>
           <div class="flex items-center gap-3">
             <label class="flex items-center gap-1.5 text-sm text-gray-600">
               <%= f.check_box :pinned, class: "rounded border-gray-300", name: "post[pinned]" %>
-              Official
+              <%= t("feed.official") %>
             </label>
-            <%= f.submit "Post", class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
+            <%= f.submit t("feed.post_button"), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
           </div>
         </div>
       <% end %>
@@ -27,7 +27,7 @@
 
   <% if @pinned_posts.any? %>
     <div class="mb-6 space-y-4">
-      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Pinned</h2>
+      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide"><%= t("feed.pinned_header") %></h2>
       <%= render partial: "post", collection: @pinned_posts %>
     </div>
   <% end %>
@@ -39,7 +39,7 @@
 
     <% if @posts.next_page %>
       <%= turbo_frame_tag "page_#{@posts.next_page}", src: feed_index_path(page: @posts.next_page), loading: :lazy do %>
-        <div class="text-center py-4 text-gray-500">Loading more...</div>
+        <div class="text-center py-4 text-gray-500"><%= t("feed.loading_more") %></div>
       <% end %>
     <% end %>
   <% end %>

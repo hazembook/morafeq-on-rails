@@ -20,7 +20,7 @@ module Admin
       @college = College.new(college_params)
       if @college.save
         log_audit("create", @college)
-        redirect_to admin_colleges_path, notice: "College created."
+        redirect_to admin_colleges_path, notice: t("flash.admin.college_created")
       else
         render :new, status: :unprocessable_entity
       end
@@ -29,7 +29,7 @@ module Admin
     def update
       if @college.update(college_params)
         log_audit("update", @college)
-        redirect_to admin_colleges_path, notice: "College updated."
+        redirect_to admin_colleges_path, notice: t("flash.admin.college_updated")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -39,7 +39,7 @@ module Admin
       changes = @college.attributes.except("updated_at", "created_at").to_json
       @college.destroy
       log_audit("destroy", @college, changes)
-      redirect_to admin_colleges_path, notice: "College deleted."
+      redirect_to admin_colleges_path, notice: t("flash.admin.college_deleted")
     end
 
     private

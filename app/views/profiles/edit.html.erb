@@ -22,12 +22,12 @@
       <% end %>
 
       <div class="space-y-1.5">
-        <%= f.label :full_name, class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
+        <%= f.label :full_name, t("profile.full_name"), class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
         <%= f.text_field :full_name, required: true, class: "w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium py-2.5 px-3.5 transition" %>
       </div>
 
       <div class="space-y-1.5">
-        <%= f.label :bio, class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
+        <%= f.label :bio, t("profile.bio"), class: "block text-xs font-bold text-gray-500 uppercase tracking-wider" %>
         <%= f.text_area :bio, rows: 4, placeholder: t("profile.bio_placeholder"), class: "w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium py-2.5 px-3.5 transition" %>
       </div>
 

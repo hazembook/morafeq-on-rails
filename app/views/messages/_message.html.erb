@@ -69,10 +69,10 @@
                 <div class="flex items-center gap-1 shrink-0">
                   <% if preview_type.present? %>
                     <button class="px-1.5 py-0.5 text-[10px] font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors cursor-pointer lightbox-trigger font-sans" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="<%= preview_type %>" data-title="<%= j attachment.filename.to_s %>" onclick="openLightboxGallery(this)">
-                      Preview
+                      <%= t("common.preview") %>
                     </button>
                   <% end %>
-                  <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "p-1 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 rounded border border-gray-200 transition-colors cursor-pointer", title: "Download", download: true do %>
+                  <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "p-1 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 rounded border border-gray-200 transition-colors cursor-pointer", title: t("common.download"), download: true do %>
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>
@@ -86,15 +86,15 @@
     <% end %>
 
     <div class="flex items-center justify-between gap-4 mt-1 border-t border-white/10 pt-1">
-      <span class="text-[10px] <%= message.user == Current.user ? "text-blue-200" : "text-gray-400" %> font-light"><%= time_ago_in_words(message.created_at) %> ago</span>
+      <span class="text-[10px] <%= message.user == Current.user ? "text-blue-200" : "text-gray-400" %> font-light"><%= t("datetime.time_ago", time: time_ago_in_words(message.created_at)) %></span>
       
       <div class="flex items-center gap-2">
         <% if message.user == Current.user %>
           <span id="message_<%= message.id %>_seen" class="text-[10px] text-blue-200 font-light">
             <% if message.seen_by?(Current.user) %>
-              Seen
+              <%= t("chats.seen") %>
             <% else %>
-              Sent
+              <%= t("chats.sent") %>
             <% end %>
           </span>
         <% end %>
@@ -103,7 +103,7 @@
         <% is_teacher = !message.chat_room.is_private? && message.chat_room.subject&.teacher == Current.user %>
         <% is_admin = Current.user.admin? %>
         <% if is_author_recent || is_teacher || is_admin %>
-          <%= button_to is_author_recent ? "Unsend" : "Delete", chat_room_message_path(message.chat_room, message), method: :delete, class: "text-[10px] #{message.user == Current.user ? 'text-red-200 hover:text-red-100' : 'text-red-600 hover:text-red-800'} underline focus:outline-none cursor-pointer bg-transparent border-0 p-0", data: { turbo_confirm: "Are you sure you want to #{is_author_recent ? 'unsend' : 'delete'} this message?" } %>
+          <%= button_to is_author_recent ? t("chats.unsend_button") : t("common.delete"), chat_room_message_path(message.chat_room, message), method: :delete, class: "text-[10px] #{message.user == Current.user ? 'text-red-200 hover:text-red-100' : 'text-red-600 hover:text-red-800'} underline focus:outline-none cursor-pointer bg-transparent border-0 p-0", data: { turbo_confirm: is_author_recent ? t("chats.confirm_unsend") : t("chats.confirm_delete") } %>
         <% end %>
       </div>
     </div>

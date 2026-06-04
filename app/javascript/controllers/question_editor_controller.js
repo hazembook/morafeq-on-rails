@@ -2,7 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [ "typeSelect", "mcqOptionsContainer", "optionTemplate" ]
-  static values = { index: String }
+  static values = {
+    index: String,
+    placeholder: String,
+    minOptionsError: String
+  }
 
   connect() {
     this.changeType()
@@ -20,7 +24,7 @@ export default class extends Controller {
       // Enable editing and removing
       this.mcqOptionsContainerTarget.querySelectorAll('input').forEach(i => {
         i.readOnly = false
-        i.placeholder = "Enter option text..."
+        i.placeholder = this.placeholderValue || "Enter option text..."
       })
       this.mcqOptionsContainerTarget.querySelectorAll('button[data-action*="removeOption"]').forEach(b => b.classList.remove("hidden"))
       
@@ -40,6 +44,12 @@ export default class extends Controller {
 
     const templateContent = this.optionTemplateTarget.innerHTML
     this.mcqOptionsContainerTarget.querySelector('.options-list').insertAdjacentHTML('beforeend', templateContent)
+    
+    // Make sure new options also have the correct localized placeholder
+    const newOptions = this.mcqOptionsContainerTarget.querySelectorAll('.options-list input')
+    newOptions.forEach(i => {
+      i.placeholder = this.placeholderValue || "Enter option text..."
+    })
   }
 
   removeOption(event) {
@@ -48,7 +58,7 @@ export default class extends Controller {
     // Ensure we do not remove below 2 options for MCQ
     const existingOptions = this.mcqOptionsContainerTarget.querySelectorAll('[data-option-wrapper="true"]')
     if (existingOptions.length <= 2) {
-      alert("An MCQ question must have at least 2 options.")
+      alert(this.minOptionsErrorValue || "An MCQ question must have at least 2 options.")
       return
     }
 

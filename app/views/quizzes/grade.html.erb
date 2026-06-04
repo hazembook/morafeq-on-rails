@@ -1,8 +1,8 @@
 <div class="max-w-4xl mx-auto px-4 py-6">
   <div class="mb-6">
-    <%= link_to "← Back to Quiz", subject_quiz_path(@subject, @quiz), class: "text-sm text-blue-600 hover:text-blue-800" %>
-    <h1 class="text-2xl font-bold mt-2 text-gray-900">Grade Submissions</h1>
-    <p class="text-sm text-gray-500">Quiz: <%= @quiz.title %> &middot; Max Points: <%= @quiz.total_points %></p>
+    <%= link_to t("quizzes.grade.back"), subject_quiz_path(@subject, @quiz), class: "text-sm text-blue-600 hover:text-blue-800" %>
+    <h1 class="text-2xl font-bold mt-2 text-gray-900"><%= t("quizzes.grade.title") %></h1>
+    <p class="text-sm text-gray-500"><%= t("quizzes.grade.subtitle", title: @quiz.title, points: @quiz.total_points) %></p>
   </div>
 
   <% if @answers_by_student.any? %>
@@ -12,13 +12,13 @@
           <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
             <div>
               <h2 class="font-bold text-gray-900"><%= student.full_name %></h2>
-              <p class="text-xs text-gray-500">Submitted <%= time_ago_in_words(answers.first.created_at) %> ago</p>
+              <p class="text-xs text-gray-500"><%= t("quizzes.grade.submitted_ago", time: time_ago_in_words(answers.first.created_at)) %></p>
             </div>
-            <div class="text-right">
+            <div class="text-end">
               <% graded_count = answers.count { |a| a.score.present? } %>
               <% total_earned = answers.map(&:score).compact.sum %>
               <span class="text-xs font-semibold px-2.5 py-1 rounded-full <%= graded_count == answers.size ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
-                <%= graded_count == answers.size ? "Fully Graded" : "Ungraded" %> (<%= total_earned %> / <%= @quiz.total_points %> pts)
+                <%= graded_count == answers.size ? t("quizzes.grade.status_fully_graded") : t("quizzes.grade.status_ungraded") %> (<%= total_earned %> / <%= @quiz.total_points %> <%= t("quizzes.grade.pts") %>)
               </span>
             </div>
           </div>
@@ -28,10 +28,10 @@
               <% q = ans.quiz_question %>
               <div class="space-y-2 border-b border-gray-100 pb-4 last:border-0 last:pb-0">
                 <div class="flex justify-between items-start gap-4">
-                  <p class="text-sm font-semibold text-gray-800">Q<%= idx + 1 %>: <span class="font-normal text-gray-600"><%= q.question %></span></p>
+                  <p class="text-sm font-semibold text-gray-800"><%= t("quizzes.grade.q_prefix", num: idx + 1) %>: <span class="font-normal text-gray-600"><%= q.question %></span></p>
                   <div class="flex items-center gap-2 shrink-0">
                     <%= number_field_tag "grades[#{ans.id}]", ans.score, min: 0, max: q.points, step: 1, class: "w-20 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-1" %>
-                    <span class="text-xs text-gray-500">/ <%= q.points %> pts</span>
+                    <span class="text-xs text-gray-500">/ <%= q.points %> <%= t("quizzes.grade.pts") %></span>
                   </div>
                 </div>
                 <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-sm text-gray-700">
@@ -44,8 +44,8 @@
       <% end %>
 
       <div class="flex justify-end gap-3 pt-4">
-        <%= link_to "Cancel", subject_quiz_path(@subject, @quiz), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50" %>
-        <%= f.submit "Save All Grades", class: "px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm cursor-pointer" %>
+        <%= link_to t("common.cancel"), subject_quiz_path(@subject, @quiz), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50" %>
+        <%= f.submit t("quizzes.grade.save_button"), class: "px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm cursor-pointer" %>
       </div>
     <% end %>
   <% else %>
@@ -53,8 +53,8 @@
       <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
       </svg>
-      <p class="text-gray-700 font-semibold">No submissions yet</p>
-      <p class="text-sm text-gray-400 mt-1">Students haven't submitted answers for this quiz yet.</p>
+      <p class="text-gray-700 font-semibold"><%= t("quizzes.grade.no_submissions_title") %></p>
+      <p class="text-sm text-gray-400 mt-1"><%= t("quizzes.grade.no_submissions_hint") %></p>
     </div>
   <% end %>
 </div>

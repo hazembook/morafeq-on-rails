@@ -20,7 +20,7 @@ module Admin
       @subject = Subject.new(subject_params)
       if @subject.save
         log_audit("create", @subject)
-        redirect_to admin_subjects_path, notice: "Subject created."
+        redirect_to admin_subjects_path, notice: t("flash.admin.subject_created")
       else
         render :new, status: :unprocessable_entity
       end
@@ -29,7 +29,7 @@ module Admin
     def update
       if @subject.update(subject_params)
         log_audit("update", @subject)
-        redirect_to admin_subjects_path, notice: "Subject updated."
+        redirect_to admin_subjects_path, notice: t("flash.admin.subject_updated")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -39,7 +39,7 @@ module Admin
       changes = @subject.attributes.except("updated_at", "created_at").to_json
       @subject.destroy
       log_audit("destroy", @subject, changes)
-      redirect_to admin_subjects_path, notice: "Subject deleted."
+      redirect_to admin_subjects_path, notice: t("flash.admin.subject_deleted")
     end
 
     private

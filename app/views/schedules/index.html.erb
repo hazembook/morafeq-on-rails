@@ -1,14 +1,14 @@
 <div class="max-w-3xl mx-auto px-4 py-6">
   <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <div>
-      <%= link_to "← Back to Subject", subject_path(@subject), class: "text-sm text-blue-600 hover:text-blue-800" %>
-      <h1 class="text-2xl font-bold mt-2 text-gray-900">Weekly Schedule</h1>
-      <p class="text-sm text-gray-500">Timetable for <%= @subject.name %> (<%= @subject.code %>)</p>
+      <%= link_to t("schedules.index.back"), subject_path(@subject), class: "text-sm text-blue-600 hover:text-blue-800" %>
+      <h1 class="text-2xl font-bold mt-2 text-gray-900"><%= t("schedules.index.title") %></h1>
+      <p class="text-sm text-gray-500"><%= t("schedules.index.subtitle", name: @subject.name, code: @subject.code) %></p>
     </div>
     
     <% if Current.user.teacher? || Current.user.admin? %>
       <div>
-        <%= link_to "Add Entry", new_subject_schedule_path(@subject), class: "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 shadow-sm" %>
+        <%= link_to t("schedules.index.add_entry_button"), new_subject_schedule_path(@subject), class: "rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 shadow-sm" %>
       </div>
     <% end %>
   </div>
@@ -25,15 +25,15 @@
                 </svg>
               </div>
               <div>
-                <p class="font-bold text-gray-900 font-sans"><%= %w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday][schedule.day] %></p>
-                <p class="text-sm text-gray-500"><%= schedule.start_time.strftime("%I:%M %p") %> - <%= schedule.end_time.strftime("%I:%M %p") %></p>
-                <p class="text-xs text-gray-400 mt-0.5">Room: <%= schedule.room %></p>
+                <p class="font-bold text-gray-900 font-sans"><%= t("subjects.days.#{%w[sunday monday tuesday wednesday thursday friday saturday][schedule.day]}") %></p>
+                <p class="text-sm text-gray-500"><%= l(schedule.start_time, format: "%I:%M %p") %> - <%= l(schedule.end_time, format: "%I:%M %p") %></p>
+                <p class="text-xs text-gray-400 mt-0.5"><%= t("schedules.index.room_prefix", room: schedule.room) %></p>
               </div>
             </div>
             
             <% if Current.user.teacher? || Current.user.admin? %>
               <div>
-                <%= button_to "Remove", subject_schedule_path(@subject, schedule), method: :delete, class: "text-xs font-semibold text-red-600 hover:text-red-800 bg-transparent border-0 cursor-pointer p-1 rounded hover:bg-red-50 transition-colors", data: { turbo_confirm: "Are you sure you want to remove this schedule entry?" } %>
+                <%= button_to t("common.remove"), subject_schedule_path(@subject, schedule), method: :delete, class: "text-xs font-semibold text-red-600 hover:text-red-800 bg-transparent border-0 cursor-pointer p-1 rounded hover:bg-red-50 transition-colors", data: { turbo_confirm: t("schedules.index.confirm_remove") } %>
               </div>
             <% end %>
           </div>
@@ -45,8 +45,8 @@
       <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
       </svg>
-      <p class="text-gray-700 font-semibold">No schedule entries</p>
-      <p class="text-sm text-gray-400 mt-1">No timetable entries have been added for this subject yet.</p>
+      <p class="text-gray-700 font-semibold"><%= t("schedules.index.no_entries_title") %></p>
+      <p class="text-sm text-gray-400 mt-1"><%= t("schedules.index.no_entries_hint") %></p>
     </div>
   <% end %>
 </div>

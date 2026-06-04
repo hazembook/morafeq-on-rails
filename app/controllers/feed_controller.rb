@@ -6,7 +6,7 @@ class FeedController < ApplicationController
 
   def create
     unless Current.user.teacher? || Current.user.admin?
-      redirect_to feed_index_path, alert: "Only teachers and admins can create posts."
+      redirect_to feed_index_path, alert: t("flash.feed.only_teachers_admins")
       return
     end
 
@@ -25,7 +25,7 @@ class FeedController < ApplicationController
     )
 
     if @post.save
-      redirect_to feed_index_path, notice: "Post created."
+      redirect_to feed_index_path, notice: t("flash.feed.post_created")
     else
       redirect_to feed_index_path, alert: @post.errors.full_messages.to_sentence
     end

@@ -38,7 +38,8 @@ export default class extends Controller {
     questions.forEach((question, index) => {
       const label = question.querySelector('[data-question-label]')
       if (label) {
-        label.textContent = `Question ${index + 1}`
+        const template = label.getAttribute('data-template') || 'Question %{num}'
+        label.textContent = template.replace('%{num}', index + 1)
       }
     })
   }

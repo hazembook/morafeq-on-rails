@@ -19,7 +19,7 @@ class MaterialsController < ApplicationController
   def create
     @material = @subject.materials.new(material_params)
     if @material.save
-      redirect_to subject_materials_path(@subject), notice: "Material uploaded."
+      redirect_to subject_materials_path(@subject), notice: t("flash.materials.uploaded")
     else
       render :new, status: :unprocessable_entity
     end
@@ -28,7 +28,7 @@ class MaterialsController < ApplicationController
   def destroy
     @material = @subject.materials.kept.find(params[:id])
     @material.discard
-    redirect_to subject_materials_path(@subject), notice: "Material removed."
+    redirect_to subject_materials_path(@subject), notice: t("flash.materials.removed")
   end
 
   private
@@ -39,7 +39,7 @@ class MaterialsController < ApplicationController
 
   def require_teacher
     unless Current.user.admin? || @subject.teacher == Current.user
-      redirect_to subjects_path, alert: "Not authorized."
+      redirect_to subjects_path, alert: t("common.not_authorized")
     end
   end
 

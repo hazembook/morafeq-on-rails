@@ -31,7 +31,7 @@ module ApplicationHelper
                 safe_join([
                   tag.span(k, class: "font-medium text-gray-800"),
                   tag.span("→", class: "text-gray-400 font-bold"),
-                  tag.span(v.presence || "No match selected", class: v.present? ? "text-blue-600 font-semibold" : "text-red-500 italic")
+                  tag.span(v.presence || t("quizzes.fields.no_match_selected"), class: v.present? ? "text-blue-600 font-semibold" : "text-red-500 italic")
                 ])
               end
             end

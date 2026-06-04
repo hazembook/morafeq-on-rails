@@ -1,15 +1,15 @@
 <div class="max-w-4xl mx-auto px-4 py-6">
   <div class="mb-6">
-    <%= link_to "← Back to Attendance", subject_attendances_path(@subject), class: "text-sm text-blue-600 hover:text-blue-800" %>
-    <h1 class="text-2xl font-bold mt-2 text-gray-900">Record Attendance</h1>
+    <%= link_to t("attendances.record.back"), subject_attendances_path(@subject), class: "text-sm text-blue-600 hover:text-blue-800" %>
+    <h1 class="text-2xl font-bold mt-2 text-gray-900"><%= t("attendances.record.title") %></h1>
     <p class="text-sm text-gray-500"><%= @subject.name %> (<%= @subject.code %>)</p>
   </div>
 
   <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
     <%= form_with url: record_subject_attendances_path(@subject), method: :get, class: "flex flex-col sm:flex-row sm:items-center gap-3" do |f| %>
-      <%= f.label :date, "Attendance Date:", class: "text-sm font-semibold text-gray-700" %>
+      <%= f.label :date, t("attendances.record.date_label"), class: "text-sm font-semibold text-gray-700" %>
       <%= f.date_field :date, value: @date, onchange: "this.form.requestSubmit();", class: "rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-1.5" %>
-      <span class="text-xs text-gray-400">Selecting a date will load existing records.</span>
+      <span class="text-xs text-gray-400"><%= t("attendances.record.date_hint") %></span>
     <% end %>
   </div>
 
@@ -21,8 +21,8 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Student</th>
-              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+              <th class="px-6 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide"><%= t("attendances.record.student") %></th>
+              <th class="px-6 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide"><%= t("attendances.record.status") %></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-150 bg-white">
@@ -35,15 +35,15 @@
                   <div class="flex items-center gap-4">
                     <label class="flex items-center gap-1.5 cursor-pointer">
                       <%= radio_button_tag "attendance[#{student.id}]", "present", selected_status == "present", class: "text-blue-600 focus:ring-blue-500 focus:ring-2 border-gray-300" %>
-                      <span class="text-sm text-gray-700">Present</span>
+                      <span class="text-sm text-gray-700"><%= t("attendances.record.present") %></span>
                     </label>
                     <label class="flex items-center gap-1.5 cursor-pointer">
                       <%= radio_button_tag "attendance[#{student.id}]", "absent", selected_status == "absent", class: "text-red-600 focus:ring-red-500 focus:ring-2 border-gray-300" %>
-                      <span class="text-sm text-gray-700">Absent</span>
+                      <span class="text-sm text-gray-700"><%= t("attendances.record.absent") %></span>
                     </label>
                     <label class="flex items-center gap-1.5 cursor-pointer">
                       <%= radio_button_tag "attendance[#{student.id}]", "excused", selected_status == "excused", class: "text-yellow-600 focus:ring-yellow-500 focus:ring-2 border-gray-300" %>
-                      <span class="text-sm text-gray-700">Excused</span>
+                      <span class="text-sm text-gray-700"><%= t("attendances.record.excused") %></span>
                     </label>
                   </div>
                 </td>
@@ -54,13 +54,13 @@
       </div>
 
       <div class="flex justify-end gap-3">
-        <%= link_to "Cancel", subject_attendances_path(@subject), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50" %>
-        <%= f.submit "Save Attendance", class: "px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm cursor-pointer" %>
+        <%= link_to t("common.cancel"), subject_attendances_path(@subject), class: "px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50" %>
+        <%= f.submit t("attendances.record.save_button"), class: "px-6 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm cursor-pointer" %>
       </div>
     <% end %>
   <% else %>
     <div class="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
-      <p class="text-gray-500">No students enrolled in this subject.</p>
+      <p class="text-gray-500"><%= t("attendances.record.no_students") %></p>
     </div>
   <% end %>
 </div>

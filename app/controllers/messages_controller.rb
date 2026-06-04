@@ -24,7 +24,7 @@ class MessagesController < ApplicationController
     @message.discard
     broadcast_destroy
 
-    flash[:notice] = is_author ? "Message unsent." : "Message deleted by moderator."
+    flash[:notice] = is_author ? t("chats.unsent") : t("chats.deleted_by_moderator")
     redirect_to room
   end
 
@@ -36,7 +36,7 @@ class MessagesController < ApplicationController
 
   def message_not_authorized
     room = ChatRoom.find_by(id: params[:chat_room_id])
-    redirect_to(room || chat_rooms_path, alert: "You are not authorized to perform this action.")
+    redirect_to(room || chat_rooms_path, alert: t("common.not_authorized"))
   end
 
   def message_params

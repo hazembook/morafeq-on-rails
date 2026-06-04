@@ -14,7 +14,7 @@ class SchedulesController < ApplicationController
   def create
     @schedule = @subject.schedules.new(schedule_params)
     if @schedule.save
-      redirect_to subject_schedules_path(@subject), notice: "Schedule entry created."
+      redirect_to subject_schedules_path(@subject), notice: t("flash.schedules.created")
     else
       render :new, status: :unprocessable_entity
     end
@@ -23,7 +23,7 @@ class SchedulesController < ApplicationController
   def destroy
     @schedule = @subject.schedules.find(params[:id])
     @schedule.destroy
-    redirect_to subject_schedules_path(@subject), notice: "Schedule entry deleted."
+    redirect_to subject_schedules_path(@subject), notice: t("flash.schedules.deleted")
   end
 
   private
@@ -34,7 +34,7 @@ class SchedulesController < ApplicationController
 
   def require_teacher_or_admin
     unless Current.user.admin? || @subject.teacher == Current.user
-      redirect_to @subject, alert: "Not authorized."
+      redirect_to @subject, alert: t("common.not_authorized")
     end
   end
 

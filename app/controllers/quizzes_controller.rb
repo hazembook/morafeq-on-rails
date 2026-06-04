@@ -35,7 +35,7 @@ class QuizzesController < ApplicationController
     @quiz.total_points = @quiz.quiz_questions.map(&:points).compact.sum
 
     if @quiz.save
-      redirect_to subject_quizzes_path(@subject), notice: "Quiz created successfully."
+      redirect_to subject_quizzes_path(@subject), notice: t("flash.quizzes.created")
     else
       @quiz.quiz_questions.build if @quiz.quiz_questions.empty?
       render :new, status: :unprocessable_entity
@@ -50,7 +50,7 @@ class QuizzesController < ApplicationController
     @quiz.total_points = @quiz.quiz_questions.map(&:points).compact.sum
 
     if @quiz.save
-      redirect_to params[:redirect_to].presence || subject_quiz_path(@subject, @quiz), notice: "Quiz updated successfully."
+      redirect_to params[:redirect_to].presence || subject_quiz_path(@subject, @quiz), notice: t("flash.quizzes.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -58,7 +58,7 @@ class QuizzesController < ApplicationController
 
   def destroy
     @quiz.destroy
-    redirect_to subject_quizzes_path(@subject), notice: "Quiz deleted successfully."
+    redirect_to subject_quizzes_path(@subject), notice: t("flash.quizzes.deleted")
   end
 
 
@@ -79,9 +79,9 @@ class QuizzesController < ApplicationController
       end
     end
 
-    redirect_to grade_subject_quiz_path(@subject, @quiz), notice: "Grades updated successfully."
+    redirect_to grade_subject_quiz_path(@subject, @quiz), notice: t("flash.quizzes.graded")
   rescue ActiveRecord::RecordInvalid => e
-    redirect_to grade_subject_quiz_path(@subject, @quiz), alert: "Failed to update grades: #{e.message}"
+    redirect_to grade_subject_quiz_path(@subject, @quiz), alert: t("flash.quizzes.grade_failed", message: e.message)
   end
 
   private
@@ -96,7 +96,7 @@ class QuizzesController < ApplicationController
 
   def require_teacher_or_admin
     unless Current.user.admin? || @subject.teacher == Current.user
-      redirect_to @subject, alert: "Not authorized."
+      redirect_to @subject, alert: t("common.not_authorized")
     end
   end
 
