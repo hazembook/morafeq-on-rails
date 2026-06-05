@@ -5,27 +5,19 @@
      data-post-url="<%= feed_path(post) %>">
 
   <div class="p-4">
-    <!-- Header row with scope + author + timestamp + badges + 3-dot menu -->
+    <!-- Header: Author name, [Official], [Scope] -->
     <div class="flex items-start justify-between gap-2 mb-2">
       <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-gray-500 min-w-0">
+        <span class="font-semibold text-gray-800 truncate"><%= post.author.full_name %></span>
+        <% if post.pinned? %>
+          <span class="shrink-0 text-[10px] bg-red-100 text-red-700 font-semibold px-1.5 py-0.5 rounded-full uppercase tracking-wider scale-90 origin-left"><%= t("feed.official") %></span>
+        <% end %>
         <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide shrink-0 <%= scope_badge_class(post.scope_type) %>">
           <%= post.scope_type.present? ? t("feed.scopes.#{post.scope_type.downcase}") : t("feed.scope_general") %>
         </span>
         <span class="text-[11px] text-gray-500 font-medium shrink-0 max-w-[120px] truncate" title="<%= post.scope&.name || t("feed.scope_univ") %>">
           <%= post.scope ? post.scope.name : t("feed.scope_univ") %>
         </span>
-        <span class="text-gray-300 shrink-0">•</span>
-        <span class="font-semibold text-gray-800 truncate"><%= post.author.full_name %></span>
-        <span class="text-gray-300 shrink-0">•</span>
-        <span class="shrink-0"><%= t("datetime.time_ago", time: time_ago_in_words(post.created_at)) %></span>
-        <% if post.pinned? %>
-          <span class="shrink-0 text-[10px] bg-red-100 text-red-700 font-semibold px-1.5 py-0.5 rounded-full uppercase tracking-wider scale-90 origin-left"><%= t("feed.official") %></span>
-        <% end %>
-        <% if post.author == Current.user && post.post_views_count.to_i > 0 %>
-          <span class="shrink-0 text-[10px] bg-blue-50 text-blue-600 font-medium px-1.5 py-0.5 rounded-full" title="<%= t("feed.read_by", count: post.post_views_count) %>">
-            <%= t("feed.read_by", count: post.post_views_count) %>
-          </span>
-        <% end %>
       </div>
 
       <!-- 3-dot dropdown menu (author or admin only) -->
@@ -38,7 +30,7 @@
               <circle cx="12" cy="19" r="1.5"/>
             </svg>
           </button>
-          <div data-dropdown-target="menu" class="hidden absolute right-0 top-full mt-1 w-36 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 origin-top-right">
+          <div data-dropdown-target="menu" class="hidden absolute end-0 top-full mt-1 w-36 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 origin-top-right">
             <%= link_to edit_feed_path(post), data: { turbo_frame: "_top" }, class: "flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors no-underline" do %>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -59,49 +51,113 @@
     <!-- Post content -->
     <div class="text-sm text-gray-800 whitespace-pre-line leading-relaxed mb-3"><%= post.content %></div>
 
-    <!-- Attachments: larger thumbnails for preview + collapsible file chips -->
+    <!-- Attachments: full preview grid for images, detailed cards for files -->
     <% if post.attachments.any? %>
       <% images, files = post.attachments.partition(&:image?) %>
-      <div class="flex flex-wrap gap-2 mb-3" data-lightbox-gallery="post-<%= post.id %>">
-        <% images.first(4).each do |attachment| %>
-          <div class="lightbox-trigger cursor-zoom-in" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" onclick="event.stopPropagation(); openLightboxGallery(this)">
-            <%= image_tag attachment, class: "w-20 h-20 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity" %>
-          </div>
-        <% end %>
-        <% if images.size > 4 %>
-          <div class="w-20 h-20 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-xs font-bold text-gray-500">
-            +<%= images.size - 4 %>
-          </div>
-        <% end %>
-        <% files.first(3).each do |attachment| %>
-          <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "flex items-center gap-1.5 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 text-xs text-gray-600 hover:text-blue-600 transition-colors no-underline", download: true, onclick: "event.stopPropagation()" do %>
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-            </svg>
-            <%= attachment.filename.to_s.truncate(20) %>
+      <div class="mt-2 space-y-2 mb-3" data-lightbox-gallery="post-<%= post.id %>">
+        <% if images.any? %>
+          <% if images.size == 1 %>
+            <% attachment = images.first %>
+            <div class="block max-w-lg overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" onclick="event.stopPropagation(); openLightboxGallery(this)">
+              <%= image_tag attachment, class: "w-full max-h-64 object-cover hover:scale-[1.02] transition-transform duration-300" %>
+            </div>
+          <% else %>
+            <div class="grid gap-1 max-w-lg <%= images.size == 2 ? "grid-cols-2" : "grid-cols-3" %> rounded-lg overflow-hidden border border-gray-200">
+              <% images.each_with_index do |attachment, idx| %>
+                <div class="relative cursor-zoom-in aspect-square overflow-hidden bg-gray-100 lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" onclick="event.stopPropagation(); openLightboxGallery(this)">
+                  <%= image_tag attachment, class: "w-full h-full object-cover hover:scale-105 transition-transform duration-300" %>
+                  <% if idx == 2 && images.size > 3 %>
+                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-lg pointer-events-none">
+                      +<%= images.size - 2 %>
+                    </div>
+                  <% end %>
+                </div>
+                <% break if idx == 2 && images.size > 3 %>
+              <% end %>
+            </div>
           <% end %>
         <% end %>
-        <% if files.size > 3 %>
-          <span class="px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 text-xs text-gray-500">
-            +<%= files.size - 3 %> <%= t("feed.more_files") %>
-          </span>
+
+        <% if files.any? %>
+          <div class="grid grid-cols-1 gap-2 max-w-lg">
+            <% files.each do |attachment| %>
+              <% preview_type = if attachment.video? then "video" elsif attachment.audio? then "audio" elsif attachment.content_type == "application/pdf" then "pdf" end %>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 hover:bg-gray-100/80 rounded-lg border border-gray-200/80 transition-colors group gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1 w-full">
+                  <div class="p-2 bg-white rounded-md border border-gray-200 text-gray-500 group-hover:text-blue-600 transition-colors shrink-0">
+                    <% if preview_type == "pdf" %>
+                      <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h1.5M9 13h6m-6 4h6"/>
+                      </svg>
+                    <% elsif preview_type == "video" %>
+                      <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                      </svg>
+                    <% elsif preview_type == "audio" %>
+                      <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                      </svg>
+                    <% else %>
+                      <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                      </svg>
+                    <% end %>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <span class="block text-sm font-medium text-gray-700 truncate group-hover:text-blue-600 transition-colors"><%= attachment.filename %></span>
+                    <span class="block text-[11px] text-gray-400"><%= number_to_human_size(attachment.byte_size) %></span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                  <% if preview_type.present? %>
+                    <button class="px-2.5 py-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors cursor-pointer font-sans lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="<%= preview_type %>" data-title="<%= j attachment.filename.to_s %>" onclick="event.stopPropagation(); openLightboxGallery(this)">
+                      <%= t("feed.preview") %>
+                    </button>
+                  <% end %>
+                  <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "p-1.5 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 rounded border border-gray-200 transition-colors cursor-pointer", title: t("common.download"), download: true, onclick: "event.stopPropagation()" do %>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
         <% end %>
       </div>
     <% end %>
 
-    <!-- Footer: comments + read status -->
-    <div class="pt-3 border-t border-gray-100 flex flex-wrap items-center gap-3 text-gray-500 text-xs font-semibold select-none">
-      <% unless post.comments_disabled? %>
-        <%= link_to feed_path(post), class: "flex items-center gap-1.5 px-3 py-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500 hover:text-gray-700 decoration-none no-underline cursor-pointer" do %>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-          </svg>
-          <span><%= post.comments.count %> <%= t("feed.comments") %></span>
+    <!-- Footer: comments + read status + timestamp -->
+    <div class="pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 text-gray-500 text-xs font-semibold select-none">
+      <div class="flex flex-wrap items-center gap-3">
+        <% unless post.comments_disabled? %>
+          <%= link_to feed_path(post), class: "flex items-center gap-1.5 px-3 py-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500 hover:text-gray-700 decoration-none no-underline cursor-pointer" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            <span><%= post.comments.count %> <%= t("feed.comments") %></span>
+          <% end %>
         <% end %>
-      <% end %>
 
-      <div id="read_status_<%= dom_id(post) %>">
-        <%= render "feed/read_button", post: post %>
+        <div id="read_status_<%= dom_id(post) %>">
+          <%= render "feed/read_button", post: post %>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-gray-400">
+        <span><%= t("datetime.time_ago", time: time_ago_in_words(post.created_at)) %></span>
+        <% if post.author == Current.user && post.post_views_count.to_i > 0 %>
+          <span class="text-gray-300">•</span>
+          <span class="text-blue-500" title="<%= t("feed.read_by", count: post.post_views_count) %>">
+            <%= t("feed.read_by", count: post.post_views_count) %>
+          </span>
+          <% last_read = post.post_views.maximum(:created_at) %>
+          <% if last_read %>
+            <span class="text-gray-300">•</span>
+            <span><%= t("feed.last_read", time: time_ago_in_words(last_read)) %></span>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>

@@ -199,6 +199,7 @@ en:
       other: "Read by %{count} people"
     read: "Read"
     mark_read: "Mark as read"
+    last_read: "Last read %{time} ago"
     share: "Share"
     sidebar:
       about: "Welcome to your academic home feed. Here you can find official pinned announcements and course-related posts."
