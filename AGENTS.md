@@ -66,6 +66,7 @@ bd close bd-42 --reason "Completed" --json
 4. **Discover new work?** Create linked issue:
    - `bd create "Found bug" --description="Details about what was found" -p 1 --deps discovered-from:<parent-id>`
 5. **Complete**: `bd close <id> --reason "Done"`
+6. **Commit before next task**: `git add -A && git commit -m "..."` — never open/claim the next task before committing the previous one's work
 
 ### Quality
 - Use `--acceptance` and `--design` fields when creating issues
@@ -92,6 +93,7 @@ bd automatically syncs via Dolt:
 - ✅ Always use `--json` flag for programmatic use
 - ✅ Link discovered work with `discovered-from` dependencies
 - ✅ Check `bd ready` before asking "what should I work on?"
+- ✅ Commit between tasks — close and commit before claiming the next one
 - ❌ Do NOT create markdown TODO lists
 - ❌ Do NOT use external issue trackers
 - ❌ Do NOT duplicate tracking systems
