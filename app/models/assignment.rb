@@ -4,12 +4,18 @@ class Assignment < ApplicationRecord
 
   has_one_attached :file, dependent: :purge_later
 
+  after_create_commit :notify_recipients
+
   validates :title, presence: true
   validates :due_at, presence: true
   validates :total_points, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   validate :file_type_valid, if: -> { file.attached? }
   validate :file_size_valid, if: -> { file.attached? }
+
+  def owner
+    subject.teacher
+  end
 
   ALLOWED_TYPES = %w[
     application/pdf
@@ -39,6 +45,10 @@ class Assignment < ApplicationRecord
   MAX_FILE_SIZE = 50.megabytes
 
   private
+
+  def notify_recipients
+    NotificationJob.perform_later(owner, "new_assignment", self)
+  end
 
   def file_type_valid
     unless ALLOWED_TYPES.include?(file.content_type)

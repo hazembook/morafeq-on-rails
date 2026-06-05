@@ -14,6 +14,7 @@ class Post < ApplicationRecord
   scope :not_pinned, -> { where(pinned: false) }
 
   after_create_commit :broadcast_create
+  after_create_commit :notify_recipients
   after_update_commit :broadcast_update
   after_destroy_commit :broadcast_destroy_callback
 
@@ -36,6 +37,11 @@ class Post < ApplicationRecord
   end
 
   private
+
+  def notify_recipients
+    action = pinned? ? "new_pinned_post" : "new_post"
+    NotificationJob.perform_later(author, action, self)
+  end
 
   def broadcast_create
     target_stream = case scope_type

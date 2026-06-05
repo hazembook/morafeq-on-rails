@@ -5,6 +5,8 @@ class Message < ApplicationRecord
   belongs_to :chat_room, inverse_of: :messages
   has_many_attached :attachments, dependent: :purge_later
 
+  after_create_commit :notify_recipients
+
   validates :content, presence: true, unless: -> { attachments.any? }
   validate :attachments_size_valid, if: -> { attachments.any? }
 
@@ -19,6 +21,11 @@ class Message < ApplicationRecord
   end
 
   private
+
+  def notify_recipients
+    return unless chat_room.is_private?
+    NotificationJob.perform_later(user, "new_message", self)
+  end
 
   def attachments_size_valid
     attachments.each do |attachment|
