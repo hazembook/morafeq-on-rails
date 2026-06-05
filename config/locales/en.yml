@@ -183,7 +183,7 @@ en:
     signed_in_as: "You're signed in as %{name}."
   feed:
     create_post: "Create Post"
-    mind_placeholder: "What's on your mind?"
+    mind_placeholder: "Share an announcement"
     scope_prompt: "Post to a subject..."
     official: "Official (Pin)"
     post_button: "Post"

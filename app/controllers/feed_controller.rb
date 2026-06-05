@@ -9,7 +9,6 @@ class FeedController < ApplicationController
 
   def show
     @post = Post.feed_for(Current.user).find(params[:id])
-    @post.post_views.find_or_create_by!(user: Current.user) unless @post.author == Current.user
     @comments = @post.comments.includes(:user)
   end
 
@@ -20,7 +19,7 @@ class FeedController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
-          "read_status_#{dom_id(@post)}",
+          "read_status_#{ActionView::RecordIdentifier.dom_id(@post)}",
           partial: "feed/read_button",
           locals: { post: @post }
         )

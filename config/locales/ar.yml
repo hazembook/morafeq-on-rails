@@ -183,7 +183,7 @@ ar:
     signed_in_as: "أنت مسجل الدخول باسم %{name}."
   feed:
     create_post: "إنشاء منشور"
-    mind_placeholder: "ماذا يدور في ذهنك؟"
+    mind_placeholder: "شارك إعلاناً"
     scope_prompt: "انشر في مادة..."
     official: "رسمي (تثبيت)"
     post_button: "نشر"

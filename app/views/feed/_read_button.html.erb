@@ -7,5 +7,5 @@
     <%= t("feed.read") %>
   </span>
 <% else %>
-  <%= button_to t("feed.mark_read"), mark_read_feed_path(post), method: :post, class: "flex items-center gap-1.5 px-3 py-1.5 hover:bg-green-50 rounded-full transition-colors text-green-600 hover:text-green-700 border-0 bg-transparent font-semibold text-xs cursor-pointer" %>
+  <%= button_to t("feed.mark_read"), mark_read_feed_path(post), method: :post, data: { turbo_frame: "_top" }, class: "flex items-center gap-1.5 px-3 py-1.5 hover:bg-green-50 rounded-full transition-colors text-green-600 hover:text-green-700 border-0 bg-transparent font-semibold text-xs cursor-pointer" %>
 <% end %>
