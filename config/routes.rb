@@ -25,6 +25,9 @@ Rails.application.routes.draw do
   end
   resources :feed, only: [ :index, :show, :create, :edit, :update, :destroy ] do
     resources :comments, only: [ :create ]
+    member do
+      post :mark_read
+    end
   end
   resources :chat_rooms, only: [ :index, :show ] do
     post :create_private, on: :collection

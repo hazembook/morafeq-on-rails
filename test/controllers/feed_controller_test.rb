@@ -10,6 +10,7 @@ class FeedControllerTest < ActionDispatch::IntegrationTest
 
   test "should get show when authenticated" do
     sign_in_as(@student)
+    @post.update!(comments_disabled: false)
     get feed_path(@post)
     assert_response :success
     assert_select "h3", text: /Comments/

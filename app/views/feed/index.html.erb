@@ -45,10 +45,16 @@
                 <%= f.select :scope, scope_options_for(Current.user), { prompt: t("feed.scope_prompt") }, class: "w-full rounded-lg border-gray-300 text-xs py-1.5 bg-white", name: "post[scope]" %>
               </div>
               <div class="flex items-center justify-between gap-3">
-                <label class="flex items-center gap-1.5 text-xs text-gray-600 font-medium cursor-pointer">
-                  <%= f.check_box :pinned, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500", name: "post[pinned]" %>
-                  <%= t("feed.official") %>
-                </label>
+                <div class="flex items-center gap-3">
+                  <label class="flex items-center gap-1.5 text-xs text-gray-600 font-medium cursor-pointer">
+                    <%= f.check_box :pinned, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500", name: "post[pinned]" %>
+                    <%= t("feed.official") %>
+                  </label>
+                  <label class="flex items-center gap-1.5 text-xs text-gray-600 font-medium cursor-pointer">
+                    <%= f.check_box :comments_disabled, { checked: true, name: "post[comments_disabled]" }, "1", "0" %>
+                    <%= t("feed.disable_comments") %>
+                  </label>
+                </div>
                 <%= f.submit t("feed.post_button"), class: "rounded-full bg-blue-600 px-4 py-1.5 text-white text-xs font-bold hover:bg-blue-700 cursor-pointer shadow transition-all hover:scale-102 border-0" %>
               </div>
             </div>

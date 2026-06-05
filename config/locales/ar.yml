@@ -194,9 +194,11 @@ ar:
     comments: "تعليقات"
     more_files: "ملفات أخرى"
     read_by:
-      zero: "لم يشاهده أحد بعد"
-      one: "شاهده شخص واحد"
-      other: "شاهده %{count} أشخاص"
+      zero: "لم يقرأه أحد بعد"
+      one: "قرأه شخص واحد"
+      other: "قرأه %{count} أشخاص"
+    read: "مقروء"
+    mark_read: "تأكيد القراءة"
     share: "مشاركة"
     sidebar:
       about: "أهلاً بك في صفحة المنشورات الأكاديمية. يمكنك هنا العثور على الإعلانات الرسمية المثبتة والمنشورات المتعلقة بالمواد الدراسية."
@@ -219,10 +221,12 @@ ar:
     scope_label: "نطاق المنشور"
     existing_attachments: "المرفقات الحالية"
     add_attachments: "إضافة مرفقات"
+    disable_comments: "تعطيل التعليقات"
+    comments_disabled_notice: "التعليقات معطلة في هذا المنشور"
     back_to_feed: "← العودة إلى المنشورات"
     comment_placeholder: "ما رأيك؟"
     add_comment: "تعليق"
-    no_comments: "لا توجد تعليقات بعد. كن أول من يشارك برأيه!"
+
   datetime:
     time_ago: "منذ %{time}"
   subjects:
@@ -280,7 +284,9 @@ ar:
 
 
   common:
+    actions: "إجراءات"
     cancel: "إلغاء"
+    confirm_delete: "هل أنت متأكد من حذف هذا المنشور؟"
     delete: "حذف"
     edit: "تعديل"
     save: "حفظ"

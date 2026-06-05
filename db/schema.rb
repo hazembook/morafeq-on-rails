@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_05_161905) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_05_165508) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -177,6 +177,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_161905) do
 
   create_table "posts", force: :cascade do |t|
     t.integer "author_id", null: false
+    t.boolean "comments_disabled", default: true, null: false
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.datetime "discarded_at"

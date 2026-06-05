@@ -47,10 +47,14 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-4">
         <label class="flex items-center gap-1.5 text-sm text-gray-600">
           <%= f.check_box :pinned, class: "rounded border-gray-300", name: "post[pinned]" %>
           <%= t("feed.official") %>
+        </label>
+        <label class="flex items-center gap-1.5 text-sm text-gray-600">
+          <%= f.check_box :comments_disabled, class: "rounded border-gray-300", name: "post[comments_disabled]" %>
+          <%= t("feed.disable_comments") %>
         </label>
       </div>
 
