@@ -21,7 +21,6 @@ class FeedController < ApplicationController
   def read_status
     @post = Post.feed_for(Current.user).find(params[:id])
     render partial: "feed/read_status", locals: { post: @post }
->>>>>>> 76e2b8c (fix: load read button per-user via lazy Turbo Frame)
   end
 
   def post_actions
