@@ -11,7 +11,3 @@ class MessagePolicy < ApplicationPolicy
     end
   end
 end
-
-    false
-  end
-end

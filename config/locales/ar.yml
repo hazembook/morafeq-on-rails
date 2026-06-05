@@ -117,6 +117,7 @@ ar:
     document_viewer: "عرض المستند"
     open_new_tab: "فتح في علامة تبويب جديدة"
     download: "تنزيل"
+    audio_player: "مشغل الصوت"
   sessions:
     title: "تسجيل الدخول"
     email_placeholder: "أدخل بريدك الإلكتروني"
@@ -270,9 +271,6 @@ ar:
       thursday: "الخميس"
       friday: "الجمعة"
       saturday: "السبت"
-
-  lightbox:
-    audio_player: "مشغل الصوت"
 
 
 

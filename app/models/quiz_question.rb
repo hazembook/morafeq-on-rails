@@ -20,9 +20,9 @@ class QuizQuestion < ApplicationRecord
   def choices_text
     @choices_text || if choices.is_a?(Array)
       choices.join("\n")
-    else
+                     else
       ""
-    end
+                     end
   end
 
   def default_choices

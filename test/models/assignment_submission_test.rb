@@ -14,7 +14,7 @@ class AssignmentSubmissionTest < ActionDispatch::IntegrationTest
       total_points: 50,
       subject: subject
     )
-    
+
     file = fixture_file_upload("test.pdf", "application/pdf")
     submission = AssignmentSubmission.create!(
       assignment: assignment,

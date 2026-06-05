@@ -63,7 +63,7 @@ class Post < ApplicationRecord
   end
 
   def broadcast_destroy_callback
-    streams = ["posts_general"]
+    streams = [ "posts_general" ]
     streams << "posts_subject_#{scope_id}" if scope_type == "Subject"
     streams << "posts_department_#{scope_id}" if scope_type == "Department"
     streams << "posts_college_#{scope_id}" if scope_type == "College"

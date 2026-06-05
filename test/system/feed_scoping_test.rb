@@ -163,7 +163,7 @@ class FeedScopingTest < ApplicationSystemTestCase
     assert_text "test.pdf"
 
     click_link "Edit"
-    
+
     assert_text "test.pdf"
     check "remove_attachments[]"
 

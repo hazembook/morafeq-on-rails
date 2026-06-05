@@ -117,6 +117,7 @@ en:
     document_viewer: "Document Viewer"
     open_new_tab: "Open in New Tab"
     download: "Download"
+    audio_player: "Audio Player"
   sessions:
     title: "Sign in"
     email_placeholder: "Enter your email address"
@@ -270,9 +271,6 @@ en:
       thursday: "Thursday"
       friday: "Friday"
       saturday: "Saturday"
-
-  lightbox:
-    audio_player: "Audio Player"
 
 
 
