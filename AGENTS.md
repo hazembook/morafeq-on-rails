@@ -69,6 +69,24 @@ bd close bd-42 --reason "Completed" --json
 6. **Complete and merge**: `bd close <id> --reason "Done"`, then `git add -A && git commit -m "..."`, then `git switch main && git merge <branch> && git branch -d <branch>`
 7. **Commit before next task**: never open/claim the next task before committing the previous one's work
 
+**Pausing a task (work not finished):**
+
+If you need to pause before completing a task, commit the partial work on the branch, push it, and switch to the new task's branch. Never leave uncommitted work on main or the branch when switching contexts.
+
+```bash
+git add -A && git commit -m "wip: <bd-task-id> partial work checkpoint"
+git push -u origin <bd-task-id>
+git switch -c <next-task-id>
+```
+
+When returning to the paused task, rebase or merge main, then continue.
+
+```bash
+git switch <paused-branch>
+git rebase main
+# continue working
+```
+
 ### Quality
 - Use `--acceptance` and `--design` fields when creating issues
 - Use `--validate` to check description completeness
