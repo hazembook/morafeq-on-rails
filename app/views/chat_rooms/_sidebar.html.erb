@@ -50,9 +50,8 @@
   </div>
 
   <!-- Chat / Users List Scrollable Area -->
-  <div class="flex-1 overflow-y-auto divide-y divide-gray-150">
-    <div class="space-y-0.5">
-      <% @rooms.each do |room| %>
+  <div class="flex-1 overflow-y-auto">
+    <% @rooms.each do |room| %>
         <% 
           is_active = @room && @room.id == room.id
           display_name = room.display_name(Current.user)
@@ -115,7 +114,6 @@
           <% end %>
         </div>
       <% end %>
-    </div>
 
     <!-- Start Chat (Contacts Search Results) Section -->
     <div data-chat-search-target="usersHeader" class="px-4 py-2 text-xs font-bold text-gray-400 bg-gray-50/50 uppercase tracking-wider hidden">
