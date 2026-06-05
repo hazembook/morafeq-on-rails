@@ -152,11 +152,7 @@
           <span class="text-blue-500" title="<%= t("feed.read_by", count: post.post_views_count) %>">
             <%= t("feed.read_by", count: post.post_views_count) %>
           </span>
-          <% last_read = post.post_views.maximum(:created_at) %>
-          <% if last_read %>
-            <span class="text-gray-300">•</span>
-            <span><%= t("feed.last_read", time: time_ago_in_words(last_read)) %></span>
-          <% end %>
+
         <% end %>
       </div>
     </div>
