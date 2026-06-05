@@ -15,18 +15,7 @@ class FeedController < ApplicationController
   def mark_read
     @post = Post.feed_for(Current.user).find(params[:id])
     @post.post_views.find_or_create_by!(user: Current.user) unless @post.author == Current.user
-
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "read_status_#{ActionView::RecordIdentifier.dom_id(@post)}",
-          partial: "feed/read_button",
-          locals: { post: @post }
-        )
-      end
-      format.json { render json: { success: true, html: render_to_string(partial: "feed/read_button", locals: { post: @post }, formats: [ :html ]) } }
-      format.html { redirect_to feed_index_path }
-    end
+    redirect_to feed_index_path
   end
 
   def create

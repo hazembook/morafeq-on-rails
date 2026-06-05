@@ -22,22 +22,11 @@ class FeedControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
   end
 
-  test "mark_read with JSON returns correct replacement HTML" do
+  test "mark_read creates PostView and redirects" do
     sign_in_as(@student)
     assert_difference -> { PostView.count } do
-      post mark_read_feed_path(@post), headers: { Accept: "application/json" }
+      post mark_read_feed_path(@post)
     end
-    assert_response :success
-    body = response.parsed_body
-    assert body["success"]
-    assert_includes body["html"], "svg"
-    assert_includes body["html"], "Read"
-    assert_not_includes body["html"], "mark_read"
-  end
-
-  test "mark_read with HTML redirects to feed" do
-    sign_in_as(@student)
-    post mark_read_feed_path(@post), headers: { Accept: "text/html" }
     assert_redirected_to feed_index_path
   end
 
@@ -47,18 +36,8 @@ class FeedControllerTest < ActionDispatch::IntegrationTest
     post = create(:post, author: teacher, scope: subject)
     sign_in_as(teacher)
     assert_no_difference -> { PostView.count } do
-      post mark_read_feed_path(post), headers: { Accept: "application/json" }
+      post mark_read_feed_path(post)
     end
-    assert_response :success
-    body = response.parsed_body
-    assert_equal "", body["html"].strip
-  end
-
-  test "mark_read with Turbo Stream returns turbo-stream content" do
-    sign_in_as(@student)
-    post mark_read_feed_path(@post), headers: { Accept: "text/vnd.turbo-stream.html" }
-    assert_response :success
-    assert_includes response.body, "turbo-stream"
-    assert_includes response.body, "read_status_post_#{@post.id}"
+    assert_redirected_to feed_index_path
   end
 end
