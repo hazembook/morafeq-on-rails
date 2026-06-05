@@ -23,23 +23,23 @@
   <div class="grid gap-4">
     <%= link_to admin_colleges_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
       <span class="font-medium"><%= t("admin.nav.colleges") %></span>
-      <span class="text-blue-600"><%= I18n.locale == :ar ? "&larr;" : "&rarr;" %></span>
+      <span class="text-blue-600"><%= I18n.locale == :ar ? "\u2190" : "\u2192" %></span>
     <% end %>
     <%= link_to admin_departments_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
       <span class="font-medium"><%= t("admin.nav.departments") %></span>
-      <span class="text-blue-600"><%= I18n.locale == :ar ? "&larr;" : "&rarr;" %></span>
+      <span class="text-blue-600"><%= I18n.locale == :ar ? "\u2190" : "\u2192" %></span>
     <% end %>
     <%= link_to admin_subjects_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
       <span class="font-medium"><%= t("admin.nav.subjects") %></span>
-      <span class="text-blue-600"><%= I18n.locale == :ar ? "&larr;" : "&rarr;" %></span>
+      <span class="text-blue-600"><%= I18n.locale == :ar ? "\u2190" : "\u2192" %></span>
     <% end %>
     <%= link_to admin_users_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
       <span class="font-medium"><%= t("admin.nav.users") %></span>
-      <span class="text-blue-600"><%= I18n.locale == :ar ? "&larr;" : "&rarr;" %></span>
+      <span class="text-blue-600"><%= I18n.locale == :ar ? "\u2190" : "\u2192" %></span>
     <% end %>
     <%= link_to admin_audit_logs_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
       <span class="font-medium"><%= t("admin.nav.audit_logs") %></span>
-      <span class="text-blue-600"><%= I18n.locale == :ar ? "&larr;" : "&rarr;" %></span>
+      <span class="text-blue-600"><%= I18n.locale == :ar ? "\u2190" : "\u2192" %></span>
     <% end %>
   </div>
 </div>
