@@ -31,7 +31,7 @@ class FeedControllerTest < ActionDispatch::IntegrationTest
     body = response.parsed_body
     assert body["success"]
     assert_includes body["html"], "svg"
-    assert_includes body["html"], "feed.read"
+    assert_includes body["html"], "Read"
     assert_not_includes body["html"], "mark_read"
   end
 
