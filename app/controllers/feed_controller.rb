@@ -5,10 +5,12 @@ class FeedController < ApplicationController
   def index
     @pinned_posts = Post.feed_for(Current.user).pinned_first.where(pinned: true).limit(5)
     @posts = Post.feed_for(Current.user).not_pinned.page(params[:page]).per(10)
+    record_views(@pinned_posts + @posts)
   end
 
   def show
     @post = Post.feed_for(Current.user).find(params[:id])
+    @post.post_views.find_or_create_by!(user: Current.user)
     @comments = @post.comments.includes(:user)
   end
 
@@ -92,5 +94,16 @@ class FeedController < ApplicationController
 
   def post_params
     params.expect(post: [ :content, :pinned, { attachments: [] } ])
+  end
+
+  def record_views(posts)
+    post_ids = posts.select { |p| p.author != Current.user }.map(&:id)
+    return if post_ids.empty?
+
+    existing = PostView.where(post_id: post_ids, user_id: Current.user.id).pluck(:post_id)
+    new_posts = post_ids - existing
+    new_posts.each do |pid|
+      PostView.create(post_id: pid, user_id: Current.user.id)
+    end
   end
 end

@@ -5,6 +5,7 @@ class Post < ApplicationRecord
   belongs_to :scope, polymorphic: true, optional: true
   has_many_attached :attachments, dependent: :purge_later
   has_many :comments, -> { order(created_at: :asc) }, dependent: :destroy, inverse_of: :post
+  has_many :post_views, dependent: :destroy, inverse_of: :post
 
   validates :content, presence: true
   validates :scope_type, inclusion: { in: %w[College Department Subject] }, allow_nil: true

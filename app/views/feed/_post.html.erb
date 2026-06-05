@@ -1,29 +1,10 @@
-<%
-  # Generate a deterministic base score
-  base_score = (post.id * 17 + 3) % 240
-%>
-
 <div id="<%= dom_id(post) %>" 
-     class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex hover:border-gray-300 transition-colors cursor-pointer" 
-     data-controller="post-actions reddit-vote" 
+     class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:border-gray-300 transition-colors cursor-pointer" 
+     data-controller="post-actions" 
      data-action="click->post-actions#navigateToPost"
      data-post-url="<%= feed_path(post) %>"
-     data-post-actions-author-id-value="<%= post.author.id %>"
-     data-reddit-vote-post-id-value="<%= post.id %>"
-     data-reddit-vote-base-score-value="<%= base_score %>">
-  
-  <!-- Left Side Voting Bar (Desktop only) -->
-  <div class="hidden md:flex flex-col items-center w-11 shrink-0 bg-gray-50/50 py-3 border-e border-gray-150 select-none vote-bar">
-    <button type="button" data-action="click->reddit-vote#upvote" data-reddit-vote-target="up" class="p-1.5 hover:bg-gray-200 rounded text-gray-400 transition-colors cursor-pointer" title="Upvote">
-      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-    </button>
-    <span data-reddit-vote-target="score" class="text-xs font-bold my-1 text-gray-700">0</span>
-    <button type="button" data-action="click->reddit-vote#downvote" data-reddit-vote-target="down" class="p-1.5 hover:bg-gray-200 rounded text-gray-400 transition-colors cursor-pointer" title="Downvote">
-      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-    </button>
-  </div>
+     data-post-actions-author-id-value="<%= post.author.id %>">
 
-  <!-- Content Section -->
   <div class="flex-1 min-w-0 p-4 flex flex-col justify-between">
     <div>
       <!-- Header -->
@@ -34,103 +15,47 @@
         <% if post.pinned? %>
           <span class="text-[10px] bg-red-100 text-red-700 font-semibold px-1.5 py-0.5 rounded-full uppercase tracking-wider scale-90 origin-left"><%= t("feed.official") %></span>
         <% end %>
+        <% if post.author == Current.user && post.post_views_count.to_i > 0 %>
+          <span class="text-[10px] bg-blue-50 text-blue-600 font-medium px-1.5 py-0.5 rounded-full" title="<%= t("feed.read_by", count: post.post_views_count) %>">
+            👁 <%= post.post_views_count %>
+          </span>
+        <% end %>
       </div>
 
       <div class="text-sm text-gray-800 whitespace-pre-line leading-relaxed mb-3"><%= post.content %></div>
+
+      <!-- Attachments as collapsible chips -->
       <% if post.attachments.any? %>
         <% images, files = post.attachments.partition(&:image?) %>
-        
-        <div class="mt-2 space-y-2" data-lightbox-gallery="post-<%= post.id %>">
-          <%# Render Images Grid %>
-          <% if images.any? %>
-            <% if images.size == 1 %>
-              <% attachment = images.first %>
-              <div class="block max-w-lg overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" onclick="openLightboxGallery(this)">
-                <%= image_tag attachment, class: "w-full max-h-72 object-cover hover:scale-[1.02] transition-transform duration-300" %>
-              </div>
-            <% else %>
-              <div class="grid gap-1.5 max-w-lg <%= images.size == 2 ? "grid-cols-2" : "grid-cols-3" %> rounded-lg overflow-hidden border border-gray-200">
-                <% images.each_with_index do |attachment, idx| %>
-                  <div class="relative cursor-zoom-in aspect-square overflow-hidden bg-gray-100 lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" onclick="openLightboxGallery(this)">
-                    <%= image_tag attachment, class: "w-full h-full object-cover hover:scale-105 transition-transform duration-300" %>
-                    <% if idx == 2 && images.size > 3 %>
-                      <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-lg pointer-events-none">
-                        +<%= images.size - 2 %>
-                      </div>
-                    <% end %>
-                  </div>
-                  <% break if idx == 2 && images.size > 3 %>
-                <% end %>
-              </div>
+        <div class="flex flex-wrap gap-1.5 mb-3" data-lightbox-gallery="post-<%= post.id %>">
+          <% images.first(3).each do |attachment| %>
+            <div class="lightbox-trigger cursor-zoom-in" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" onclick="event.stopPropagation(); openLightboxGallery(this)">
+              <%= image_tag attachment, class: "w-16 h-16 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity" %>
+            </div>
+          <% end %>
+          <% if images.size > 3 %>
+            <div class="w-16 h-16 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-xs font-bold text-gray-500">
+              +<%= images.size - 3 %>
+            </div>
+          <% end %>
+          <% files.first(2).each do |attachment| %>
+            <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "flex items-center gap-1 px-2.5 py-1.5 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 text-xs text-gray-600 hover:text-blue-600 transition-colors no-underline", download: true, onclick: "event.stopPropagation()" do %>
+              <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+              <%= attachment.filename.to_s.truncate(20) %>
             <% end %>
           <% end %>
-
-          <%# Render Documents & Non-Images %>
-          <% if files.any? %>
-            <div class="grid grid-cols-1 gap-2 max-w-lg">
-              <% files.each do |attachment| %>
-                <% if attachment.video? %>
-                  <% preview_type = "video" %>
-                <% elsif attachment.audio? %>
-                  <% preview_type = "audio" %>
-                <% elsif attachment.content_type == "application/pdf" %>
-                  <% preview_type = "pdf" %>
-                <% else %>
-                  <% preview_type = nil %>
-                <% end %>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 hover:bg-gray-100/80 rounded-lg border border-gray-200/80 transition-colors mt-2 group gap-3">
-                  <div class="flex items-center gap-3 min-w-0 flex-1 w-full">
-                    <div class="p-2 bg-white rounded-md border border-gray-200 text-gray-500 group-hover:text-blue-600 transition-colors shrink-0">
-                      <% if preview_type == "pdf" %>
-                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h1.5M9 13h6m-6 4h6"></path>
-                        </svg>
-                      <% elsif preview_type == "video" %>
-                        <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                        </svg>
-                      <% elsif preview_type == "audio" %>
-                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                        </svg>
-                      <% else %>
-                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                      <% end %>
-                    </div>
-                    
-                    <div class="min-w-0 flex-1">
-                      <span class="block text-sm font-medium text-gray-700 truncate group-hover:text-blue-600 transition-colors">
-                        <%= attachment.filename %>
-                      </span>
-                      <span class="block text-[11px] text-gray-400">
-                        <%= number_to_human_size(attachment.byte_size) %>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                    <% if preview_type.present? %>
-                      <button class="px-2.5 py-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors cursor-pointer font-sans lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="<%= preview_type %>" data-title="<%= j attachment.filename.to_s %>" onclick="openLightboxGallery(this)">
-                        <%= t("feed.preview") %>
-                      </button>
-                    <% end %>
-                    <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "p-1.5 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 rounded border border-gray-200 transition-colors cursor-pointer", title: "Download", download: true do %>
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                      </svg>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
+          <% if files.size > 2 %>
+            <span class="px-2.5 py-1.5 bg-gray-50 rounded-lg border border-gray-200 text-xs text-gray-500">
+              +<%= files.size - 2 %> <%= t("feed.more_files") %>
+            </span>
           <% end %>
         </div>
       <% end %>
+
       <!-- Scope Tag -->
-      <div class="mt-3 flex items-center gap-1.5 flex-wrap">
+      <div class="flex items-center gap-1.5 flex-wrap">
         <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold tracking-wide uppercase <%= scope_badge_class(post.scope_type) %>">
           <%= post.scope_type.present? ? t("feed.scopes.#{post.scope_type.downcase}") : t("feed.scope_general") %>
         </span>
@@ -140,25 +65,14 @@
       </div>
     </div>
 
-    <!-- Reddit Footer Action Bar -->
+    <!-- Footer Action Bar -->
     <div class="mt-4 pt-2 border-t border-gray-100 flex flex-wrap items-center gap-3 text-gray-500 text-xs font-semibold select-none">
-      <!-- Inline vote pill for mobile -->
-      <div class="md:hidden flex items-center bg-gray-100 rounded-full p-0.5 select-none vote-bar">
-        <button type="button" data-action="click->reddit-vote#upvote" data-reddit-vote-target="up" class="p-1.5 hover:bg-gray-200 rounded-full text-gray-400 transition-colors cursor-pointer">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-        </button>
-        <span data-reddit-vote-target="score" class="text-xs font-bold px-1 text-gray-700">0</span>
-        <button type="button" data-action="click->reddit-vote#downvote" data-reddit-vote-target="down" class="p-1.5 hover:bg-gray-200 rounded-full text-gray-400 transition-colors cursor-pointer">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-        </button>
-      </div>
-
       <!-- Comments Button -->
       <%= link_to feed_path(post), class: "flex items-center gap-1.5 px-3 py-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500 hover:text-gray-700 decoration-none no-underline cursor-pointer" do %>
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
         </svg>
-        <span><%= post.comments.count %> <%= t("feed.comments", default: "Comments") %></span>
+        <span><%= post.comments.count %> <%= t("feed.comments") %></span>
       <% end %>
 
       <!-- Edit/Delete Actions (shown dynamically if owner) -->
@@ -178,6 +92,5 @@
         <% end %>
       </span>
     </div>
-
   </div>
 </div>

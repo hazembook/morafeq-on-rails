@@ -192,6 +192,11 @@ en:
     message_author: "Message"
     preview: "Preview"
     comments: "Comments"
+    more_files: "more files"
+    read_by:
+      zero: "Seen by no one yet"
+      one: "Seen by 1 person"
+      other: "Seen by %{count} people"
     share: "Share"
     sidebar:
       about: "Welcome to your academic home feed. Here you can find official pinned announcements and course-related posts."

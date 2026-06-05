@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_04_153524) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_05_161905) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -165,12 +165,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_153524) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "post_views", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "post_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["post_id", "user_id"], name: "index_post_views_on_post_id_and_user_id", unique: true
+    t.index ["post_id"], name: "index_post_views_on_post_id"
+    t.index ["user_id"], name: "index_post_views_on_user_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.integer "author_id", null: false
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.datetime "discarded_at"
     t.boolean "pinned", default: false, null: false
+    t.integer "post_views_count"
     t.integer "scope_id"
     t.string "scope_type"
     t.datetime "updated_at", null: false
@@ -276,6 +287,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_153524) do
   add_foreign_key "materials", "subjects"
   add_foreign_key "messages", "chat_rooms"
   add_foreign_key "messages", "users"
+  add_foreign_key "post_views", "posts"
+  add_foreign_key "post_views", "users"
   add_foreign_key "posts", "users", column: "author_id"
   add_foreign_key "quiz_answers", "quiz_questions"
   add_foreign_key "quiz_answers", "users"
