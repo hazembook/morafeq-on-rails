@@ -1,0 +1,1 @@
+{"id":"int-1ee9729b","kind":"field_change","created_at":"2026-06-05T19:51:49.18618589Z","actor":"Hazem Shaban","issue_id":"morafeq-xcq","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Fixed: Stimulus fetch-based mark-as-read replaces button_to, bypasses Turbo Frame nesting issues. mark_read_controller.js sends POST with Turbo Stream accept header."}}
