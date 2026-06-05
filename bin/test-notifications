@@ -1,0 +1,139 @@
+#!/usr/bin/env rails runner
+# frozen_string_literal: true
+
+# Verification script for notification integration points (morafeq-0ln.2)
+# Run: bin/rails runner bin/test-notifications
+
+$passed = 0
+$failed = 0
+
+def check(label, condition)
+  if condition
+    puts "  ✅ #{label}"
+    $passed += 1
+  else
+    puts "  ❌ #{label}"
+    $failed += 1
+  end
+end
+
+def cleanup
+  ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = OFF")
+  Notification.delete_all
+  Message.delete_all
+  ChatParticipant.delete_all
+  ChatRoom.delete_all
+  Enrollment.delete_all
+  Post.delete_all
+  ActiveStorage::Attachment.delete_all
+  ActiveStorage::Blob.delete_all
+  Material.delete_all
+  Assignment.delete_all
+  Quiz.delete_all
+  Subject.delete_all
+  Department.delete_all
+  College.delete_all
+  User.where.not(id: User.where(role: :admin).first&.id).delete_all
+  ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON")
+end
+
+cleanup
+
+puts "=== Notification Integration Test ===\n\n"
+
+suffix = rand(100000).to_s
+
+# --- Setup ---
+teacher = User.create!(full_name: "Teacher", email_address: "teacher_#{suffix}@t.com", password: "pass123", role: :teacher)
+student = User.create!(full_name: "Student", email_address: "student_#{suffix}@s.com", password: "pass123", role: :student)
+college = College.create!(name: "Test College #{suffix}")
+dept = Department.create!(name: "Test Dept #{suffix}", college: college)
+subject = Subject.create!(name: "Test Subject", code: "TST_#{suffix}", department: dept, teacher: teacher)
+Enrollment.create!(user: student, subject: subject)
+puts "Users: teacher ##{teacher.id}, student ##{student.id}"
+puts "Subject: ##{subject.id}\n\n"
+
+# 1. Subject-scoped post
+post = Post.create!(author: teacher, content: "Subject post", scope: subject, scope_type: "Subject")
+NotificationJob.perform_now(teacher, "new_post", post)
+n = student.notifications.where(action: "new_post", notifiable: post).last
+check("Subject-scoped post → student notified", n.present?)
+check("    actor is teacher", n&.actor == teacher)
+check("    action is new_post", n&.action == "new_post")
+
+# 2. Pinned post — different action
+pinned = Post.create!(author: teacher, content: "Pinned!", scope: subject, scope_type: "Subject", pinned: true)
+NotificationJob.perform_now(teacher, "new_pinned_post", pinned)
+n2 = student.notifications.where(action: "new_pinned_post", notifiable: pinned).last
+check("Pinned post → new_pinned_post action", n2.present?)
+
+# 3. Material upload
+mat = Material.new(title: "Test Material", subject: subject)
+mat.file.attach(io: StringIO.new("content"), filename: "test.pdf", content_type: "application/pdf")
+mat.save!
+NotificationJob.perform_now(teacher, "new_material", mat)
+n3 = student.notifications.where(action: "new_material", notifiable: mat).last
+check("Material upload → student notified", n3.present?)
+
+# 4. Quiz creation
+quiz = Quiz.create!(title: "Test Quiz", subject: subject, due_at: 1.week.from_now, total_points: 10)
+NotificationJob.perform_now(teacher, "new_quiz", quiz)
+n4 = student.notifications.where(action: "new_quiz", notifiable: quiz).last
+check("Quiz creation → student notified", n4.present?)
+
+# 5. Assignment creation
+assignment = Assignment.create!(title: "HW", subject: subject, due_at: 1.week.from_now, total_points: 100)
+NotificationJob.perform_now(teacher, "new_assignment", assignment)
+n5 = student.notifications.where(action: "new_assignment", notifiable: assignment).last
+check("Assignment creation → student notified", n5.present?)
+
+# 6. DM message
+dm = ChatRoom.find_or_create_private(teacher, student)
+msg = dm.messages.create!(user: teacher, content: "Hello DM")
+NotificationJob.perform_now(teacher, "new_message", msg)
+n6 = student.notifications.where(action: "new_message", notifiable: msg).last
+check("DM message → student notified", n6.present?)
+
+# 7. Group chat message — should NOT notify
+group = ChatRoom.create!(name: "Group Chat", is_private: false, subject: subject)
+group.chat_participants.create!(user: teacher)
+group.chat_participants.create!(user: student)
+group_msg = group.messages.create!(user: teacher, content: "Hello group")
+NotificationJob.perform_now(teacher, "new_message", group_msg)
+n7 = student.notifications.where(action: "new_message", notifiable: group_msg).last
+check("Group message → student NOT notified", n7.nil?)
+
+# 8. Author never receives own notifications
+check("Author has 0 notifications", teacher.notifications.count == 0)
+
+# 9. Department-scoped post
+other_dept_subject = Subject.create!(name: "Other", code: "TST2_#{suffix}", department: dept, teacher: teacher)
+other_student = User.create!(full_name: "Other Student", email_address: "other_#{suffix}@o.com", password: "pass123", role: :student)
+Enrollment.create!(user: other_student, subject: other_dept_subject)
+dept_post = Post.create!(author: teacher, content: "Dept wide", scope: dept, scope_type: "Department")
+NotificationJob.perform_now(teacher, "new_post", dept_post)
+both = [ student, other_student ].all? { |u| u.notifications.where(action: "new_post", notifiable: dept_post).exists? }
+check("Department-scoped post → both students notified", both)
+
+# 10. College-scoped post
+other_dept = Department.create!(name: "Other Dept #{suffix}", college: college)
+far_subject = Subject.create!(name: "Far", code: "TST3_#{suffix}", department: other_dept, teacher: teacher)
+far_student = User.create!(full_name: "Far Student", email_address: "far_#{suffix}@f.com", password: "pass123", role: :student)
+Enrollment.create!(user: far_student, subject: far_subject)
+college_post = Post.create!(author: teacher, content: "College wide", scope: college, scope_type: "College")
+NotificationJob.perform_now(teacher, "new_post", college_post)
+all_three = [ student, other_student, far_student ].all? { |u| u.notifications.where(action: "new_post", notifiable: college_post).exists? }
+check("College-scoped post → all students notified", all_three)
+
+# 11. General post — notifies all users
+extra_user = User.create!(full_name: "Extra", email_address: "extra_#{suffix}@e.com", password: "pass123", role: :student)
+general_post = Post.create!(author: teacher, content: "General", scope: nil, scope_type: nil)
+NotificationJob.perform_now(teacher, "new_post", general_post)
+all_users = [ student, other_student, far_student, extra_user ].all? { |u| u.notifications.where(action: "new_post", notifiable: general_post).exists? }
+check("General post → all users notified", all_users)
+check("    author still excluded", teacher.notifications.where(notifiable: general_post).empty?)
+
+cleanup
+
+puts "\n=== Result: #{$passed} passed, #{$failed} failed ==="
+exit($failed > 0 ? 1 : 0)
