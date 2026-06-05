@@ -74,7 +74,7 @@ export default class extends Controller {
 
     this.userTargets.forEach(user => {
       const name = user.getAttribute("data-search-name").toLowerCase()
-      if (name.includes(query)) {
+      if (name.includes(query) && query.length > 0) {
         user.classList.remove("hidden")
         visibleUsers++
       } else {
