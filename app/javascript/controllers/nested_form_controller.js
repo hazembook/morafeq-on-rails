@@ -10,7 +10,9 @@ export default class extends Controller {
   add(event) {
     event.preventDefault()
     
-    const content = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, new Date().getTime())
+    const timestamp = new Date().getTime()
+    this._counter = (this._counter || timestamp) + 1
+    const content = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, this._counter)
     this.containerTarget.insertAdjacentHTML('beforeend', content)
     this.updateLabels()
   }
@@ -34,6 +36,7 @@ export default class extends Controller {
   }
 
   updateLabels() {
+    if (!this.hasContainerTarget) return
     const questions = this.containerTarget.querySelectorAll('[data-nested-form-wrapper]:not([data-removed="true"])')
     questions.forEach((question, index) => {
       const label = question.querySelector('[data-question-label]')

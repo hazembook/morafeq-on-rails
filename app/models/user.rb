@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :enrollments, dependent: :destroy
   has_many :subjects, through: :enrollments
-  has_many :taught_subjects, class_name: "Subject", foreign_key: :teacher_id, dependent: :nullify, inverse_of: :teacher
+  has_many :taught_subjects, class_name: "Subject", foreign_key: :teacher_id, dependent: :restrict_with_error, inverse_of: :teacher
   has_many :authored_posts, class_name: "Post", foreign_key: :author_id, dependent: :destroy, inverse_of: :author
   has_many :chat_participants, dependent: :destroy
   has_many :chat_rooms, through: :chat_participants

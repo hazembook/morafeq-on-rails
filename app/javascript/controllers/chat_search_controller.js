@@ -49,6 +49,7 @@ export default class extends Controller {
   }
 
   filter() {
+    if (!this.hasInputTarget) return
     const query = this.inputTarget.value.toLowerCase().trim()
     sessionStorage.setItem("chat_search_query", this.inputTarget.value)
     
@@ -58,7 +59,7 @@ export default class extends Controller {
     let visibleUsers = 0
 
     this.roomTargets.forEach(room => {
-      const name = room.getAttribute("data-search-name").toLowerCase()
+      const name = (room.getAttribute("data-search-name") || "").toLowerCase()
       const type = room.getAttribute("data-chat-type")
       
       const matchesSearch = name.includes(query)
@@ -73,7 +74,7 @@ export default class extends Controller {
     })
 
     this.userTargets.forEach(user => {
-      const name = user.getAttribute("data-search-name").toLowerCase()
+      const name = (user.getAttribute("data-search-name") || "").toLowerCase()
       if (name.includes(query) && query.length > 0) {
         user.classList.remove("hidden")
         visibleUsers++

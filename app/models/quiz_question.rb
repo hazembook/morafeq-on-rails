@@ -3,32 +3,26 @@ class QuizQuestion < ApplicationRecord
   has_many :quiz_answers, dependent: :destroy
 
   serialize :choices, coder: JSON
-  attr_accessor :choices_text
 
   validates :question, presence: true
   validates :points, presence: true, numericality: { greater_than: 0 }
   validates :question_type, presence: true, inclusion: { in: %w[mcq true_false] }
   validate :choices_count_valid, if: -> { question_type == "mcq" }
 
-  after_initialize :set_default_question_type, if: :new_record?
+  before_validation :set_default_question_type
+  before_validation :set_default_choices
   before_validation :clean_and_parse_choices
-  after_save :recalculate_quiz_total_points
+  after_save :recalculate_quiz_total_points, if: :saved_change_to_points?
   after_destroy :recalculate_quiz_total_points
 
-  def set_default_question_type
-    self.question_type ||= "mcq"
-  end
-
-  def question_type
-    super || "mcq"
-  end
+  attr_writer :choices_text
 
   def choices_text
     @choices_text || if choices.is_a?(Array)
       choices.join("\n")
-                     else
+    else
       ""
-                     end
+    end
   end
 
   def default_choices
@@ -43,6 +37,14 @@ class QuizQuestion < ApplicationRecord
   end
 
   private
+
+  def set_default_question_type
+    self.question_type ||= "mcq"
+  end
+
+  def set_default_choices
+    self.choices ||= default_choices if new_record?
+  end
 
   def choices_count_valid
     if choices.blank? || !choices.is_a?(Array) || choices.size < 2

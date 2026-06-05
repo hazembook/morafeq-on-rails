@@ -29,6 +29,7 @@ class ChatRoom < ApplicationRecord
         .where(is_private: true)
         .group("chat_rooms.id")
         .having("count(distinct chat_participants.user_id) = 1 AND sum(case when chat_participants.user_id = ? then 1 else 0 end) = 1", user_a.id)
+        .order(created_at: :desc)
         .first
     else
       joins(:chat_participants)

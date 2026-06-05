@@ -3,7 +3,7 @@ class Message < ApplicationRecord
 
   belongs_to :user
   belongs_to :chat_room
-  has_many_attached :attachments
+  has_many_attached :attachments, dependent: :purge_later
 
   validates :content, presence: true, unless: -> { attachments.any? }
   validate :attachments_size_valid, if: -> { attachments.any? }

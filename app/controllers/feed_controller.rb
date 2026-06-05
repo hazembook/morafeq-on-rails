@@ -25,11 +25,11 @@ class FeedController < ApplicationController
     end
 
     @post = Current.user.authored_posts.build(
-      content: params[:post][:content],
+      content: post_params[:content],
       scope_type: scope_type,
       scope_id: scope_id,
-      pinned: params[:post][:pinned] == "1",
-      attachments: params[:post][:attachments]
+      pinned: post_params[:pinned] == "1",
+      attachments: post_params[:attachments]
     )
 
     if @post.save
@@ -88,5 +88,9 @@ class FeedController < ApplicationController
     unless @post.author == Current.user || Current.user.admin?
       redirect_to feed_index_path, alert: t("alerts.not_authorized")
     end
+  end
+
+  def post_params
+    params.expect(post: [ :content, :pinned, { attachments: [] } ])
   end
 end

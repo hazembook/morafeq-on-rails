@@ -52,7 +52,7 @@ class AttendancesController < ApplicationController
     end
 
     redirect_to subject_attendances_path(@subject), notice: t("flash.attendance.saved")
-  rescue => e
+  rescue ActiveRecord::RecordInvalid => e
     redirect_to record_subject_attendances_path(@subject, date: params[:date]), alert: t("flash.attendance.save_failed", message: e.message)
   end
 

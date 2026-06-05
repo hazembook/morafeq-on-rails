@@ -35,7 +35,7 @@ class AssignmentsController < ApplicationController
 
   def update
     if @assignment.update(assignment_params)
-      redirect_to params[:redirect_to].presence || subject_assignment_path(@subject, @assignment), notice: t("flash.assignments.updated")
+      redirect_to subject_assignment_path(@subject, @assignment), notice: t("flash.assignments.updated")
     else
       render :edit, status: :unprocessable_entity
     end

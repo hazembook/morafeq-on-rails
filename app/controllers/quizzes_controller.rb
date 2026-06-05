@@ -50,7 +50,7 @@ class QuizzesController < ApplicationController
     @quiz.total_points = @quiz.quiz_questions.map(&:points).compact.sum
 
     if @quiz.save
-      redirect_to params[:redirect_to].presence || subject_quiz_path(@subject, @quiz), notice: t("flash.quizzes.updated")
+      redirect_to subject_quiz_path(@subject, @quiz), notice: t("flash.quizzes.updated")
     else
       render :edit, status: :unprocessable_entity
     end
