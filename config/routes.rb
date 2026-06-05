@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     member do
       post :mark_read
       get :read_status
+      get :post_actions
     end
   end
   resources :chat_rooms, only: [ :index, :show ] do

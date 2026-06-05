@@ -24,6 +24,11 @@ class FeedController < ApplicationController
 >>>>>>> 76e2b8c (fix: load read button per-user via lazy Turbo Frame)
   end
 
+  def post_actions
+    @post = Post.feed_for(Current.user).find(params[:id])
+    render partial: "feed/post_actions", locals: { post: @post }
+  end
+
   def create
     unless Current.user.teacher? || Current.user.admin?
       redirect_to feed_index_path, alert: t("flash.feed.only_teachers_admins")
