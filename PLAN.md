@@ -256,7 +256,7 @@ We use a **GitHub Flow** model:
   - [x] File/image attachment support in messages
   - [x] "Unsend" within 5 minutes (soft delete)
   - [x] Read receipts (seen_by tracking)
-- [ ] Chat push notifications via Notifications system (to be built in Phase 10)
+- [ ] Chat push notifications via Notifications system (to be built in Phase 8)
 - [x] Moderation: Teachers can delete messages in their subject rooms
 - [x] Write system tests + channel tests
 
@@ -292,12 +292,19 @@ We use a **GitHub Flow** model:
 - [x] Add RTL layout compatibility to `application.html.erb` by setting correct `dir` and `lang` HTML parameters based on locale.
 - [x] Refactor UI direction styles using logical properties (like padding start/end, absolute start/end positioning).
 
-### Phase 8: Institution Adaptability
-- [ ] Define global configuration key `institution_type` representing `:university`, `:school`, `:course_platform`, or `:tech_community` (with Priority 1 focus on `:university` and `:school` configurations).
-- [ ] Implement translation lookup helpers for dynamic model names (College, Department, Subject) in views and logs.
-- [ ] Set up layout configurations to toggle features based on type (e.g., GPA/attendance analysis for universities/schools vs module progress trackers).
-- [ ] Configure translation layers to map Priority 2 (Online Course Platforms) and Priority 3 (Tech Communities) terminologies.
-- [ ] Adapt seed data configuration to dynamically initialize the database using the selected institution structure, prioritizing university/school setups first.
+### Phase 8: Notifications System
+- [ ] Create `Notification` model (polymorphic)
+- [ ] Integration points:
+  - New post in student's scope → notify enrolled students
+  - New material uploaded → notify enrolled students
+  - New message in DM → notify recipient
+  - Teacher pins a post → notify enrolled students
+- [ ] UI: Notification bell in navbar with unread badge (Turbo Streams via Solid Cable)
+- [ ] Notification dropdown / page showing recent unread & all
+- [ ] Mark as read (individual + "mark all read")
+- [ ] Use Solid Queue for async notification delivery
+- [ ] Chat push notifications (unblocks Phase 5 remaining item)
+- [ ] Write tests
 
 ### Phase 9: Task Distribution & Role Expansion
 - [ ] Add `moderator` and `ta` roles to User enum
@@ -314,18 +321,28 @@ We use a **GitHub Flow** model:
 - [ ] Seed moderator, TA, and task_distribution data
 - [ ] Write tests
 
-### Phase 10: Notifications System
-- [ ] Create `Notification` model (polymorphic)
-- [ ] Integration points:
-  - New post in student's scope → notify enrolled students
-  - New material uploaded → notify enrolled students
-  - New message in DM → notify recipient
-  - Teacher pins a post → notify enrolled students
-- [ ] UI: Notification bell in navbar with unread badge (Turbo Streams via Solid Cable)
-- [ ] Notification dropdown / page showing recent unread & all
-- [ ] Mark as read (individual + "mark all read")
-- [ ] Use Solid Queue for async notification delivery
-- [ ] Write tests
+### Phase 10: Polish & Deploy
+- [ ] **Production Setup (do early — app won't boot in production as-is):**
+  - Fix `config/database.yml` — uncomment production database paths
+  - Configure `config.hosts` / DNS rebinding protection
+  - Configure `config.active_storage.service` for cloud storage
+  - Dockerfile (multi-stage: builder + production)
+  - Kamal 2 config (`config/deploy.yml`)
+  - SQLite WAL + `busy_timeout` config for concurrency
+  - Solid Queue dashboard mounted at `/jobs` (admin-only)
+  - **Sentry:** Add `sentry-ruby` and `sentry-rails` gems; configure DSN via env var
+- [ ] **CI/CD Pipeline:**
+  - GitHub Actions already wired for rubocop, brakeman, tests, system tests
+  - Uncomment system test step in `config/ci.rb`
+  - On green → Kamal deploy
+  - Deploy to VPS via Kamal
+- [ ] **Mobile Polish (incremental, post-deploy):**
+  - Bottom navigation bar (responsive: sidebar on desktop, bottom tabs on mobile)
+  - Touch targets >= 44px
+  - Safe-area insets (viewport `env(safe-area-inset-*)`)
+  - Pull-to-refresh via Stimulus
+  - Offline fallback page (service worker)
+- [ ] Final smoke tests post-deploy
 
 ### Phase 11: Search
 - [ ] Add SQLite FTS5 virtual tables for:
@@ -336,23 +353,10 @@ We use a **GitHub Flow** model:
 - [ ] Results grouped by type (Subjects, Posts, Materials)
 - [ ] Write tests
 
-### Phase 12: Polish & Deploy
-- [ ] Mobile Polish:
-  - Bottom navigation bar (responsive: sidebar on desktop, bottom tabs on mobile)
-  - Touch targets >= 44px
-  - Safe-area insets (viewport `env(safe-area-inset-*)`)
-  - Pull-to-refresh via Stimulus
-  - Offline fallback page (service worker)
-- [ ] Production Setup:
-  - Dockerfile (multi-stage: builder + production)
-  - Kamal 2 config (`config/deploy.yml`)
-  - SQLite WAL + `busy_timeout` config for concurrency
-  - Solid Queue dashboard mounted at `/jobs` (admin-only)
-  - **Sentry:** Add `sentry-ruby` and `sentry-rails` gems; configure DSN via env var
-- [ ] CI/CD Pipeline:
-  - Push repo to GitHub
-  - Setup GitHub Actions: `rubocop`, `brakeman`, `rails test:all`, `rails test:system`
-  - On green → Kamal deploy
-- [ ] Deploy to VPS via Kamal
-- [ ] Final smoke tests post-deploy
+### Phase 12: Institution Adaptability
+- [ ] Define global configuration key `institution_type` representing `:university`, `:school`, `:course_platform`, or `:tech_community` (with Priority 1 focus on `:university` and `:school` configurations).
+- [ ] Implement translation lookup helpers for dynamic model names (College, Department, Subject) in views and logs.
+- [ ] Set up layout configurations to toggle features based on type (e.g., GPA/attendance analysis for universities/schools vs module progress trackers).
+- [ ] Configure translation layers to map Priority 2 (Online Course Platforms) and Priority 3 (Tech Communities) terminologies.
+- [ ] Adapt seed data configuration to dynamically initialize the database using the selected institution structure, prioritizing university/school setups first.
 
