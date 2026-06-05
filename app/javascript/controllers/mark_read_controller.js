@@ -9,14 +9,14 @@ export default class extends Controller {
 
     fetch(this.urlValue, {
       method: "POST",
-      headers: {
-        "X-CSRF-Token": csrfToken,
-        Accept: "text/vnd.turbo-stream.html",
-      },
+      headers: { "X-CSRF-Token": csrfToken, Accept: "application/json" },
     })
-      .then((r) => r.text())
-      .then((html) => {
-        Turbo.renderStreamMessage(html)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          const container = this.element.closest("[id^=read_status_]")
+          if (container) container.outerHTML = data.html
+        }
       })
   }
 }

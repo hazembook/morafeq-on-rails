@@ -24,6 +24,7 @@ class FeedController < ApplicationController
           locals: { post: @post }
         )
       end
+      format.json { render json: { success: true, html: render_to_string(partial: "feed/read_button", locals: { post: @post }, formats: [ :html ]) } }
       format.html { redirect_to feed_index_path }
     end
   end
