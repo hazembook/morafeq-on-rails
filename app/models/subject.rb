@@ -15,7 +15,7 @@ class Subject < ApplicationRecord
   validates :code, presence: true, uniqueness: true
 
   def name
-    return super if code.blank?
+    return super if super.blank?
     I18n.t("db.subjects.#{code}", default: super)
   end
 
@@ -24,6 +24,6 @@ class Subject < ApplicationRecord
   private
 
   def create_chat_room
-    ChatRoom.create!(name: name, subject: self)
+    ChatRoom.create!(name: name_before_type_cast, subject: self)
   end
 end

@@ -170,6 +170,12 @@ en:
     files_selected: "%{count} file(s) selected"
     attach_files: "Attach files/images"
     self_chat: "Self Chat"
+    you: "You"
+    sent_file: "Sent an attachment"
+    no_messages: "No messages yet"
+    start_new_chat: "Contacts"
+    search_placeholder: "Search chats or users..."
+    members_count: "%{count} participants"
   home:
     welcome: "Welcome to Morafeq"
     subtitle: "Your university companion app. Stay connected with your courses, materials, and community."

@@ -170,6 +170,12 @@ ar:
     files_selected: "تم اختيار %{count} ملف(ات)"
     attach_files: "إرفاق ملفات/صور"
     self_chat: "ملاحظة لنفسي"
+    you: "أنت"
+    sent_file: "أرسل مرفقاً"
+    no_messages: "لا توجد رسائل بعد"
+    start_new_chat: "جهات الاتصال"
+    search_placeholder: "ابحث في المحادثات أو المستخدمين..."
+    members_count: "%{count} مشارك"
   home:
     welcome: "مرحباً بك في مرافق"
     subtitle: "تطبيقك الجامعي المفضل. ابقَ على اتصال بموادك الدراسية، ومصادرك العلمية، ومجتمعك التعليمي."
