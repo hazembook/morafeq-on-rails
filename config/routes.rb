@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     resources :comments, only: [ :create ]
     member do
       post :mark_read
+      get :read_status
     end
   end
   resources :chat_rooms, only: [ :index, :show ] do

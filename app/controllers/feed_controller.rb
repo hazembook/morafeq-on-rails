@@ -15,7 +15,13 @@ class FeedController < ApplicationController
   def mark_read
     @post = Post.feed_for(Current.user).find(params[:id])
     @post.post_views.find_or_create_by!(user: Current.user) unless @post.author == Current.user
-    redirect_to feed_index_path
+    render partial: "feed/read_status", locals: { post: @post }
+  end
+
+  def read_status
+    @post = Post.feed_for(Current.user).find(params[:id])
+    render partial: "feed/read_status", locals: { post: @post }
+>>>>>>> 76e2b8c (fix: load read button per-user via lazy Turbo Frame)
   end
 
   def create

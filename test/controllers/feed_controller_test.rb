@@ -22,12 +22,13 @@ class FeedControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
   end
 
-  test "mark_read creates PostView and redirects" do
+  test "mark_read creates PostView and returns read_status frame" do
     sign_in_as(@student)
     assert_difference -> { PostView.count } do
       post mark_read_feed_path(@post)
     end
-    assert_redirected_to feed_index_path
+    assert_response :ok
+    assert_match "read_status_post_#{@post.id}", response.body
   end
 
   test "mark_read does not create PostView for author" do
@@ -38,6 +39,6 @@ class FeedControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference -> { PostView.count } do
       post mark_read_feed_path(post)
     end
-    assert_redirected_to feed_index_path
+    assert_response :ok
   end
 end

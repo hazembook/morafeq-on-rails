@@ -140,9 +140,9 @@
           <% end %>
         <% end %>
 
-        <div id="read_status_<%= dom_id(post) %>">
-          <%= render "feed/read_button", post: post %>
-        </div>
+        <%= turbo_frame_tag "read_status_#{dom_id(post)}", src: read_status_feed_path(post), loading: :lazy do %>
+          <div class="h-5"></div>
+        <% end %>
       </div>
 
       <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-gray-400">
