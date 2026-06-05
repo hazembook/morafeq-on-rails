@@ -30,7 +30,7 @@ module ApplicationHelper
               tag.div(class: "flex items-center gap-2 text-sm text-gray-700") do
                 safe_join([
                   tag.span(k, class: "font-medium text-gray-800"),
-                  tag.span("→", class: "text-gray-400 font-bold"),
+                  tag.span(I18n.locale == :ar ? "←" : "→", class: "text-gray-400 font-bold"),
                   tag.span(v.presence || t("quizzes.fields.no_match_selected"), class: v.present? ? "text-blue-600 font-semibold" : "text-red-500 italic")
                 ])
               end

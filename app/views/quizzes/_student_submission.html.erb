@@ -4,7 +4,7 @@
       <p class="text-sm font-semibold text-green-800"><%= t("quizzes.show.completed_title") %></p>
       <p class="text-xs text-green-600"><%= t("quizzes.show.completed_hint") %></p>
     </div>
-    <div class="text-right">
+    <div class="text-end">
       <% total_score = answers.map(&:score).compact.sum %>
       <% all_graded = answers.all? { |a| a.score.present? } %>
       <% if all_graded %>

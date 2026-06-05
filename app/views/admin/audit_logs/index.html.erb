@@ -5,11 +5,11 @@
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t("admin.table.action") %></th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t("admin.table.type") %></th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t("admin.table.user") %></th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t("admin.table.date") %></th>
-          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase"><%= t("common.actions") %></th>
+          <th class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"><%= t("admin.table.action") %></th>
+          <th class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"><%= t("admin.table.type") %></th>
+          <th class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"><%= t("admin.table.user") %></th>
+          <th class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"><%= t("admin.table.date") %></th>
+          <th class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase"><%= t("common.actions") %></th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -19,7 +19,7 @@
             <td class="px-6 py-4"><%= log.auditable_type %></td>
             <td class="px-6 py-4"><%= log.user&.full_name || t("admin.audit_logs.system") %></td>
             <td class="px-6 py-4"><%= l log.created_at, format: :long %></td>
-            <td class="px-6 py-4 text-right">
+            <td class="px-6 py-4 text-end">
               <%= link_to t("admin.actions.show"), admin_audit_log_path(log), class: "text-blue-600 hover:text-blue-800 text-sm" %>
             </td>
           </tr>
