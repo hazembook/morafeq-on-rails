@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "morafeq",
+  "project_id": "0444c962-73f5-404f-95ce-810a7464acef"
+}
