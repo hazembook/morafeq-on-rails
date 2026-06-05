@@ -284,6 +284,100 @@ en:
 
 
 
+  admin:
+    dashboard:
+      title: "Admin Dashboard"
+    colleges:
+      index:
+        title: "Colleges"
+        new: "New College"
+      show:
+        departments: "Departments"
+        none: "No departments yet."
+      edit:
+        title: "Edit College"
+      new:
+        title: "New College"
+    departments:
+      index:
+        title: "Departments"
+        new: "New Department"
+      show:
+        college: "College:"
+        subjects: "Subjects"
+        none: "No subjects yet."
+      edit:
+        title: "Edit Department"
+      new:
+        title: "New Department"
+    subjects:
+      index:
+        title: "Subjects"
+        new: "New Subject"
+      show:
+        department: "Department:"
+        teacher: "Teacher:"
+        enrolled_students: "Enrolled Students"
+        none: "No enrollments yet."
+      edit:
+        title: "Edit Subject"
+      new:
+        title: "New Subject"
+    users:
+      index:
+        title: "Users"
+        new: "New User"
+      show:
+        email: "Email:"
+        role: "Role:"
+        bio: "Bio:"
+      edit:
+        title: "Edit User"
+      new:
+        title: "New User"
+      form:
+        password_hint: "Leave blank to keep current password"
+    audit_logs:
+      index:
+        title: "Audit Logs"
+      show:
+        title: "Audit Log Detail"
+        action: "Action"
+        type: "Type"
+        id: "ID"
+        user: "User"
+        date: "Date"
+        changes: "Changes"
+      system: "System"
+    table:
+      name: "Name"
+      email: "Email"
+      role: "Role"
+      code: "Code"
+      college: "College"
+      department: "Department"
+      teacher: "Teacher"
+      action: "Action"
+      type: "Type"
+      user: "User"
+      date: "Date"
+    actions:
+      show: "Show"
+      new: "New"
+    form:
+      select_college: "Select College"
+      select_department: "Select Department"
+      select_teacher: "Select Teacher"
+      college: "College"
+      department: "Department"
+      teacher: "Teacher"
+    nav:
+      colleges: "Colleges"
+      departments: "Departments"
+      subjects: "Subjects"
+      users: "Users"
+      audit_logs: "Audit Logs"
+
   common:
     actions: "Actions"
     cancel: "Cancel"

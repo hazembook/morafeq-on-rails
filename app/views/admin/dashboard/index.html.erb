@@ -1,44 +1,44 @@
 <div class="max-w-4xl mx-auto">
-  <h1 class="text-2xl font-bold mb-6">Admin Dashboard</h1>
+  <h1 class="text-2xl font-bold mb-6"><%= t("admin.dashboard.title") %></h1>
 
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
     <div class="bg-white rounded-lg shadow p-6 text-center">
       <p class="text-3xl font-bold text-blue-600"><%= @stats[:colleges] %></p>
-      <p class="text-sm text-gray-500">Colleges</p>
+      <p class="text-sm text-gray-500"><%= t("admin.nav.colleges") %></p>
     </div>
     <div class="bg-white rounded-lg shadow p-6 text-center">
       <p class="text-3xl font-bold text-blue-600"><%= @stats[:departments] %></p>
-      <p class="text-sm text-gray-500">Departments</p>
+      <p class="text-sm text-gray-500"><%= t("admin.nav.departments") %></p>
     </div>
     <div class="bg-white rounded-lg shadow p-6 text-center">
       <p class="text-3xl font-bold text-blue-600"><%= @stats[:subjects] %></p>
-      <p class="text-sm text-gray-500">Subjects</p>
+      <p class="text-sm text-gray-500"><%= t("admin.nav.subjects") %></p>
     </div>
     <div class="bg-white rounded-lg shadow p-6 text-center">
       <p class="text-3xl font-bold text-blue-600"><%= @stats[:users] %></p>
-      <p class="text-sm text-gray-500">Users</p>
+      <p class="text-sm text-gray-500"><%= t("admin.nav.users") %></p>
     </div>
   </div>
 
   <div class="grid gap-4">
     <%= link_to admin_colleges_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
-      <span class="font-medium">Colleges</span>
+      <span class="font-medium"><%= t("admin.nav.colleges") %></span>
       <span class="text-blue-600">&rarr;</span>
     <% end %>
     <%= link_to admin_departments_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
-      <span class="font-medium">Departments</span>
+      <span class="font-medium"><%= t("admin.nav.departments") %></span>
       <span class="text-blue-600">&rarr;</span>
     <% end %>
     <%= link_to admin_subjects_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
-      <span class="font-medium">Subjects</span>
+      <span class="font-medium"><%= t("admin.nav.subjects") %></span>
       <span class="text-blue-600">&rarr;</span>
     <% end %>
     <%= link_to admin_users_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
-      <span class="font-medium">Users</span>
+      <span class="font-medium"><%= t("admin.nav.users") %></span>
       <span class="text-blue-600">&rarr;</span>
     <% end %>
     <%= link_to admin_audit_logs_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
-      <span class="font-medium">Audit Logs</span>
+      <span class="font-medium"><%= t("admin.nav.audit_logs") %></span>
       <span class="text-blue-600">&rarr;</span>
     <% end %>
   </div>

@@ -8,12 +8,12 @@
   </div>
 
   <div class="mb-4">
-    <%= f.label :college_id, "College", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= f.collection_select :college_id, College.order(:name), :id, :name, { prompt: "Select College" }, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    <%= f.label :college_id, t("admin.form.college"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.collection_select :college_id, College.order(:name), :id, :name, { prompt: t("admin.form.select_college") }, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
   </div>
 
   <div class="flex gap-3">
     <%= f.submit class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
-    <%= link_to "Cancel", admin_departments_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+    <%= link_to t("common.cancel"), admin_departments_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
   </div>
 <% end %>

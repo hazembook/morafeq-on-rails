@@ -1,32 +1,32 @@
 <div class="max-w-2xl mx-auto">
-  <h1 class="text-2xl font-bold mb-4">Audit Log Detail</h1>
+  <h1 class="text-2xl font-bold mb-4"><%= t("admin.audit_logs.show.title") %></h1>
 
   <dl class="grid grid-cols-2 gap-4 mb-6">
     <div>
-      <dt class="text-sm font-medium text-gray-500">Action</dt>
+      <dt class="text-sm font-medium text-gray-500"><%= t("admin.audit_logs.show.action") %></dt>
       <dd><%= @audit_log.action %></dd>
     </div>
     <div>
-      <dt class="text-sm font-medium text-gray-500">Type</dt>
+      <dt class="text-sm font-medium text-gray-500"><%= t("admin.audit_logs.show.type") %></dt>
       <dd><%= @audit_log.auditable_type %></dd>
     </div>
     <div>
-      <dt class="text-sm font-medium text-gray-500">ID</dt>
+      <dt class="text-sm font-medium text-gray-500"><%= t("admin.audit_logs.show.id") %></dt>
       <dd><%= @audit_log.auditable_id %></dd>
     </div>
     <div>
-      <dt class="text-sm font-medium text-gray-500">User</dt>
-      <dd><%= @audit_log.user&.full_name || "System" %></dd>
+      <dt class="text-sm font-medium text-gray-500"><%= t("admin.audit_logs.show.user") %></dt>
+      <dd><%= @audit_log.user&.full_name || t("admin.audit_logs.system") %></dd>
     </div>
     <div class="col-span-2">
-      <dt class="text-sm font-medium text-gray-500">Date</dt>
+      <dt class="text-sm font-medium text-gray-500"><%= t("admin.audit_logs.show.date") %></dt>
       <dd><%= l @audit_log.created_at, format: :long %></dd>
     </div>
     <div class="col-span-2">
-      <dt class="text-sm font-medium text-gray-500">Changes</dt>
+      <dt class="text-sm font-medium text-gray-500"><%= t("admin.audit_logs.show.changes") %></dt>
       <dd><pre class="bg-gray-100 p-3 rounded text-sm mt-1"><%= @audit_log.record_changes %></pre></dd>
     </div>
   </dl>
 
-  <%= link_to "Back", admin_audit_logs_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+  <%= link_to t("common.back"), admin_audit_logs_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
 </div>

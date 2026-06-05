@@ -1,9 +1,9 @@
 <div class="max-w-2xl mx-auto">
   <h1 class="text-2xl font-bold mb-2"><%= @subject.code %> - <%= @subject.name %></h1>
-  <p class="text-gray-500 mb-1">Department: <%= @subject.department.name %></p>
-  <p class="text-gray-500 mb-4">Teacher: <%= @subject.teacher.full_name %></p>
+  <p class="text-gray-500 mb-1"><%= t("admin.subjects.show.department") %> <%= @subject.department.name %></p>
+  <p class="text-gray-500 mb-4"><%= t("admin.subjects.show.teacher") %> <%= @subject.teacher.full_name %></p>
 
-  <h2 class="text-lg font-semibold mb-2">Enrolled Students (<%= @subject.students.count %>)</h2>
+  <h2 class="text-lg font-semibold mb-2"><%= t("admin.subjects.show.enrolled_students") %> (<%= @subject.students.count %>)</h2>
   <% if @subject.students.any? %>
     <ul class="list-disc list-inside space-y-1 mb-4">
       <% @subject.students.each do |student| %>
@@ -11,11 +11,11 @@
       <% end %>
     </ul>
   <% else %>
-    <p class="text-gray-500 mb-4">No enrollments yet.</p>
+    <p class="text-gray-500 mb-4"><%= t("admin.subjects.show.none") %></p>
   <% end %>
 
   <div class="flex gap-3">
-    <%= link_to "Edit", edit_admin_subject_path(@subject), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
-    <%= link_to "Back", admin_subjects_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+    <%= link_to t("common.edit"), edit_admin_subject_path(@subject), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
+    <%= link_to t("common.back"), admin_subjects_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
   </div>
 </div>

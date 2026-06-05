@@ -16,17 +16,17 @@
   </div>
 
   <div class="mb-4">
-    <%= f.label :department_id, "Department", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= f.collection_select :department_id, Department.includes(:college).order(:name), :id, ->(d) { "#{d.name} (#{d.college.name})" }, { prompt: "Select Department" }, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    <%= f.label :department_id, t("admin.form.department"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.collection_select :department_id, Department.includes(:college).order(:name), :id, ->(d) { "#{d.name} (#{d.college.name})" }, { prompt: t("admin.form.select_department") }, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
   </div>
 
   <div class="mb-4">
-    <%= f.label :teacher_id, "Teacher", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= f.collection_select :teacher_id, User.where(role: :teacher).order(:full_name), :id, :full_name, { prompt: "Select Teacher" }, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    <%= f.label :teacher_id, t("admin.form.teacher"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.collection_select :teacher_id, User.where(role: :teacher).order(:full_name), :id, :full_name, { prompt: t("admin.form.select_teacher") }, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
   </div>
 
   <div class="flex gap-3">
     <%= f.submit class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
-    <%= link_to "Cancel", admin_subjects_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+    <%= link_to t("common.cancel"), admin_subjects_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
   </div>
 <% end %>

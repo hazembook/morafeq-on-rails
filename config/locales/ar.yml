@@ -284,6 +284,100 @@ ar:
 
 
 
+  admin:
+    dashboard:
+      title: "لوحة الإدارة"
+    colleges:
+      index:
+        title: "الكليات"
+        new: "كلية جديدة"
+      show:
+        departments: "الأقسام"
+        none: "لا توجد أقسام بعد."
+      edit:
+        title: "تعديل الكلية"
+      new:
+        title: "كلية جديدة"
+    departments:
+      index:
+        title: "الأقسام"
+        new: "قسم جديد"
+      show:
+        college: "الكلية:"
+        subjects: "المواد الدراسية"
+        none: "لا توجد مواد دراسية بعد."
+      edit:
+        title: "تعديل القسم"
+      new:
+        title: "قسم جديد"
+    subjects:
+      index:
+        title: "المواد الدراسية"
+        new: "مادة جديدة"
+      show:
+        department: "القسم:"
+        teacher: "الأستاذ:"
+        enrolled_students: "الطلاب المسجلون"
+        none: "لا توجد تسجيلات بعد."
+      edit:
+        title: "تعديل المادة"
+      new:
+        title: "مادة جديدة"
+    users:
+      index:
+        title: "المستخدمون"
+        new: "مستخدم جديد"
+      show:
+        email: "البريد الإلكتروني:"
+        role: "الدور:"
+        bio: "النبذة الشخصية:"
+      edit:
+        title: "تعديل المستخدم"
+      new:
+        title: "مستخدم جديد"
+      form:
+        password_hint: "اتركه فارغاً للحفاظ على كلمة المرور الحالية"
+    audit_logs:
+      index:
+        title: "سجل التدقيق"
+      show:
+        title: "تفاصيل سجل التدقيق"
+        action: "الإجراء"
+        type: "النوع"
+        id: "المعرف"
+        user: "المستخدم"
+        date: "التاريخ"
+        changes: "التغييرات"
+      system: "النظام"
+    table:
+      name: "الاسم"
+      email: "البريد الإلكتروني"
+      role: "الدور"
+      code: "الرمز"
+      college: "الكلية"
+      department: "القسم"
+      teacher: "الأستاذ"
+      action: "الإجراء"
+      type: "النوع"
+      user: "المستخدم"
+      date: "التاريخ"
+    actions:
+      show: "عرض"
+      new: "جديد"
+    form:
+      select_college: "اختر كلية"
+      select_department: "اختر قسم"
+      select_teacher: "اختر أستاذاً"
+      college: "الكلية"
+      department: "القسم"
+      teacher: "الأستاذ"
+    nav:
+      colleges: "الكليات"
+      departments: "الأقسام"
+      subjects: "المواد الدراسية"
+      users: "المستخدمون"
+      audit_logs: "سجل التدقيق"
+
   common:
     actions: "إجراءات"
     cancel: "إلغاء"
