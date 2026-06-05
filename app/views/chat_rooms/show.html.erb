@@ -66,7 +66,7 @@
         <!-- Self-message styling overrides based on current user -->
         <style>
           [data-role="seen-status"] { display: none; }
-          #typing_indicator[data-typing-user-id="<%= Current.user.id %>"] { visibility: hidden; }
+          #typing_indicator[data-typing-user-id="<%= Current.user.id %>"] { display: none; }
           [data-message-user-id="<%= Current.user.id %>"] {
             justify-content: flex-end;
           }
