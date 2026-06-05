@@ -61,12 +61,13 @@ bd close bd-42 --reason "Completed" --json
 ### Workflow for AI Agents
 
 1. **Check ready work**: `bd ready` shows unblocked issues
-2. **Claim your task atomically**: `bd update <id> --claim`
-3. **Work on it**: Implement, test, document
-4. **Discover new work?** Create linked issue:
+2. **Create a branch for the task**: `git switch -c <bd-task-id>`
+3. **Claim your task atomically**: `bd update <id> --claim`
+4. **Work on it**: Implement, test, document
+5. **Discover new work?** Create linked issue:
    - `bd create "Found bug" --description="Details about what was found" -p 1 --deps discovered-from:<parent-id>`
-5. **Complete**: `bd close <id> --reason "Done"`
-6. **Commit before next task**: `git add -A && git commit -m "..."` — never open/claim the next task before committing the previous one's work
+6. **Complete and merge**: `bd close <id> --reason "Done"`, then `git add -A && git commit -m "..."`, then `git switch main && git merge <branch> && git branch -d <branch>`
+7. **Commit before next task**: never open/claim the next task before committing the previous one's work
 
 ### Quality
 - Use `--acceptance` and `--design` fields when creating issues
@@ -93,6 +94,7 @@ bd automatically syncs via Dolt:
 - ✅ Always use `--json` flag for programmatic use
 - ✅ Link discovered work with `discovered-from` dependencies
 - ✅ Check `bd ready` before asking "what should I work on?"
+- ✅ Branch per task — create a feature branch for each bd issue, merge to main when done
 - ✅ Commit between tasks — close and commit before claiming the next one
 - ❌ Do NOT create markdown TODO lists
 - ❌ Do NOT use external issue trackers
