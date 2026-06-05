@@ -65,27 +65,30 @@
       </div>
 
       <!-- Typing Indicator -->
-      <div id="typing_indicator" data-controller="typing-indicator" data-typer-id="" class="text-xs text-gray-500 bg-white/70 backdrop-blur-sm px-4 py-1 min-h-[1.5rem] transition-opacity duration-300 z-10 border-t border-gray-100/50"></div>
+      <div id="typing_indicator" class="text-xs text-gray-500 bg-white/70 backdrop-blur-sm px-4 py-1 min-h-[1.5rem] transition-opacity duration-300 z-10 border-t border-gray-100/50"></div>
 
       <!-- Chat Input Form -->
-      <%= form_with model: [ @room, Message.new ], class: "bg-white border-t border-gray-150 p-3 sm:p-4 flex items-center gap-2 sm:gap-3 relative z-10 shrink-0 shadow-lg", data: { controller: "chat-typing", chat_typing_room_id_value: @room.id, chat_typing_url_value: typing_chat_room_path(@room) } do |f| %>
-        <div id="file-count" class="text-xs text-blue-600 absolute -top-6 start-4 font-semibold bg-white/95 border border-blue-200 shadow-sm rounded-t px-2 py-0.5" style="display: none;"></div>
-        
-        <%= f.file_field :attachments, multiple: true, class: "hidden", id: "chat-file-input", data: { selected_template: t("chats.files_selected", count: "%{count}") }, onchange: "let cnt = document.getElementById('file-count'); if(this.files.length > 0) { cnt.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); cnt.style.display = 'block'; } else { cnt.style.display = 'none'; }" %>
-        
-        <label for="chat-file-input" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full cursor-pointer flex items-center justify-center transition-colors shrink-0" title="<%= t("chats.attach_files") %>">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-          </svg>
-        </label>
+      <%= form_with model: [ @room, Message.new ], class: "bg-white border-t border-gray-150 p-3 sm:p-4 relative z-10 shrink-0 shadow-lg", data: { controller: "chat-typing chat-file-preview", chat_typing_room_id_value: @room.id, chat_typing_url_value: typing_chat_room_path(@room) } do |f| %>
+        <!-- File preview strip -->
+        <div data-chat-file-preview-target="preview" class="flex flex-wrap gap-2 mb-2 hidden"></div>
 
-        <%= f.text_field :content, placeholder: t("chats.placeholder"), class: "flex-1 rounded-2xl border-gray-300 shadow-inner bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-blue-500 text-sm py-2 px-4 transition-all duration-200", autocomplete: "off", data: { action: "input->chat-typing#typing" } %>
-        
-        <button type="submit" class="w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-all duration-150 hover:scale-105 shrink-0 cursor-pointer shadow-md border-0">
-          <svg class="w-5 h-5 translate-x-[2px] rtl:-translate-x-[2px] -translate-y-[1px]" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-          </svg>
-        </button>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <%= f.file_field :attachments, multiple: true, class: "hidden", id: "chat-file-input", data: { chat_file_preview_target: "input", action: "change->chat-file-preview#preview" } %>
+          
+          <label for="chat-file-input" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full cursor-pointer flex items-center justify-center transition-colors shrink-0" title="<%= t("chats.attach_files") %>">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+            </svg>
+          </label>
+
+          <%= f.text_field :content, placeholder: t("chats.placeholder"), class: "flex-1 rounded-2xl border-gray-300 shadow-inner bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-blue-500 text-sm py-2 px-4 transition-all duration-200", autocomplete: "off", data: { action: "input->chat-typing#typing" } %>
+          
+          <button type="submit" class="w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-all duration-150 hover:scale-105 shrink-0 cursor-pointer shadow-md border-0">
+            <svg class="w-5 h-5 translate-x-[2px] rtl:-translate-x-[2px] -translate-y-[1px]" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+            </svg>
+          </button>
+        </div>
       <% end %>
     </div>
 

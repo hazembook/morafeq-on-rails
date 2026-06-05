@@ -69,7 +69,7 @@ class ChatRoomsController < ApplicationController
     private_rooms = ChatRoom.joins(:chat_participants).where(is_private: true, chat_participants: { user_id: Current.user.id })
     @rooms = ChatRoom.where(id: public_rooms.pluck(:id) + private_rooms.pluck(:id))
                      .ordered
-                     .includes(:subject, messages: :user)
+                     .includes(:subject, messages: :user, chat_participants: :user)
     @users = User.where.not(id: Current.user.id).order(:full_name)
   end
 end

@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "room", "user", "roomsHeader", "usersHeader", "tab"]
+  static targets = ["input", "room", "user", "usersHeader", "tab"]
 
   connect() {
     // Restore search query
@@ -84,14 +84,6 @@ export default class extends Controller {
     })
 
     // Show/hide section headers
-    if (this.hasRoomsHeaderTarget) {
-      if (visibleRooms > 0) {
-        this.roomsHeaderTarget.classList.remove("hidden")
-      } else {
-        this.roomsHeaderTarget.classList.add("hidden")
-      }
-    }
-
     if (this.hasUsersHeaderTarget) {
       // Show user search results only when query is present
       if (visibleUsers > 0 && query.length > 0) {
