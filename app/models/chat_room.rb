@@ -1,7 +1,7 @@
 class ChatRoom < ApplicationRecord
-  belongs_to :subject, optional: true
-  has_many :messages, dependent: :destroy
-  has_many :chat_participants, dependent: :destroy
+  belongs_to :subject, optional: true, inverse_of: :chat_room
+  has_many :messages, dependent: :destroy, inverse_of: :chat_room
+  has_many :chat_participants, dependent: :destroy, inverse_of: :chat_room
   has_many :participants, through: :chat_participants, source: :user
 
   validates :name, presence: true, unless: :is_private?

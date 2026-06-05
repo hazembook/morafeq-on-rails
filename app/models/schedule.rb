@@ -1,5 +1,5 @@
 class Schedule < ApplicationRecord
-  belongs_to :subject
+  belongs_to :subject, inverse_of: :schedules
 
   validates :day, presence: true, inclusion: { in: 0..6 }
   validates :start_time, presence: true

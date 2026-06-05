@@ -1,8 +1,8 @@
 class AssignmentSubmission < ApplicationRecord
-  belongs_to :assignment
-  belongs_to :user
+  belongs_to :assignment, inverse_of: :assignment_submissions
+  belongs_to :user, inverse_of: :assignment_submissions
 
-  has_one_attached :file
+  has_one_attached :file, dependent: :purge_later
 
   validates :user_id, uniqueness: { scope: :assignment_id, message: "has already submitted this assignment" }
   validates :score, numericality: {

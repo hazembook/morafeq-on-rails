@@ -3,8 +3,8 @@ class Post < ApplicationRecord
 
   belongs_to :author, class_name: "User"
   belongs_to :scope, polymorphic: true, optional: true
-  has_many_attached :attachments
-  has_many :comments, -> { order(created_at: :asc) }, dependent: :destroy
+  has_many_attached :attachments, dependent: :purge_later
+  has_many :comments, -> { order(created_at: :asc) }, dependent: :destroy, inverse_of: :post
 
   validates :content, presence: true
   validates :scope_type, inclusion: { in: %w[College Department Subject] }, allow_nil: true
@@ -31,7 +31,7 @@ class Post < ApplicationRecord
       "(scope_type = 'Department' AND scope_id IN (?)) OR " \
       "(scope_type = 'College' AND scope_id IN (?))",
       subject_ids, department_ids, college_ids
-    ).order(pinned: :desc, created_at: :desc)
+    ).merge(pinned_first)
   end
 
   private

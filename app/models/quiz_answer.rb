@@ -1,6 +1,6 @@
 class QuizAnswer < ApplicationRecord
-  belongs_to :quiz_question
-  belongs_to :user
+  belongs_to :quiz_question, inverse_of: :quiz_answers
+  belongs_to :user, inverse_of: :quiz_answers
 
   validates :answer, presence: true
   validates :user_id, uniqueness: { scope: :quiz_question_id, message: "has already answered this question" }

@@ -1,8 +1,8 @@
 class Material < ApplicationRecord
   include Discard::Model
 
-  belongs_to :subject
-  has_one_attached :file
+  belongs_to :subject, inverse_of: :materials
+  has_one_attached :file, dependent: :purge_later
 
   validates :title, presence: true
   validate :file_attached

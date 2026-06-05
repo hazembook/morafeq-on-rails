@@ -1,5 +1,5 @@
 class College < ApplicationRecord
-  has_many :departments, dependent: :destroy
+  has_many :departments, dependent: :destroy, inverse_of: :college
 
   validates :name, presence: true, uniqueness: true
 

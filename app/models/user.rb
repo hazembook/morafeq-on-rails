@@ -11,7 +11,10 @@ class User < ApplicationRecord
   has_many :quiz_answers, dependent: :destroy
   has_many :assignment_submissions, dependent: :destroy
   has_many :attendances, dependent: :destroy
-  has_one_attached :avatar
+  has_many :comments, dependent: :destroy, inverse_of: :user
+  has_many :recorded_attendances, class_name: "Attendance", foreign_key: :recorded_by_id, dependent: :nullify, inverse_of: :recorded_by
+  has_many :audit_logs, dependent: :destroy
+  has_one_attached :avatar, dependent: :purge_later
 
   enum :role, { student: 0, teacher: 1, admin: 2 }
 

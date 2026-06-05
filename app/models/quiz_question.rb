@@ -1,6 +1,6 @@
 class QuizQuestion < ApplicationRecord
-  belongs_to :quiz
-  has_many :quiz_answers, dependent: :destroy
+  belongs_to :quiz, inverse_of: :quiz_questions
+  has_many :quiz_answers, dependent: :destroy, inverse_of: :quiz_question
 
   serialize :choices, coder: JSON
 

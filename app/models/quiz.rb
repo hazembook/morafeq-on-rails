@@ -1,5 +1,5 @@
 class Quiz < ApplicationRecord
-  belongs_to :subject
+  belongs_to :subject, inverse_of: :quizzes
   has_many :quiz_questions, dependent: :destroy
   has_many :quiz_answers, through: :quiz_questions
 

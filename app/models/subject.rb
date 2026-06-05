@@ -1,6 +1,6 @@
 class Subject < ApplicationRecord
-  belongs_to :department
-  belongs_to :teacher, class_name: "User"
+  belongs_to :department, inverse_of: :subjects
+  belongs_to :teacher, class_name: "User", inverse_of: :taught_subjects
   has_many :enrollments, dependent: :destroy
   has_many :students, through: :enrollments, source: :user
   has_many :materials, dependent: :destroy

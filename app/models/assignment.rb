@@ -1,8 +1,8 @@
 class Assignment < ApplicationRecord
-  belongs_to :subject
+  belongs_to :subject, inverse_of: :assignments
   has_many :assignment_submissions, dependent: :destroy
 
-  has_one_attached :file
+  has_one_attached :file, dependent: :purge_later
 
   validates :title, presence: true
   validates :due_at, presence: true

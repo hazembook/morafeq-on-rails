@@ -1,6 +1,6 @@
 class Department < ApplicationRecord
-  belongs_to :college
-  has_many :subjects, dependent: :destroy
+  belongs_to :college, inverse_of: :departments
+  has_many :subjects, dependent: :destroy, inverse_of: :department
 
   validates :name, presence: true
 
