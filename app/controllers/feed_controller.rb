@@ -20,11 +20,13 @@ class FeedController < ApplicationController
 
   def read_status
     @post = Post.feed_for(Current.user).find(params[:id])
+    response.headers["Cache-Control"] = "no-cache, no-store"
     render partial: "feed/read_status", locals: { post: @post }
   end
 
   def post_actions
     @post = Post.feed_for(Current.user).find(params[:id])
+    response.headers["Cache-Control"] = "no-cache, no-store"
     render partial: "feed/post_actions", locals: { post: @post }
   end
 
