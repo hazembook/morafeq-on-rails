@@ -20,7 +20,7 @@
         </span>
       </div>
 
-      <%= turbo_frame_tag "post_actions_#{dom_id(post)}", src: post_actions_feed_path(post), loading: :lazy %>
+      <%= turbo_frame_tag "post_actions_#{dom_id(post)}", src: post_actions_feed_path(post), loading: :lazy, data: { controller: "frame-cache" } %>
     </div>
 
     <!-- Post content -->
@@ -115,7 +115,7 @@
           <% end %>
         <% end %>
 
-        <%= turbo_frame_tag "read_status_#{dom_id(post)}", src: read_status_feed_path(post), loading: :lazy do %>
+        <%= turbo_frame_tag "read_status_#{dom_id(post)}", src: read_status_feed_path(post), loading: :lazy, data: { controller: "frame-cache" } do %>
           <div class="h-5"></div>
         <% end %>
       </div>
