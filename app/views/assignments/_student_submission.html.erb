@@ -22,7 +22,7 @@
         </svg>
         <%= link_to t("assignments.show.download_solved", filename: submission.file.filename), rails_blob_path(submission.file, disposition: "attachment"), class: "text-sm font-semibold text-blue-600 hover:text-blue-800 underline", target: "_blank" %>
       </div>
-      <p class="text-xs text-gray-400"><%= t("assignments.show.uploaded_ago", time: time_ago_in_words(submission.created_at)) %></p>
+      <p class="text-xs text-gray-400" data-controller="timeago" data-timeago-datetime-value="<%= submission.created_at.iso8601 %>" data-timeago-format-value="<%= t("assignments.show.uploaded_ago", time: "%{time}") %>"><%= t("assignments.show.uploaded_ago", time: time_ago_in_words(submission.created_at)) %></p>
     </div>
 
     <% if submission.feedback.present? %>

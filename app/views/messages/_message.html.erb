@@ -96,7 +96,7 @@
 
       <!-- Footer -->
       <div data-role="footer" class="flex items-center justify-between gap-4 mt-1.5 border-t border-gray-100 pt-1">
-        <span data-role="timestamp" class="text-[10px] text-gray-400 font-light"><%= t("datetime.time_ago", time: time_ago_in_words(message.created_at)) %></span>
+        <span data-role="timestamp" class="text-[10px] text-gray-400 font-light" data-controller="timeago" data-timeago-datetime-value="<%= message.created_at.iso8601 %>" data-timeago-format-value="<%= t("datetime.time_ago", time: "%{time}") %>"><%= t("datetime.time_ago", time: time_ago_in_words(message.created_at)) %></span>
 
         <div class="flex items-center gap-2">
           <span id="message_<%= message.id %>_seen" data-role="seen-status" class="text-[10px] font-light">

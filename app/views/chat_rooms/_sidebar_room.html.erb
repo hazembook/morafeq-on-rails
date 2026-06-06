@@ -1,0 +1,55 @@
+<% 
+  my_participant = room.chat_participants.find { |p| p.user_id == user.id }
+  last_msg = room.messages.kept.last
+  is_active = defined?(current_room) && current_room && current_room.id == room.id
+  unread = last_msg && my_participant && (my_participant.last_read_message_id.nil? || last_msg.id > my_participant.last_read_message_id)
+
+  display_name = room.display_name(user)
+  initials = if room.is_private?
+    other_participant = room.chat_participants.find { |p| p.user_id != user.id }
+    other = other_participant&.user
+    other ? other.full_name.split.map(&:first).join("").first(2).upcase : "ME"
+  else
+    room.subject ? room.subject.code.first(4) : room.name.first(2).upcase
+  end
+
+  gradients = [
+    "from-blue-500 to-indigo-600",
+    "from-emerald-400 to-teal-600",
+    "from-purple-500 to-pink-600",
+    "from-amber-500 to-orange-600",
+    "from-rose-500 to-red-600"
+  ]
+  gradient = gradients[room.id % gradients.size]
+%>
+<div id="sidebar_room_<%= room.id %>" data-chat-search-target="room" data-search-name="<%= display_name %>" data-chat-type="<%= room.is_private? ? 'private' : 'group' %>">
+  <%= link_to room, class: "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 #{is_active ? 'bg-blue-50/70 hover:bg-blue-50/70 border-s-4 border-blue-600 ps-[12px]' : ''}" do %>
+    <div class="w-11 h-11 rounded-full bg-gradient-to-tr <%= gradient %> flex items-center justify-center text-white text-sm font-semibold tracking-wider shadow-inner shrink-0 select-none relative">
+      <%= initials %>
+      <% if unread %>
+        <span class="absolute -top-0.5 -end-0.5 w-3.5 h-3.5 bg-red-500 border-2 border-white rounded-full"></span>
+      <% end %>
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center justify-between gap-1 mb-0.5">
+        <h3 class="text-sm font-bold text-gray-900 truncate <%= is_active ? 'text-blue-900' : '' %> <%= unread ? 'text-gray-900' : '' %>">
+          <%= display_name %>
+          <% if unread %>
+            <span class="inline-block w-2 h-2 bg-blue-500 rounded-full ms-1 align-middle"></span>
+          <% end %>
+        </h3>
+        <span class="text-[10px] text-gray-400 whitespace-nowrap" data-controller="timeago" data-timeago-datetime-value="<%= last_msg&.created_at&.iso8601 %>">
+          <%= last_msg ? time_ago_in_words(last_msg.created_at) : "" %>
+        </span>
+      </div>
+      <p class="text-xs <%= unread ? 'font-semibold text-gray-800' : 'text-gray-500' %> truncate">
+        <% if last_msg %>
+          <span class="font-medium text-gray-700"><%= last_msg.user == user ? t("chats.you", default: "You") : last_msg.user.full_name.split.first %>:</span>
+          <%= last_msg.content.presence || t("chats.sent_file", default: "Sent an attachment") %>
+        <% else %>
+          <span class="italic text-gray-400"><%= t("chats.no_messages", default: "No messages yet") %></span>
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+</div>

@@ -49,7 +49,7 @@
                 <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-gray-500 mb-1">
                   <span class="font-semibold text-gray-800"><%= comment.user.full_name %></span>
                   <span class="text-gray-300">•</span>
-                  <span><%= t("datetime.time_ago", time: time_ago_in_words(comment.created_at)) %></span>
+                  <span data-controller="timeago" data-timeago-datetime-value="<%= comment.created_at.iso8601 %>" data-timeago-format-value="<%= t("datetime.time_ago", time: "%{time}") %>"><%= t("datetime.time_ago", time: time_ago_in_words(comment.created_at)) %></span>
                 </div>
                 <p class="text-sm text-gray-700 whitespace-pre-line leading-relaxed"><%= comment.content %></p>
               </div>

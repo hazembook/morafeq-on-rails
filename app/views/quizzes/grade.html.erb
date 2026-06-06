@@ -12,7 +12,7 @@
           <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
             <div>
               <h2 class="font-bold text-gray-900"><%= student.full_name %></h2>
-              <p class="text-xs text-gray-500"><%= t("quizzes.grade.submitted_ago", time: time_ago_in_words(answers.first.created_at)) %></p>
+              <p class="text-xs text-gray-500" data-controller="timeago" data-timeago-datetime-value="<%= answers.first.created_at.iso8601 %>" data-timeago-format-value="<%= t("quizzes.grade.submitted_ago", time: "%{time}") %>"><%= t("quizzes.grade.submitted_ago", time: time_ago_in_words(answers.first.created_at)) %></p>
             </div>
             <div class="text-end">
               <% graded_count = answers.count { |a| a.score.present? } %>

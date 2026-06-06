@@ -3,11 +3,12 @@ class MessagesController < ApplicationController
   rescue_from Pundit::NotAuthorizedError, with: :message_not_authorized
 
   def create
-    @room = ChatRoom.find(params[:chat_room_id])
+    @room = ChatRoom.includes(:subject, chat_participants: :user, messages: :user).find(params[:chat_room_id])
     @message = @room.messages.build(message_params.merge(user: Current.user))
 
     if @message.save
       broadcast_message
+      broadcast_sidebar_to_participants
       redirect_to @room
     else
       redirect_to @room, alert: @message.errors.full_messages.to_sentence
@@ -50,6 +51,17 @@ class MessagesController < ApplicationController
       partial: "messages/message",
       locals: { message: @message }
     )
+  end
+
+  def broadcast_sidebar_to_participants
+    @room.chat_participants.each do |participant|
+      Turbo::StreamsChannel.broadcast_replace_to(
+        "unread_#{participant.user_id}",
+        target: "sidebar_room_#{@room.id}",
+        partial: "chat_rooms/sidebar_room",
+        locals: { room: @room, user: participant.user }
+      )
+    end
   end
 
   def broadcast_destroy
