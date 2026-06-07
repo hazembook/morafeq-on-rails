@@ -319,6 +319,9 @@ ar:
         teacher: "الأستاذ:"
         enrolled_students: "الطلاب المسجلون"
         none: "لا توجد تسجيلات بعد."
+        add_student: "إضافة طالب"
+        select_student: "اختر طالباً..."
+        enroll_button: "تسجيل"
       edit:
         title: "تعديل المادة"
       new:
@@ -409,6 +412,8 @@ ar:
       user_updated: "تم تحديث المستخدم بنجاح."
       user_deleted: "تم حذف المستخدم بنجاح."
       cannot_delete_self: "لا يمكنك حذف حسابك الشخصي."
+      enrollment_created: "تم تسجيل الطالب بنجاح."
+      enrollment_deleted: "تم حذف الطالب من المادة."
     assignments:
       submitted: "تم تسليم الواجب بنجاح."
       created: "تم إنشاء الواجب بنجاح."

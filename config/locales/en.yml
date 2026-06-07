@@ -319,6 +319,9 @@ en:
         teacher: "Teacher:"
         enrolled_students: "Enrolled Students"
         none: "No enrollments yet."
+        add_student: "Add Student"
+        select_student: "Select a student..."
+        enroll_button: "Enroll"
       edit:
         title: "Edit Subject"
       new:
@@ -409,6 +412,8 @@ en:
       user_updated: "User updated."
       user_deleted: "User deleted."
       cannot_delete_self: "Cannot delete yourself."
+      enrollment_created: "Student enrolled."
+      enrollment_deleted: "Student removed from subject."
     assignments:
       submitted: "Your assignment has been submitted successfully."
       created: "Assignment created successfully."

@@ -4,14 +4,29 @@
   <p class="text-gray-500 mb-4"><%= t("admin.subjects.show.teacher") %> <%= @subject.teacher.full_name %></p>
 
   <h2 class="text-lg font-semibold mb-2"><%= t("admin.subjects.show.enrolled_students") %> (<%= @subject.students.count %>)</h2>
+
   <% if @subject.students.any? %>
-    <ul class="list-disc list-inside space-y-1 mb-4">
+    <ul class="space-y-2 mb-4">
       <% @subject.students.each do |student| %>
-        <li><%= student.full_name %> (<%= student.email_address %>)</li>
+        <li class="flex items-center justify-between bg-gray-50 rounded-md px-3 py-2">
+          <span><%= student.full_name %> (<%= student.email_address %>)</span>
+          <%= button_to t("common.remove"), admin_subject_enrollment_path(@subject, student.enrollments.find_by(subject: @subject)),
+                        method: :delete,
+                        data: { confirm: t("common.confirm_delete") },
+                        class: "rounded-md bg-red-500 px-3 py-1 text-white text-xs font-medium hover:bg-red-600" %>
+        </li>
       <% end %>
     </ul>
   <% else %>
     <p class="text-gray-500 mb-4"><%= t("admin.subjects.show.none") %></p>
+  <% end %>
+
+  <h2 class="text-lg font-semibold mb-2"><%= t("admin.subjects.show.add_student") %></h2>
+  <%= form_with url: admin_subject_enrollments_path(@subject), method: :post, class: "flex gap-2 mb-4" do |form| %>
+    <%= form.collection_select :user_id, User.where(role: :student).order(:full_name), :id, ->(u) { "#{u.full_name} (#{u.email_address})" },
+                               { include_blank: t("admin.subjects.show.select_student") },
+                               class: "rounded-md border border-gray-300 px-3 py-2 text-sm flex-1" %>
+    <%= form.submit t("admin.subjects.show.enroll_button"), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700 whitespace-nowrap" %>
   <% end %>
 
   <div class="flex gap-3">

@@ -51,7 +51,9 @@ Rails.application.routes.draw do
     get "/", to: "dashboard#index"
     resources :colleges
     resources :departments
-    resources :subjects
+    resources :subjects do
+      resources :enrollments, only: [ :create, :destroy ]
+    end
     resources :users
     resources :audit_logs, only: [ :index, :show ]
   end
