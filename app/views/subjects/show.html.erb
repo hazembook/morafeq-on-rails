@@ -3,7 +3,7 @@
   <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
       <div>
-        <%= link_to t("subjects.back_to_subjects"), subjects_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+        <%= link_to t("subjects.back_to_subjects"), subjects_path, data: { turbo_action: "restore" }, class: "text-sm text-blue-600 hover:text-blue-800" %>
         <h1 class="text-3xl font-extrabold text-gray-900 mt-2"><%= @subject.name %></h1>
         <p class="text-sm text-gray-500 mt-1 font-medium"><%= @subject.code %> &middot; <%= t("subjects.department_label", name: @subject.department.name) %></p>
         <p class="text-sm text-gray-600 mt-0.5"><%= t("subjects.instructor_label", name: @subject.teacher.full_name) %></p>

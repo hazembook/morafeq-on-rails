@@ -1,7 +1,7 @@
 <div class="max-w-4xl mx-auto px-4 py-6">
   <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <div>
-      <%= link_to t("attendances.index.back_to_subject"), subject_path(@subject), class: "text-sm text-blue-600 hover:text-blue-800" %>
+      <%= link_to t("attendances.index.back_to_subject"), subject_path(@subject), data: { turbo_action: "restore" }, class: "text-sm text-blue-600 hover:text-blue-800" %>
       <h1 class="text-2xl font-bold mt-2 text-gray-900"><%= t("attendances.index.title") %></h1>
       <p class="text-sm text-gray-500"><%= t("attendances.index.subject_prefix", name: @subject.name, code: @subject.code) %></p>
     </div>

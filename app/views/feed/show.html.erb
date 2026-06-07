@@ -1,6 +1,6 @@
 <div class="max-w-3xl mx-auto px-4 py-6">
   <div class="mb-5">
-    <%= link_to t("feed.back_to_feed"), feed_index_path, class: "text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1.5 no-underline hover:underline" %>
+    <%= link_to t("feed.back_to_feed"), feed_index_path, data: { turbo_action: "restore" }, class: "text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1.5 no-underline hover:underline" %>
   </div>
 
   <div class="mb-6">
