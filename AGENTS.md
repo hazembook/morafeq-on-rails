@@ -77,17 +77,8 @@ Rationale: the project is single-owner, so feature branches stay local. The agen
 
 ### Human-in-the-Loop Split
 
-| Step | Agent | Human |
-|------|:-----:|:-----:|
-| Check bd, claim, branch | ✓ | |
-| Implement, test, commit on branch | ✓ | |
-| Run quality gates on branch | ✓ | |
-| Review diff / branch | | ✓ |
-| Fast-forward `main` (or rebase-then-merge for cleaner history) | | ✓ |
-| Push `main` to all 3 remotes (`origin` / `github` / `gitlab`) | | ✓ |
-| Delete local feature branch | | ✓ |
-| Confirm `bd close` or reopen with feedback | | ✓ |
-| Force-push (only after history rewrite) | | ✓ |
+- **Agent** owns: check bd, claim, branch, implement, test, commit, run quality gates
+- **Human** owns: review diff, fast-forward `main`, push `main` to all 3 remotes (`origin` / `github` / `gitlab`), delete local feature branch, confirm `bd close`, force-push after a history rewrite
 
 ### Pre-change Workflow (Direct Requests & Untracked Work)
 
