@@ -23,6 +23,9 @@ module ApplicationHelper
     if quiz_answer.answer.present?
       case question_type
       when "match"
+        # Match questions store the student's pairings as a JSON hash
+        # (prompt → chosen answer); fall back to raw text if a legacy row
+        # holds an unparseable value.
         begin
           parsed = JSON.parse(quiz_answer.answer)
           if parsed.is_a?(Hash)

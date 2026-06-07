@@ -1,5 +1,8 @@
 # Comprehensive seed data for development/demo
 # Run with: bin/rails db:seed
+#
+# Idempotent: this file wipes all rows from the tables below and re-creates
+# the demo dataset, so re-running bin/rails db:seed is safe.
 
 puts "Cleaning existing data..."
 ActiveStorage::Attachment.delete_all

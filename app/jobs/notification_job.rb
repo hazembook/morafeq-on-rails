@@ -11,6 +11,9 @@ class NotificationJob < ApplicationJob
   private
 
   def recipients_for(notifiable)
+    # Polymorphic dispatch — each notifiable class resolves its own audience.
+    # Subjects are the only direct scope; materials/assignments/quizzes notify
+    # their subject's students, messages only notify DM participants (below).
     case notifiable
     when Post
       post_recipients(notifiable)
@@ -28,6 +31,9 @@ class NotificationJob < ApplicationJob
   end
 
   def post_recipients(post)
+    # Posts fan out by their scope: a Subject-scoped post hits the subject's
+    # students; Department/College-scoped posts join through enrollments to
+    # reach every enrolled student. General (nil scope) posts go to everyone.
     case post.scope_type
     when "Subject"
       post.scope&.students || User.none
@@ -49,6 +55,8 @@ class NotificationJob < ApplicationJob
   end
 
   def message_recipients(message)
+    # Only DMs generate notifications — group-chat messages are in-app only
+    # so we don't spam every participant on every reply.
     return User.none unless message.chat_room&.is_private?
     message.chat_room.participants
   end

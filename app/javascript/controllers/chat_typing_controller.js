@@ -12,6 +12,9 @@ export default class extends Controller {
   }
 
   typing(event) {
+    // Debounce pattern: fire a single "started" signal the first time the
+    // user types, then re-arm a 2s timer on every keystroke. When the timer
+    // expires with no new input, fire the "stopped" signal.
     if (!this.isTyping) {
       this.isTyping = true
       this.sendTypingStatus(true)
