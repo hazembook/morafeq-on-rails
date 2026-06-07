@@ -79,7 +79,7 @@ The standard workflow above assumes the agent is picking from `bd ready`. For **
    - Commit the bd state change (claim or create, plus any `--deps` linkage) so the bd auto-export to `.beads/issues.jsonl` is in git history
    - Branch from `main` with `git switch -c <bd-id>`
    - Implement, run quality gates, commit with a `Refs: <id>` footer in the work commit
-   - Merge to `main` with `--no-ff` (per project convention), then `git branch -d` and `git push origin --delete` the branch
+   - Merge to `main` with `--no-ff` (per project convention), then `git branch -d` and `git push origin --delete` the branch (and `git push gihub` / `git push gilab` — see Session Completion)
    - `bd close <id> --reason "..."` with a reference to the merge commit
 
 **Pausing a task (work not finished):**
@@ -142,12 +142,15 @@ For more details, see README.md and docs/QUICKSTART.md.
 1. **File issues for remaining work** - Create issues for anything that needs follow-up
 2. **Run quality gates** (if code changed) - Tests, linters, builds
 3. **Update issue status** - Close finished work, update in-progress items
-4. **PUSH TO REMOTE** - This is MANDATORY:
+4. **PUSH TO REMOTE** - This is MANDATORY. The project has three remotes — push to all of them:
    ```bash
    git pull --rebase
-   git push
-   git status  # MUST show "up to date with origin"
+   git push origin main   # codeberg (canonical)
+   git push gihub main    # github mirror
+   git push gilab main    # gitlab mirror
+   git remote -v          # MUST show all three at the same tip
    ```
+   The remote names `gihub` / `gilab` are typos preserved for history; rename via `git remote rename` if desired.
 5. **Clean up** - Clear stashes, prune remote branches
 6. **Verify** - All changes committed AND pushed
 7. **Hand off** - Provide context for next session
@@ -164,9 +167,8 @@ For more details, see README.md and docs/QUICKSTART.md.
 ## Build & Test
 
 ```bash
-# Install Ruby + JS deps
+# Install Ruby deps (JS is managed by importmap, no node_modules)
 bundle install
-npm install
 
 # Database (creates, migrates, seeds with colleges/departments/subjects/users/etc.)
 bin/rails db:prepare
@@ -184,7 +186,7 @@ bin/rails test test/integration/academic_tools_test.rb -n /quiz/   # by name
 
 # Quality gates
 bin/rubocop                     # Ruby style (omakase Rails)
-bin/erb_lint --lint-all         # ERB templates
+bundle exec erb_lint --lint-all # ERB templates (no binstub)
 bin/brakeman --quiet --no-pager # Static security analysis
 bin/bundler-audit               # Gem vuln audit
 bin/importmap audit             # JS importmap audit
@@ -207,8 +209,7 @@ bin/ci
 
 ## Conventions & Patterns
 
-- **Branch & commit**: GitHub Flow — short-lived branches off `main` (`feat/<scope>`, `fix/<scope>`); `bin/ci` must be green before merging.
-- **Issue tracking**: every task goes through `bd` (beads). One branch per issue; commit and close before claiming the next.
+- **Branch & commit**: feature-branch flow — short-lived branches off `main` (`feat/<scope>`, `fix/<scope>`); `bin/ci` must be green before merging. See the BEADS INTEGRATION section for issue tracking + branch-per-issue workflow.
 - **Styling**: Ruby follows `rubocop-rails-omakase` (inherited in `.rubocop.yml`). ERB lint config in `.erb_lint.yml` enables only the Rubocop linter with selected `Layout/*` rules disabled.
 - **Authorization**: every controller action that touches a record must go through Pundit (`include Pundit::Authorization` is already in `ApplicationController`); add a policy under `app/policies/<resource>_policy.rb` and use `authorize` / `policy_scope`. Unauth → `redirect_to root_path, alert: t("alerts.not_authorized")`.
 - **Auth in tests**: use `sign_in_as(user)` from `test/test_helpers/session_test_helper.rb` in integration/controller tests; never hit the login form in tests.
