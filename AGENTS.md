@@ -70,16 +70,16 @@ bd close bd-42 --reason "Substantive summary of what was fixed/why" --json
    - `git add -A && git commit -m "..."` with a `Refs: <id>` footer
    - Present: branch name, key commits, diff highlights, quality-gate status, suggested merge message
    - Do **not** merge, push, or close the bd task until the human says "go ahead" (or equivalent)
-7. **After explicit confirmation, run the publish steps** (see Session Completion): `bd close` on the feature branch with a substantive reason, commit the JSONL export, then fast-forward `main`, push to all 3 remotes, delete local branch
+7. **After explicit confirmation, run the publish steps** (see Session Completion): `bd close` on the feature branch with a substantive reason, commit the JSONL export, then fast-forward `main`, push to `origin main`, delete local branch
 8. **Commit before next task**: never open/claim the next task before handing off the previous one.
 
-Rationale: the project is single-owner, so feature branches stay local. The agent works on isolated, reproducible steps; the human reviews the diff and explicitly signs off before anything touches `main` or the public mirrors. The explicit "go ahead" is the gate — the agent never assumes approval from a "thanks" or "looks good" alone. When more contributors join, add PRs by pushing the feature branch to `origin` and letting the human open the PR.
+Rationale: the project is single-owner, so feature branches stay local. The agent works on isolated, reproducible steps; the human reviews the diff and explicitly signs off before anything touches `main` on `origin`. The explicit "go ahead" is the gate — the agent never assumes approval from a "thanks" or "looks good" alone. When more contributors join, add PRs by pushing the feature branch to `origin` and letting the human open the PR.
 
 ### Human-in-the-Loop Split
 
 - **Agent** owns: check bd, claim, branch, implement, test, commit, run quality gates, present handoff summary
 - **Human** owns: review diff, give explicit confirmation (e.g., "go ahead")
-- **After confirmation, agent** owns: `bd close` on the feature branch with a substantive reason, commit the JSONL export, fast-forward `main`, push to all 3 remotes, delete local feature branch
+- **After confirmation, agent** owns: `bd close` on the feature branch with a substantive reason, commit the JSONL export, fast-forward `main`, push to `origin main`, delete local feature branch
 
 ### Pre-change Workflow (Direct Requests & Untracked Work)
 
@@ -146,7 +146,7 @@ For more details, see README.md and docs/QUICKSTART.md.
 
 ## Session Completion
 
-This section describes the **explicit-confirm publish flow**: the agent prepares the work, the human reviews and gives explicit "go ahead", and only then does the agent touch `main` and the public mirrors. Feature branches stay local — only `main` is pushed.
+This section describes the **explicit-confirm publish flow**: the agent prepares the work, the human reviews and gives explicit "go ahead", and only then does the agent touch `main` on `origin`. Feature branches stay local — only `main` is pushed.
 
 ### Agent handoff (end of session)
 
@@ -177,12 +177,11 @@ This section describes the **explicit-confirm publish flow**: the agent prepares
    git switch main
    git merge <bd-id>           # fast-forward — no merge commit
    ```
-9. **Push `main` to all three remotes**:
+9. **Push `main` to `origin`**:
    ```bash
-   git push origin main   # codeberg (canonical)
-   git push github main   # github mirror
-   git push gitlab main   # gitlab mirror
-   git remote -v          # MUST show all three at the same tip
+   git pull --rebase origin main
+   git push origin main
+   git status             # MUST show "up to date with 'origin/main'"
    ```
 10. **Delete the local feature branch**:
     ```bash
@@ -191,7 +190,7 @@ This section describes the **explicit-confirm publish flow**: the agent prepares
     `git status` returns clean — no dangling `.beads/` changes after push.
 
 **CRITICAL RULES:**
-- The agent **never** runs `git push <remote> main` for the canonical branch without explicit human confirmation
+- The agent **never** runs `git push origin main` without explicit human confirmation
 - The agent **never** force-pushes (`--force` / `--force-with-lease`) — only the human does, and only after a history rewrite
 - The agent **never** merges to `main` without explicit human confirmation
 - The agent **never** pushes feature branches — only `main` is pushed
