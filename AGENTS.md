@@ -69,6 +69,19 @@ bd close bd-42 --reason "Completed" --json
 6. **Complete and merge**: `bd close <id> --reason "Done"`, then `git add -A && git commit -m "..."`, then `git switch main && git merge <branch> && git branch -d <branch>`
 7. **Commit before next task**: never open/claim the next task before committing the previous one's work
 
+### Pre-change Workflow (Direct Requests & Untracked Work)
+
+The standard workflow above assumes the agent is picking from `bd ready`. For **direct requests** from the user, **work that isn't tracked**, or **even for an already-tracked task**, follow this checklist before writing any code:
+
+1. **Review and debate the request.** If the change is non-trivial, the approach is unclear, or there's a tradeoff to weigh, surface it first — propose options, cite constraints, and confirm direction. Do not assume the literal request is the best path.
+2. **Check bd for related work:** `bd ready --json` and `bd list --json`. If an existing issue already covers the request (even partially), use it: claim with `bd update <id> --claim` and link new findings via `--deps discovered-from:<id>`. If nothing matches, create a new task with `bd create` (clear title, type, priority, description).
+3. **Never work on `main` directly — always branch, even for tracked work.** This applies whether the task was pre-existing or just created. The flow is:
+   - Commit the bd state change (claim or create, plus any `--deps` linkage) so the bd auto-export to `.beads/issues.jsonl` is in git history
+   - Branch from `main` with `git switch -c <bd-id>`
+   - Implement, run quality gates, commit with a `Refs: <id>` footer in the work commit
+   - Merge to `main` with `--no-ff` (per project convention), then `git branch -d` and `git push origin --delete` the branch
+   - `bd close <id> --reason "..."` with a reference to the merge commit
+
 **Pausing a task (work not finished):**
 
 If you need to pause before completing a task, commit the partial work on the branch, push it, and switch to the new task's branch. Never leave uncommitted work on main or the branch when switching contexts.
