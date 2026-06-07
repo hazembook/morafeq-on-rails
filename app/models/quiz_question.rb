@@ -12,6 +12,7 @@ class QuizQuestion < ApplicationRecord
   before_validation :set_default_question_type
   before_validation :set_default_choices
   before_validation :clean_and_parse_choices
+  # Saving a child question mutates the parent quiz's total_points
   after_save :recalculate_quiz_total_points, if: :saved_change_to_points?
   after_destroy :recalculate_quiz_total_points
 

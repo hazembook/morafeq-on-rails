@@ -19,6 +19,7 @@ class Subject < ApplicationRecord
     I18n.t("db.subjects.#{code}", default: super)
   end
 
+  # Each subject gets its own chat room on creation
   after_create_commit :create_chat_room
 
   private

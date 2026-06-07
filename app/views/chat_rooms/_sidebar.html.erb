@@ -1,5 +1,4 @@
 <div class="flex flex-col h-full bg-white border-e border-gray-200" data-controller="chat-search">
-  <!-- Search / Header -->
   <div class="p-4 border-b border-gray-100 space-y-3">
     <div class="flex items-center justify-between">
       <h1 class="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -23,7 +22,6 @@
              class="w-full ps-9 pe-4 py-2 rounded-lg border-0 bg-gray-100 focus:bg-white focus:ring-2 focus:ring-blue-500 text-sm placeholder-gray-400 transition-all duration-200">
     </div>
 
-    <!-- Segmented Tabs for Grouping -->
     <div class="flex gap-1 bg-gray-100 p-0.5 rounded-lg">
       <button type="button" 
               data-chat-search-target="tab"
@@ -49,12 +47,10 @@
     </div>
   </div>
 
-  <!-- Chat / Users List Scrollable Area -->
   <div class="flex-1 overflow-y-auto">
     <%= turbo_stream_from "unread_#{Current.user.id}" %>
     <%= render partial: "sidebar_room", collection: @rooms, as: :room, locals: { user: Current.user, current_room: @room } %>
 
-    <!-- Start Chat (Contacts Search Results) Section -->
     <div data-chat-search-target="usersHeader" class="px-4 py-2 text-xs font-bold text-gray-400 bg-gray-50/50 uppercase tracking-wider hidden">
       <%= t("chats.start_new_chat", default: "Contacts") %>
     </div>
@@ -74,11 +70,9 @@
         %>
         <div data-chat-search-target="user" data-search-name="<%= user.full_name %>" class="hidden">
           <%= button_to create_private_chat_rooms_path(user_id: user.id), method: :post, class: "w-full text-start flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 cursor-pointer border-0 bg-transparent" do %>
-            <!-- Avatar -->
             <div class="w-10 h-10 rounded-full bg-gradient-to-tr <%= gradient %> flex items-center justify-center text-white text-xs font-semibold tracking-wider shadow-inner shrink-0 select-none">
               <%= initials %>
             </div>
-            <!-- Info -->
             <div class="flex-1 min-w-0">
               <h3 class="text-sm font-bold text-gray-900 truncate"><%= user.full_name %></h3>
               <p class="text-xs text-gray-400 capitalize"><%= t("roles.#{user.role}") %></p>

@@ -4,14 +4,11 @@
 
 <div class="flex-1 flex overflow-hidden min-h-0 w-full">
   
-  <!-- Sidebar Pane (List of Chats) -->
   <div class="w-full md:w-80 lg:w-96 flex flex-col shrink-0 min-h-0 border-e border-gray-200">
     <%= render "sidebar" %>
   </div>
 
-  <!-- Active Chat / Placeholder Pane (Hidden on mobile) -->
   <div class="hidden md:flex flex-1 flex-col bg-[#e7ebf0] justify-center items-center p-8 text-center select-none relative min-h-0">
-    <!-- Telegram pattern texture background overlay -->
     <div class="absolute inset-0 opacity-[0.05] bg-repeat pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg width=\"80\" height=\"80\" viewBox=\"0 0 80 80\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M14 16v4h-2v-4H8v-2h4V8h2v6h6v2h-6zM30 46v4h-2v-4h-4v-2h4v-6h2v6h6v2h-6z\" fill=\"%23000\" fill-opacity=\"1\" fill-rule=\"evenodd\"%3E%3C/path%3E%3C/svg%3E');"></div>
     
     <div class="z-10 max-w-sm space-y-3">

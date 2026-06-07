@@ -23,7 +23,6 @@
     <% end %>
   </div>
 
-  <!-- Instruction Details Card -->
   <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6 space-y-4">
     <div>
       <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wide"><%= t("assignments.show.instructions_heading") %></h2>
@@ -49,10 +48,8 @@
   <% if Current.user.student? %>
     <%= turbo_stream_from "assignment_#{@assignment.id}_user_#{Current.user.id}" %>
     <% if @submitted %>
-      <!-- Submissions Display -->
       <%= render partial: "assignments/student_submission", locals: { submission: @submission, assignment: @assignment } %>
     <% elsif @assignment.locked? %>
-      <!-- Locked Display -->
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
         <svg class="w-12 h-12 text-amber-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
@@ -61,7 +58,6 @@
         <p class="text-sm text-gray-500 mt-1"><%= t("assignments.show.locked_hint") %></p>
       </div>
     <% elsif @assignment.closed? %>
-      <!-- Closed Display -->
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
         <svg class="w-12 h-12 text-orange-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
@@ -70,7 +66,6 @@
         <p class="text-sm text-gray-500 mt-1"><%= t("assignments.show.closed_hint") %></p>
       </div>
     <% elsif @assignment.due_at < Time.current %>
-      <!-- Past Due Display -->
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
         <svg class="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -79,7 +74,6 @@
         <p class="text-sm text-gray-500 mt-1"><%= t("assignments.show.past_due_hint", date: l(@assignment.due_at, format: :long)) %></p>
       </div>
     <% else %>
-      <!-- Submit Solution Form -->
       <%= form_with model: [ @subject, @assignment, @new_submission ], class: "bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6" do |f| %>
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4" data-controller="countdown" data-countdown-due-at-value="<%= @assignment.due_at.iso8601 %>">
           <p class="text-sm text-gray-600"><%= t("assignments.show.submit_instruction") %></p>

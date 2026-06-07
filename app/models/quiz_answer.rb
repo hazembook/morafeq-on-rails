@@ -16,6 +16,7 @@ class QuizAnswer < ApplicationRecord
   def broadcast_grade_update
     if saved_change_to_score?
       quiz = quiz_question.quiz
+      # Re-fetch the whole submission so the partial renders the full status block
       answers = QuizAnswer.where(quiz_question_id: quiz.quiz_question_ids, user_id: user_id)
       questions = quiz.quiz_questions
 

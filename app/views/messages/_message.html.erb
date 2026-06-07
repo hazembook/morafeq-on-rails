@@ -1,19 +1,15 @@
 <% is_private = message.chat_room.is_private? %>
 
 <div id="<%= dom_id(message) %>" data-message-user-id="<%= message.user_id %>" class="flex gap-1.5">
-  <!-- Avatar (hidden via CSS for self messages) -->
   <div data-role="avatar" class="w-7 h-7 mt-1 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white text-[10px] font-bold shrink-0 select-none">
     <%= message.user.full_name.first.upcase %>
   </div>
 
   <div class="relative max-w-[75%] min-w-[80px]">
-    <!-- Self tail -->
     <div data-role="self-tail" class="hidden absolute top-0 end-0 -me-[7px] w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-s-[7px] border-s-[#eef2ff]"></div>
-    <!-- Other tail -->
     <div data-role="other-tail" class="absolute top-0 start-0 -ms-[7px] w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-e-[7px] border-e-white"></div>
 
     <div data-role="bubble" class="bg-white border border-gray-150 rounded-2xl rounded-tl-none shadow-sm px-4 py-2.5">
-      <!-- Sender name (shown for all group chats) -->
       <% if !is_private %>
         <p data-role="sender-name" class="text-[11px] font-bold text-blue-600 mb-0.5"><%= message.user.full_name %></p>
       <% end %>
@@ -94,7 +90,6 @@
         </div>
       <% end %>
 
-      <!-- Footer -->
       <div data-role="footer" class="flex items-center justify-between gap-4 mt-1.5 border-t border-gray-100 pt-1">
         <span data-role="timestamp" class="text-[10px] text-gray-400 font-light" data-controller="timeago" data-timeago-datetime-value="<%= message.created_at.iso8601 %>" data-timeago-format-value="<%= t("datetime.time_ago", time: "%{time}") %>"><%= t("datetime.time_ago", time: time_ago_in_words(message.created_at)) %></span>
 

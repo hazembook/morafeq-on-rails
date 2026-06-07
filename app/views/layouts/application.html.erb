@@ -111,7 +111,6 @@
 
     <%# Global Media Lightbox Modal %>
     <div id="lightbox-modal" class="fixed inset-0 bg-black/95 z-[100] flex-col items-center justify-center p-4 cursor-zoom-out" style="display: none;" onclick="closeLightbox(event)">
-      <!-- Toolbar -->
       <div id="lightbox-toolbar" class="w-full max-w-5xl flex items-center justify-between mb-2 text-white pointer-events-auto cursor-default shrink-0 select-none px-2" onclick="event.stopPropagation()">
         <div class="flex items-center gap-2 min-w-0">
           <svg id="lightbox-toolbar-icon" class="w-5 h-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
@@ -135,22 +134,16 @@
         </div>
       </div>
 
-      <!-- Main Viewer Area with Controls -->
       <div class="relative w-full flex-1 max-w-5xl max-h-[80vh] flex items-center justify-center pointer-events-none" onclick="event.stopPropagation()">
-        <!-- Previous / Next Controls -->
         <button id="lightbox-prev" class="absolute start-4 top-1/2 -translate-y-1/2 text-white text-5xl font-light hover:text-gray-300 cursor-pointer pointer-events-auto bg-black/30 hover:bg-black/50 rounded-full w-12 h-12 flex items-center justify-center select-none transition-colors z-[102]" onclick="navigateLightbox(<%= I18n.locale == :ar ? 1 : -1 %>); event.stopPropagation();" style="display: none;"><%= I18n.locale == :ar ? "\u203A" : "\u2039" %></button>
         <button id="lightbox-next" class="absolute end-4 top-1/2 -translate-y-1/2 text-white text-5xl font-light hover:text-gray-300 cursor-pointer pointer-events-auto bg-black/30 hover:bg-black/50 rounded-full w-12 h-12 flex items-center justify-center select-none transition-colors z-[102]" onclick="navigateLightbox(<%= I18n.locale == :ar ? -1 : 1 %>); event.stopPropagation();" style="display: none;"><%= I18n.locale == :ar ? "\u2039" : "\u203A" %></button>
 
-        <!-- Image Container -->
         <img id="lightbox-img" src="" class="hidden max-w-full max-h-full object-contain rounded shadow-2xl scale-95 opacity-0 transition-all duration-300 pointer-events-auto" style="display: none;">
         
-        <!-- PDF Container -->
         <iframe id="lightbox-pdf" src="" class="hidden w-full h-full rounded shadow-2xl opacity-0 scale-95 transition-all duration-300 pointer-events-auto bg-white" style="display: none;"></iframe>
         
-        <!-- Video Container -->
         <video id="lightbox-video" src="" controls class="hidden max-w-full max-h-full rounded shadow-2xl opacity-0 scale-95 transition-all duration-300 pointer-events-auto" style="display: none;"></video>
         
-        <!-- Audio Container -->
         <div id="lightbox-audio-container" class="hidden w-full max-w-md bg-white rounded-lg p-6 shadow-2xl opacity-0 scale-95 transition-all duration-300 pointer-events-auto flex flex-col items-center gap-4" style="display: none;">
           <svg class="w-16 h-16 text-blue-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>

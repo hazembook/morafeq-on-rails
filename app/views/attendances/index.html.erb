@@ -14,7 +14,7 @@
   </div>
 
   <% if Current.user.student? %>
-    <!-- Student View -->
+    <%# Student view %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 text-center">
         <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide"><%= t("attendances.index.rate_label") %></span>
@@ -75,7 +75,7 @@
       </div>
     <% end %>
   <% else %>
-    <!-- Teacher View -->
+    <%# Teacher view %>
     <% if @students.any? %>
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200">

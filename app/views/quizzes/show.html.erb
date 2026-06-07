@@ -28,7 +28,6 @@
     <% if @submitted %>
       <%= render partial: "quizzes/student_submission", locals: { quiz: @quiz, answers: @answers, questions: @questions } %>
     <% elsif @quiz.locked? %>
-      <!-- Locked Display -->
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
         <svg class="w-12 h-12 text-amber-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
@@ -37,7 +36,6 @@
         <p class="text-sm text-gray-500 mt-1"><%= t("quizzes.show.locked_hint") %></p>
       </div>
     <% elsif @quiz.closed? %>
-      <!-- Closed Display -->
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
         <svg class="w-12 h-12 text-orange-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
@@ -46,7 +44,6 @@
         <p class="text-sm text-gray-500 mt-1"><%= t("quizzes.show.closed_hint") %></p>
       </div>
     <% elsif @quiz.due_at < Time.current %>
-      <!-- Past Due Display -->
       <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
         <svg class="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -55,7 +52,6 @@
         <p class="text-sm text-gray-500 mt-1"><%= t("quizzes.show.past_due_hint", date: l(@quiz.due_at, format: :long)) %></p>
       </div>
     <% else %>
-      <!-- Take Quiz Form -->
       <%= form_with url: subject_quiz_quiz_answers_path(@subject, @quiz), method: :post, class: "bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6" do |f| %>
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4" data-controller="countdown" data-countdown-due-at-value="<%= @quiz.due_at.iso8601 %>">
           <p class="text-sm text-gray-600"><%= t("quizzes.show.take_form_instruction") %></p>
@@ -97,7 +93,7 @@
       <% end %>
     <% end %>
   <% else %>
-    <!-- Teacher Details View -->
+    <%# Teacher details view %>
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6">
       <h2 class="text-lg font-bold text-gray-800 mb-2"><%= t("quizzes.show.details_title") %></h2>
       <div class="space-y-4">

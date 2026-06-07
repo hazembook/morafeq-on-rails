@@ -40,14 +40,12 @@
         </button>
       </div>
 
-      <!-- Container for dynamic questions -->
       <div class="space-y-4" data-nested-form-target="container">
         <%= f.fields_for :quiz_questions do |q_form| %>
           <%= render "quiz_question_fields", q_form: q_form %>
         <% end %>
       </div>
 
-      <!-- Template for new questions -->
       <template data-nested-form-target="template">
         <%= f.fields_for :quiz_questions, QuizQuestion.new, child_index: "NEW_RECORD" do |q_form| %>
           <%= render "quiz_question_fields", q_form: q_form %>

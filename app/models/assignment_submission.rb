@@ -30,6 +30,7 @@ class AssignmentSubmission < ApplicationRecord
   private
 
   def broadcast_grade_update
+    # Re-broadcast on either score or feedback change so the student sees updates immediately
     if saved_change_to_score? || saved_change_to_feedback?
       broadcast_replace_to(
         "assignment_#{assignment_id}_user_#{user_id}",

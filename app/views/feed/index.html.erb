@@ -18,7 +18,6 @@
 <% end %>
 
 <div class="max-w-5xl mx-auto flex gap-6 items-start">
-  <!-- Left Side: Main Feed (Posts & Creator) -->
   <div class="flex-1 min-w-0 max-w-2xl mx-auto lg:mx-0">
     <% if Current.user.teacher? || Current.user.admin? %>
       <div class="bg-white rounded-xl border border-gray-200 p-5 mb-6 shadow-sm">
@@ -86,9 +85,7 @@
     <% end %>
   </div>
 
-  <!-- Right Side: Reddit style sidebar (Desktop only) -->
   <div class="hidden lg:block w-80 shrink-0 space-y-4 select-none">
-    <!-- Community Details Card -->
     <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
       <div class="h-12 bg-blue-500 rounded-t-lg -mx-4 -mt-4 mb-3 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
       <h3 class="font-bold text-sm text-gray-900 mb-1">Morafeq Portal</h3>
@@ -105,7 +102,6 @@
       </div>
     </div>
 
-    <!-- Rules / Guidelines Card -->
     <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm text-xs">
       <h3 class="font-bold text-gray-900 mb-3 uppercase tracking-wider text-[10px] text-gray-400"><%= t("feed.sidebar.guidelines_title", default: "Portal Guidelines") %></h3>
       <ol class="list-decimal list-inside space-y-2 text-gray-600 font-medium">

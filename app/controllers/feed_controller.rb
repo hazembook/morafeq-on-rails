@@ -14,7 +14,7 @@ class FeedController < ApplicationController
 
   def mark_read
     @post = Post.feed_for(Current.user).find(params[:id])
-    @post.post_views.find_or_create_by!(user: Current.user) unless @post.author == Current.user
+    @post.post_views.find_or_create_by!(user: Current.user) unless @post.author == Current.user # authors don't see their own posts as unread
     render partial: "feed/read_status", locals: { post: @post }
   end
 
@@ -94,6 +94,7 @@ class FeedController < ApplicationController
   end
 
   def destroy
+    # Soft-delete via discard gem; row stays so post_views and comments survive
     @post.discard
     redirect_to feed_index_path, notice: t("flash.feed.post_deleted")
   end

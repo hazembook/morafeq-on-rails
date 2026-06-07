@@ -15,6 +15,7 @@ class MessagesController < ApplicationController
     end
   end
 
+  # Soft-delete supports the 5-minute retraction window checked in messages/_message.html.erb
   def destroy
     @message = Message.find(params[:id])
     authorize @message
