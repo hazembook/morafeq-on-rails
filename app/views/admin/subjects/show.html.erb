@@ -21,12 +21,15 @@
     <p class="text-gray-500 mb-4"><%= t("admin.subjects.show.none") %></p>
   <% end %>
 
-  <h2 class="text-lg font-semibold mb-2"><%= t("admin.subjects.show.add_student") %></h2>
-  <%= form_with url: admin_subject_enrollments_path(@subject), method: :post, class: "flex gap-2 mb-4" do |form| %>
-    <%= form.collection_select :user_id, User.where(role: :student).order(:full_name), :id, ->(u) { "#{u.full_name} (#{u.email_address})" },
-                               { include_blank: t("admin.subjects.show.select_student") },
-                               class: "rounded-md border border-gray-300 px-3 py-2 text-sm flex-1" %>
-    <%= form.submit t("admin.subjects.show.enroll_button"), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700 whitespace-nowrap" %>
+  <% unenrolled = User.where(role: :student).where.not(id: @subject.student_ids).order(:full_name) %>
+  <% if unenrolled.any? %>
+    <h2 class="text-lg font-semibold mb-2"><%= t("admin.subjects.show.add_student") %></h2>
+    <%= form_with url: admin_subject_enrollments_path(@subject), method: :post, class: "flex gap-2 mb-4" do |form| %>
+      <%= form.collection_select :user_id, unenrolled, :id, ->(u) { "#{u.full_name} (#{u.email_address})" },
+                                 { include_blank: t("admin.subjects.show.select_student") },
+                                 class: "rounded-md border border-gray-300 px-3 py-2 text-sm flex-1" %>
+      <%= form.submit t("admin.subjects.show.enroll_button"), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700 whitespace-nowrap" %>
+    <% end %>
   <% end %>
 
   <div class="flex gap-3">
