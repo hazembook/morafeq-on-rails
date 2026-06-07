@@ -150,18 +150,59 @@ For more details, see README.md and docs/QUICKSTART.md.
 
 ## Build & Test
 
-_Add your build and test commands here_
-
 ```bash
-# Example:
-# npm install
-# npm test
+# Install Ruby + JS deps
+bundle install
+npm install
+
+# Database (creates, migrates, seeds with colleges/departments/subjects/users/etc.)
+bin/rails db:prepare
+bin/rails db:seed
+bin/rails db:reset              # drop + db:prepare + db:seed
+
+# Dev server (Rails + Tailwind watcher via Foreman)
+bin/dev                         # http://localhost:3000
+
+# Tests
+bin/rails test                  # full Minitest suite (parallelized)
+bin/rails test:system           # Capybara/Selenium system tests (optional)
+bin/rails test test/models/user_test.rb                   # single file
+bin/rails test test/integration/academic_tools_test.rb -n /quiz/   # by name
+
+# Quality gates
+bin/rubocop                     # Ruby style (omakase Rails)
+bin/erb_lint --lint-all         # ERB templates
+bin/brakeman --quiet --no-pager # Static security analysis
+bin/bundler-audit               # Gem vuln audit
+bin/importmap audit             # JS importmap audit
+
+# Full local CI (runs all of the above in order)
+bin/ci
 ```
 
 ## Architecture Overview
 
-_Add a brief overview of your project architecture_
+- **Monolith**: Rails 8.1 on Ruby 4.0.1, SQLite (primary + cache/queue/cable DBs).
+- **HTTP layer** (`app/controllers/`): RESTful resourceful routes; nested under `subjects` for academic tools (materials, quizzes, assignments, schedules, attendances); top-level for `feed`, `chat_rooms` (with nested `messages`), `profile`; `namespace :admin` for the back office (colleges/departments/subjects/users/audit_logs).
+- **Auth & Authz**: Rails 8 cookie-session auth via `Session` model + `Current.session` (`app/models/current.rb`); `allow_browser versions: :modern` and `stale_when_importmap_changes` set globally in `ApplicationController`. Pundit policies in `app/policies/` (one per resource, plus `ApplicationPolicy` + nested `Scope`).
+- **Domain** (`app/models/`): hierarchical institution model `College → Department → Subject`, with `Enrollment` joining `User` (student/teacher) to `Subject`. Posts are polymorphic-scoped (`College`/`Department`/`Subject`/`nil` for global); `Notification`/`AuditLog` are polymorphic notifiables/auditable. Soft-delete via the `discard` gem (`Post`, `Message`).
+- **Real-time**: Action Cable over Solid Cable — `app/channels/` (placeholder); broadcasts also fired from `Post` lifecycle callbacks.
+- **Background work**: `NotificationJob` (`app/jobs/`) on Solid Queue.
+- **Frontend**: Hotwire (Turbo Streams + Stimulus) with importmap; Tailwind CSS compiled by `tailwindcss-rails` (watched in dev). No custom SPA — server-rendered ERB.
+- **I18n**: `config.i18n.available_locales = [:en, :ar]`, default `:en`. Locale resolved from `params[:locale]` → `cookies[:locale]` → `session[:locale]` → default in `ApplicationController#set_locale`. RTL handled in CSS via logical properties.
+- **Storage**: Active Storage with local disk (`storage/`); `image_processing` for variants.
 
 ## Conventions & Patterns
 
-_Add your project-specific conventions here_
+- **Branch & commit**: GitHub Flow — short-lived branches off `main` (`feat/<scope>`, `fix/<scope>`); `bin/ci` must be green before merging.
+- **Issue tracking**: every task goes through `bd` (beads). One branch per issue; commit and close before claiming the next.
+- **Styling**: Ruby follows `rubocop-rails-omakase` (inherited in `.rubocop.yml`). ERB lint config in `.erb_lint.yml` enables only the Rubocop linter with selected `Layout/*` rules disabled.
+- **Authorization**: every controller action that touches a record must go through Pundit (`include Pundit::Authorization` is already in `ApplicationController`); add a policy under `app/policies/<resource>_policy.rb` and use `authorize` / `policy_scope`. Unauth → `redirect_to root_path, alert: t("alerts.not_authorized")`.
+- **Auth in tests**: use `sign_in_as(user)` from `test/test_helpers/session_test_helper.rb` in integration/controller tests; never hit the login form in tests.
+- **Test data**: build test objects with FactoryBot (`create` / `build`) — no fixtures except a small `users.yml`. Traits encode roles (`:teacher`, `:admin`).
+- **Soft-delete**: include `Discard::Model` and query with `.kept`; the feed scope (`Post.feed_for(user)`) is the reference example.
+- **Polymorphic scoping**: when adding a notifiable/auditable, follow the `belongs_to :notifiable, polymorphic: true` / `:auditable, polymorphic: true` pattern already in `Notification` and `AuditLog`.
+- **Locales**: never hard-code user-facing strings in controllers, models, or views — wrap with `t("...")` / `I18n.t("...")` and add the key to both `config/locales/en.yml` and `config/locales/ar.yml`.
+- **Files & uploads**: validate size at the model layer (see `Message#attachments_size_valid`, 50 MB cap). Use Active Storage attachments (`has_many_attached` / `has_one_attached`).
+- **Broadcasts**: real-time UI updates go through Turbo Streams from `after_create_commit` / `after_update_commit` / `after_destroy_commit` callbacks (see `Post#broadcast_*`).
+- **Routes**: prefer nested resourceful routes inside `subjects` for academic tools; custom member/collection actions are acceptable when the verb is clear (e.g. `post :mark_read` on `feed`).
