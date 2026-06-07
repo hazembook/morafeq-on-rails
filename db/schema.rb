@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_07_133439) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_07_140807) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -273,6 +273,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_133439) do
     t.index ["teacher_id"], name: "index_subjects_on_teacher_id"
   end
 
+  create_table "task_distributions", force: :cascade do |t|
+    t.integer "assignee_id", null: false
+    t.integer "assigner_id", null: false
+    t.datetime "created_at", null: false
+    t.boolean "manage_attendance", default: false, null: false
+    t.boolean "manage_chat", default: false, null: false
+    t.boolean "manage_departments", default: false, null: false
+    t.boolean "manage_enrollments", default: false, null: false
+    t.boolean "manage_exam_grades", default: false, null: false
+    t.boolean "manage_materials", default: false, null: false
+    t.boolean "manage_posts", default: false, null: false
+    t.boolean "manage_prerequisites", default: false, null: false
+    t.boolean "manage_quizzes", default: false, null: false
+    t.boolean "manage_schedules", default: false, null: false
+    t.boolean "manage_subjects", default: false, null: false
+    t.integer "scope_id"
+    t.string "scope_type"
+    t.datetime "updated_at", null: false
+    t.index ["assignee_id"], name: "index_task_distributions_on_assignee_id"
+    t.index ["assigner_id"], name: "index_task_distributions_on_assigner_id"
+    t.index ["scope_type", "scope_id"], name: "index_task_distributions_on_scope"
+    t.index ["scope_type", "scope_id"], name: "index_task_distributions_on_scope_type_and_scope_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.text "bio"
     t.datetime "created_at", null: false
@@ -317,4 +341,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_133439) do
   add_foreign_key "sessions", "users"
   add_foreign_key "subjects", "departments"
   add_foreign_key "subjects", "users", column: "teacher_id"
+  add_foreign_key "task_distributions", "users", column: "assignee_id"
+  add_foreign_key "task_distributions", "users", column: "assigner_id"
 end

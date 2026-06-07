@@ -41,5 +41,9 @@
       <span class="font-medium"><%= t("admin.nav.audit_logs") %></span>
       <span class="text-blue-600"><%= I18n.locale == :ar ? "\u2190" : "\u2192" %></span>
     <% end %>
+    <%= link_to admin_task_distributions_path, class: "bg-white rounded-lg shadow p-4 flex items-center justify-between hover:bg-gray-50" do %>
+      <span class="font-medium"><%= t("admin.nav.task_distributions") %></span>
+      <span class="text-blue-600"><%= I18n.locale == :ar ? "\u2190" : "\u2192" %></span>
+    <% end %>
   </div>
 </div>

@@ -1,0 +1,48 @@
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-2xl font-bold mb-6"><%= t("admin.task_distributions.show.title") %></h1>
+
+  <dl class="grid grid-cols-2 gap-4 mb-6">
+    <div>
+      <dt class="text-sm text-gray-500"><%= t("admin.task_distributions.show.assignee") %></dt>
+      <dd class="text-sm font-medium"><%= @task_distribution.assignee.full_name %> (<%= @task_distribution.assignee.email_address %>)</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500"><%= t("admin.task_distributions.show.assigner") %></dt>
+      <dd class="text-sm font-medium"><%= @task_distribution.assigner.full_name %></dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500"><%= t("admin.task_distributions.show.scope") %></dt>
+      <dd class="text-sm font-medium">
+        <% if @task_distribution.scope %>
+          <%= @task_distribution.scope_type %>: <%= @task_distribution.scope.name %>
+        <% else %>
+          <span class="text-gray-400"><%= t("admin.task_distributions.show.global") %></span>
+        <% end %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500"><%= t("admin.task_distributions.show.created") %></dt>
+      <dd class="text-sm font-medium"><%= l(@task_distribution.created_at.to_date) %></dd>
+    </div>
+  </dl>
+
+  <h2 class="text-lg font-semibold mb-3"><%= t("admin.task_distributions.show.permissions") %></h2>
+
+  <div class="grid grid-cols-2 gap-2 mb-6">
+    <% TaskDistribution::FLAGS.each do |flag| %>
+      <div class="flex items-center gap-2">
+        <% if @task_distribution.send(flag) %>
+          <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <% else %>
+          <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <% end %>
+        <span class="text-sm"><%= t("admin.task_distributions.flags.#{flag}") %></span>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="flex gap-3">
+    <%= link_to t("common.edit"), edit_admin_task_distribution_path(@task_distribution), class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
+    <%= link_to t("common.back"), admin_task_distributions_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+  </div>
+</div>

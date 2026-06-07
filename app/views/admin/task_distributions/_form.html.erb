@@ -1,0 +1,67 @@
+<%= form_with(model: [ :admin, task_distribution ]) do |f| %>
+  <div class="mb-4">
+    <%= f.label :assignee_id, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.collection_select :assignee_id, User.order(:full_name), :id, ->(u) { "#{u.full_name} (#{u.email_address})" },
+                            { include_blank: t("admin.form.select_user") },
+                            class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    <% if task_distribution.errors[:assignee_id].any? %>
+      <p class="text-red-500 text-xs mt-1"><%= task_distribution.errors[:assignee_id].join(", ") %></p>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :scope_type, t("admin.form.scope_type"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.select :scope_type, options_for_select([[t("admin.form.global"), ""], *[ "College", "Department", "Subject" ].map { |t| [t, t] }], task_distribution.scope_type),
+                {}, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+  </div>
+
+  <div class="mb-4" data-controller="scope-select">
+    <%= f.label :scope_id, t("admin.form.scope"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <% if task_distribution.scope_type == "College" %>
+      <%= f.collection_select :scope_id, College.order(:name), :id, :name,
+                              { include_blank: t("admin.form.select_college") },
+                              class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    <% elsif task_distribution.scope_type == "Department" %>
+      <%= f.collection_select :scope_id, Department.includes(:college).order(:name), :id, ->(d) { "#{d.name} (#{d.college.name})" },
+                              { include_blank: t("admin.form.select_department") },
+                              class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    <% elsif task_distribution.scope_type == "Subject" %>
+      <%= f.collection_select :scope_id, Subject.includes(:department).order(:code), :id, ->(s) { "#{s.code} - #{s.name} (#{s.department.name})" },
+                              { include_blank: t("admin.form.select_subject") },
+                              class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    <% else %>
+      <%= f.collection_select :scope_id, [], :id, :name,
+                              { include_blank: t("admin.form.select_scope_first") },
+                              class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+    <% end %>
+  </div>
+
+  <fieldset class="mb-4">
+    <legend class="text-sm font-medium text-gray-700 mb-2"><%= t("admin.task_distributions.form.content_flags") %></legend>
+    <div class="grid grid-cols-2 gap-2">
+      <% %w[manage_posts manage_materials manage_quizzes manage_schedules manage_attendance manage_chat].each do |flag| %>
+        <label class="flex items-center gap-2 text-sm">
+          <%= f.check_box flag, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+          <%= t("admin.task_distributions.flags.#{flag}") %>
+        </label>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <fieldset class="mb-4">
+    <legend class="text-sm font-medium text-gray-700 mb-2"><%= t("admin.task_distributions.form.academic_flags") %></legend>
+    <div class="grid grid-cols-2 gap-2">
+      <% %w[manage_enrollments manage_prerequisites manage_exam_grades manage_subjects manage_departments].each do |flag| %>
+        <label class="flex items-center gap-2 text-sm">
+          <%= f.check_box flag, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+          <%= t("admin.task_distributions.flags.#{flag}") %>
+        </label>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <div class="flex gap-3">
+    <%= f.submit class: "rounded-md bg-blue-600 px-4 py-2 text-white text-sm font-medium hover:bg-blue-700" %>
+    <%= link_to t("common.cancel"), admin_task_distributions_path, class: "rounded-md bg-gray-200 px-4 py-2 text-sm font-medium hover:bg-gray-300" %>
+  </div>
+<% end %>

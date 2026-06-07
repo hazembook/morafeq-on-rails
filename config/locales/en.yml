@@ -371,6 +371,12 @@ en:
       select_college: "Select College"
       select_department: "Select Department"
       select_teacher: "Select Teacher"
+      select_user: "Select User"
+      select_subject: "Select Subject"
+      select_scope_first: "Select scope type first"
+      scope_type: "Scope Type"
+      scope: "Scope"
+      global: "Global"
       college: "College"
       department: "Department"
       teacher: "Teacher"
@@ -380,6 +386,44 @@ en:
       subjects: "Subjects"
       users: "Users"
       audit_logs: "Audit Logs"
+      task_distributions: "Task Distributions"
+    task_distributions:
+      index:
+        title: "Task Distributions"
+        new: "New Task Distribution"
+        assignee: "Assignee"
+        assigner: "Assigner"
+        scope: "Scope"
+        flags: "Permissions"
+        global: "Global"
+        none: "None"
+      show:
+        title: "Task Distribution"
+        assignee: "Assignee"
+        assigner: "Assigner"
+        scope: "Scope"
+        created: "Created"
+        permissions: "Permissions"
+        global: "Global"
+      edit:
+        title: "Edit Task Distribution"
+      new:
+        title: "New Task Distribution"
+      form:
+        content_flags: "Content Permissions"
+        academic_flags: "Academic Admin Permissions"
+      flags:
+        manage_posts: "Posts"
+        manage_materials: "Materials"
+        manage_quizzes: "Quizzes"
+        manage_schedules: "Schedules"
+        manage_attendance: "Attendance"
+        manage_chat: "Chat"
+        manage_enrollments: "Enrollments"
+        manage_prerequisites: "Prerequisites"
+        manage_exam_grades: "Exam Grades"
+        manage_subjects: "Subjects"
+        manage_departments: "Departments"
 
   enrollment:
     status:
@@ -415,6 +459,9 @@ en:
       subject_created: "Subject created."
       subject_updated: "Subject updated."
       subject_deleted: "Subject deleted."
+      task_distribution_created: "Task distribution created."
+      task_distribution_updated: "Task distribution updated."
+      task_distribution_deleted: "Task distribution deleted."
       user_created: "User created."
       user_updated: "User updated."
       user_deleted: "User deleted."

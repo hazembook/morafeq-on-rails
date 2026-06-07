@@ -13,6 +13,8 @@ class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
   has_many :comments, dependent: :destroy, inverse_of: :user
   has_many :recorded_attendances, class_name: "Attendance", foreign_key: :recorded_by_id, dependent: :nullify, inverse_of: :recorded_by
+  has_many :task_distributions, foreign_key: :assignee_id, dependent: :destroy, inverse_of: :assignee
+  has_many :assigned_task_distributions, class_name: "TaskDistribution", foreign_key: :assigner_id, dependent: :destroy, inverse_of: :assigner
   has_many :audit_logs, dependent: :destroy
   has_many :post_views, dependent: :destroy, inverse_of: :user
   has_many :notifications, foreign_key: :recipient_id, dependent: :destroy, inverse_of: :recipient

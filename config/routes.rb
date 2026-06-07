@@ -56,6 +56,7 @@ Rails.application.routes.draw do
     end
     resources :users
     resources :audit_logs, only: [ :index, :show ]
+    resources :task_distributions
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

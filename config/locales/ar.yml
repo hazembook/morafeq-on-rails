@@ -371,6 +371,12 @@ ar:
       select_college: "اختر كلية"
       select_department: "اختر قسم"
       select_teacher: "اختر أستاذاً"
+      select_user: "اختر مستخدماً"
+      select_subject: "اختر مادة دراسية"
+      select_scope_first: "اختر نوع النطاق أولاً"
+      scope_type: "نوع النطاق"
+      scope: "النطاق"
+      global: "عام"
       college: "الكلية"
       department: "القسم"
       teacher: "الأستاذ"
@@ -380,6 +386,44 @@ ar:
       subjects: "المواد الدراسية"
       users: "المستخدمون"
       audit_logs: "سجل التدقيق"
+      task_distributions: "توزيع المهام"
+    task_distributions:
+      index:
+        title: "توزيع المهام"
+        new: "توزيع مهام جديد"
+        assignee: "المسند إليه"
+        assigner: "المسند"
+        scope: "النطاق"
+        flags: "الصلاحيات"
+        global: "عام"
+        none: "بدون"
+      show:
+        title: "توزيع المهام"
+        assignee: "المسند إليه"
+        assigner: "المسند"
+        scope: "النطاق"
+        created: "تاريخ الإنشاء"
+        permissions: "الصلاحيات"
+        global: "عام"
+      edit:
+        title: "تعديل توزيع المهام"
+      new:
+        title: "توزيع مهام جديد"
+      form:
+        content_flags: "صلاحيات المحتوى"
+        academic_flags: "صلاحيات الإدارة الأكاديمية"
+      flags:
+        manage_posts: "المنشورات"
+        manage_materials: "المصادر"
+        manage_quizzes: "الاختبارات"
+        manage_schedules: "الجداول"
+        manage_attendance: "الحضور"
+        manage_chat: "المحادثات"
+        manage_enrollments: "التسجيلات"
+        manage_prerequisites: "المتطلبات"
+        manage_exam_grades: "درجات الامتحانات"
+        manage_subjects: "المواد الدراسية"
+        manage_departments: "الأقسام"
 
   enrollment:
     status:
@@ -421,6 +465,9 @@ ar:
       cannot_delete_self: "لا يمكنك حذف حسابك الشخصي."
       enrollment_created: "تم تسجيل الطالب بنجاح."
       enrollment_deleted: "تم حذف الطالب من المادة."
+      task_distribution_created: "تم إنشاء توزيع المهام."
+      task_distribution_updated: "تم تحديث توزيع المهام."
+      task_distribution_deleted: "تم حذف توزيع المهام."
     assignments:
       submitted: "تم تسليم الواجب بنجاح."
       created: "تم إنشاء الواجب بنجاح."
