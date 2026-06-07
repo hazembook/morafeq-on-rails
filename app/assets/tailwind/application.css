@@ -27,3 +27,9 @@
   display: inline;
   color: var(--self-msg-timestamp);
 }
+
+/* Mobile keyboard: hide the bottom nav on the chat page (it overlaps the
+   chat input at z-50 > z-40) and give the html scroll-padding so focused
+   textareas on other pages scroll above the bottom nav + safe area. */
+body.chat-mode #mobile-bottom-nav { display: none; }
+html { scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); }
