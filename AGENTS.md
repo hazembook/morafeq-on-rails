@@ -66,19 +66,20 @@ bd close bd-42 --reason "Completed" --json
 4. **Work on it**: Implement, test, document
 5. **Discover new work?** Create linked issue:
    - `bd create "Found bug" --description="Details about what was found" -p 1 --deps discovered-from:<parent-id>`
-6. **Commit, present a summary, and hand off to the human**:
-   - `bd close <id> --reason "..."` (the close is provisional — the human confirms after merge)
+6. **Commit and present a handoff summary**, then **stop and wait for explicit human confirmation**:
    - `git add -A && git commit -m "..."` with a `Refs: <id>` footer
-   - Present a short summary: branch name, key commits, diff highlights, suggested merge message
-7. **The human reviews, fast-forwards the branch into `main`, and pushes `main` to all three remotes** (see Session Completion).
+   - Present: branch name, key commits, diff highlights, quality-gate status, suggested merge message
+   - Do **not** merge, push, or close the bd task until the human says "go ahead" (or equivalent)
+7. **After explicit confirmation, run the publish steps** (see Session Completion): fast-forward `main`, push to all 3 remotes, delete local branch, `bd close`
 8. **Commit before next task**: never open/claim the next task before handing off the previous one.
 
-Rationale: the project is single-owner, so feature branches stay local. The agent works on isolated, reproducible steps; the human is the only one who signs off on what lands on the canonical `main` and what reaches the public mirrors. When more contributors join, add PRs by pushing the feature branch to `origin` and letting the human open the PR.
+Rationale: the project is single-owner, so feature branches stay local. The agent works on isolated, reproducible steps; the human reviews the diff and explicitly signs off before anything touches `main` or the public mirrors. The explicit "go ahead" is the gate — the agent never assumes approval from a "thanks" or "looks good" alone. When more contributors join, add PRs by pushing the feature branch to `origin` and letting the human open the PR.
 
 ### Human-in-the-Loop Split
 
-- **Agent** owns: check bd, claim, branch, implement, test, commit, run quality gates
-- **Human** owns: review diff, fast-forward `main`, push `main` to all 3 remotes (`origin` / `github` / `gitlab`), delete local feature branch, confirm `bd close`, force-push after a history rewrite
+- **Agent** owns: check bd, claim, branch, implement, test, commit, run quality gates, present handoff summary
+- **Human** owns: review diff, give explicit confirmation (e.g., "go ahead")
+- **After confirmation, agent** owns: fast-forward `main`, push to all 3 remotes (`origin` / `github` / `gitlab`), delete local feature branch, `bd close`
 
 ### Pre-change Workflow (Direct Requests & Untracked Work)
 
@@ -90,8 +91,8 @@ The standard workflow above assumes the agent is picking from `bd ready`. For **
    - Commit the bd state change (claim or create, plus any `--deps` linkage) so the bd auto-export to `.beads/issues.jsonl` is in git history
    - Branch from `main` with `git switch -c <bd-id>`
    - Implement, run quality gates on the branch, commit with a `Refs: <id>` footer in the work commit
-   - Hand off to the human with a short summary — do **not** merge to `main`, push to any remote, or delete the branch; that is the human's job (see Session Completion)
-   - `bd close <id> --reason "..."` is provisional; the human confirms or reopens after merge
+   - Present a handoff summary and **stop and wait for explicit human confirmation** before any merge, push, or bd close — the agent never assumes approval from a "thanks" or "looks good" alone
+   - After the human says "go ahead" (or equivalent), execute the publish steps in Session Completion
 
 **Pausing a task (work not finished):**
 
@@ -131,57 +132,62 @@ bd automatically syncs via Dolt:
 
 ### Important Rules
 
-- ✅ Use bd for ALL task tracking
-- ✅ Always use `--json` flag for programmatic use
-- ✅ Link discovered work with `discovered-from` dependencies
-- ✅ Check `bd ready` before asking "what should I work on?"
-- ✅ Branch per task — create a feature branch for each bd issue, merge to main when done
-- ✅ Commit between tasks — close and commit before claiming the next one
-- ❌ Do NOT create markdown TODO lists
-- ❌ Do NOT use external issue trackers
-- ❌ Do NOT duplicate tracking systems
+- Use bd for substantive work; trivial doc-only changes (workflow prose, comment policy, this file) may skip bd
+- Always use `--json` flag for programmatic use
+- Link discovered work with `discovered-from` dependencies
+- Check `bd ready` before asking "what should I work on?"
+- Branch per task — create a feature branch for each change, merge to main when done
+- Commit between tasks — close and commit before claiming the next one
+- Do NOT create markdown TODO lists
+- Do NOT use external issue trackers
+- Do NOT duplicate tracking systems
 
 For more details, see README.md and docs/QUICKSTART.md.
 
 ## Session Completion
 
-This section is **split between agent and human** per the Responsibilities table above. The agent does the handoff work; the human signs off on what hits `main` and the public mirrors. Feature branches stay local — only `main` is pushed.
+This section describes the **explicit-confirm publish flow**: the agent prepares the work, the human reviews and gives explicit "go ahead", and only then does the agent touch `main` and the public mirrors. Feature branches stay local — only `main` is pushed.
 
 ### Agent handoff (end of session)
 
 1. **File issues for remaining work** — anything you noticed but didn't fix
 2. **Run quality gates** on the branch — `bin/ci` (or the relevant subset)
-3. **Provisional `bd close`** — `bd close <id> --reason "..."` with a reference to the work commit; the human confirms or reopens
-4. **Present a handoff summary** to the human: branch name, key commits, diff highlights, quality-gate status, suggested merge commit message
+3. **Present a handoff summary** to the human: branch name, key commits, diff highlights, quality-gate status, suggested merge commit message
+4. **Stop and wait for explicit confirmation** — the agent does nothing further until the human says "go ahead" (or equivalent). A "thanks" or "looks good" is **not** approval.
 
-### Human merge & publish (after review)
+### Human review (gate)
 
 5. **Review the diff on the branch** (and the handoff summary)
-6. **Fast-forward `main`** (or rebase the branch first for a cleaner linear history):
+6. **Give explicit confirmation** — say "go ahead" (or "merge it", "publish", "ship it", or any unambiguous signal). If you want changes, say "rework X" and the agent picks the branch back up.
+
+### Agent publish (only after explicit confirmation)
+
+7. **Fast-forward `main`** (or rebase the branch first for a cleaner linear history):
    ```bash
    git switch <bd-id>          # on the feature branch
    git rebase main             # optional, replays work on top of current main
    git switch main
    git merge <bd-id>           # fast-forward — no merge commit
    ```
-7. **Push `main` to all three remotes**:
+8. **Push `main` to all three remotes**:
    ```bash
    git push origin main   # codeberg (canonical)
    git push github main   # github mirror
    git push gitlab main   # gitlab mirror
    git remote -v          # MUST show all three at the same tip
    ```
-8. **Delete the local feature branch**:
+9. **Delete the local feature branch**:
    ```bash
    git branch -d <bd-id>
    ```
-9. **Confirm `bd close` or reopen with feedback** — if you reopen, the agent picks the task back up on the same branch
+10. **`bd close <id> --reason "..."`** with a reference to the merge commit
 
 **CRITICAL RULES:**
-- The agent **never** runs `git push <remote> main` for the canonical branch — only the human does
+- The agent **never** runs `git push <remote> main` for the canonical branch without explicit human confirmation
 - The agent **never** force-pushes (`--force` / `--force-with-lease`) — only the human does, and only after a history rewrite
-- The agent **never** merges to `main` — only the human does
+- The agent **never** merges to `main` without explicit human confirmation
 - The agent **never** pushes feature branches — only `main` is pushed
+- A "thanks" or "looks good" is **not** approval — the agent waits for an unambiguous "go ahead"
 - If the agent runs into a git state it can't recover from, it stops, commits a `wip:` checkpoint, and hands off to the human for the next move
 
 <!-- END BEADS INTEGRATION -->
