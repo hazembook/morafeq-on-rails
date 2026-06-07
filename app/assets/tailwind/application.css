@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+/* Self-message bubble styling — CSS variables toggled by [data-self="true"] on each message element. */
+:root {
+  --self-msg-bg: #eef2ff;
+  --self-msg-border: rgb(199 210 254);
+  --self-msg-name: rgb(79 70 229);
+  --self-msg-footer-border: rgb(199 210 254 / 0.5);
+  --self-msg-timestamp: rgb(79 70 229 / 0.7);
+}
+
+[data-role="seen-status"] { display: none; }
+
+[data-self="true"] { justify-content: flex-end; }
+[data-self="true"] [data-role="avatar"] { display: none; }
+[data-self="true"] [data-role="self-tail"] { display: block; }
+[data-self="true"] [data-role="other-tail"] { display: none; }
+[data-self="true"] [data-role="bubble"] {
+  background-color: var(--self-msg-bg);
+  border-radius: 1rem 1rem 0 1rem;
+  border-color: var(--self-msg-border);
+}
+[data-self="true"] [data-role="sender-name"] { color: var(--self-msg-name); }
+[data-self="true"] [data-role="footer"] { border-color: var(--self-msg-footer-border); }
+[data-self="true"] [data-role="timestamp"] { color: var(--self-msg-timestamp); }
+[data-self="true"] [data-role="seen-status"] {
+  display: inline;
+  color: var(--self-msg-timestamp);
+}

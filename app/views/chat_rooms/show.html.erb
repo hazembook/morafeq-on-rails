@@ -56,41 +56,6 @@
 
       <div id="messages" data-controller="chat-scroll" data-current-user-id="<%= Current.user.id %>" class="flex-1 overflow-y-auto p-4 space-y-3.5 z-10">
         <%= render @messages %>
-
-        <style>
-          [data-role="seen-status"] { display: none; }
-          #typing_indicator[data-typing-user-id="<%= Current.user.id %>"] { display: none; }
-          [data-message-user-id="<%= Current.user.id %>"] {
-            justify-content: flex-end;
-          }
-          [data-message-user-id="<%= Current.user.id %>"] [data-role="avatar"] {
-            display: none;
-          }
-          [data-message-user-id="<%= Current.user.id %>"] [data-role="self-tail"] {
-            display: block;
-          }
-          [data-message-user-id="<%= Current.user.id %>"] [data-role="other-tail"] {
-            display: none;
-          }
-          [data-message-user-id="<%= Current.user.id %>"] [data-role="bubble"] {
-            background-color: #eef2ff;
-            border-radius: 1rem 1rem 0 1rem;
-            border-color: rgb(199 210 254);
-          }
-          [data-message-user-id="<%= Current.user.id %>"] [data-role="sender-name"] {
-            color: rgb(79 70 229);
-          }
-          [data-message-user-id="<%= Current.user.id %>"] [data-role="footer"] {
-            border-color: rgb(199 210 254 / 0.5);
-          }
-          [data-message-user-id="<%= Current.user.id %>"] [data-role="timestamp"] {
-            color: rgb(79 70 229 / 0.7);
-          }
-          [data-message-user-id="<%= Current.user.id %>"] [data-role="seen-status"] {
-            display: inline;
-            color: rgb(79 70 229 / 0.7);
-          }
-        </style>
       </div>
 
       <div id="typing_indicator" data-typing-user-id="" class="text-xs text-gray-500 bg-white/70 backdrop-blur-sm px-4 py-0 transition-opacity duration-300 z-10 leading-none"></div>
