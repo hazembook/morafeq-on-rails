@@ -381,6 +381,13 @@ en:
       users: "Users"
       audit_logs: "Audit Logs"
 
+  enrollment:
+    status:
+      enrolled: "Enrolled"
+      completed: "Completed"
+      failed: "Failed"
+      dropped: "Dropped"
+
   common:
     actions: "Actions"
     cancel: "Cancel"

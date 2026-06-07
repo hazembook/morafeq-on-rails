@@ -381,6 +381,13 @@ ar:
       users: "المستخدمون"
       audit_logs: "سجل التدقيق"
 
+  enrollment:
+    status:
+      enrolled: "مسجل"
+      completed: "مكتمل"
+      failed: "راسب"
+      dropped: "منسحب"
+
   common:
     actions: "إجراءات"
     cancel: "إلغاء"
