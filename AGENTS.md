@@ -66,13 +66,14 @@ bd close bd-42 --reason "Completed" --json
 4. **Work on it**: Implement, test, document
 5. **Discover new work?** Create linked issue:
    - `bd create "Found bug" --description="Details about what was found" -p 1 --deps discovered-from:<parent-id>`
-6. **Commit, push the branch, and hand off to the human**:
+6. **Commit, present a summary, and hand off to the human**:
    - `bd close <id> --reason "..."` (the close is provisional — the human confirms after merge)
    - `git add -A && git commit -m "..."` with a `Refs: <id>` footer
-   - `git push -u origin <bd-id>` (branch visibility, not yet merged)
    - Present a short summary: branch name, key commits, diff highlights, suggested merge message
-7. **The human reviews, merges to main, pushes to all remotes, and deletes the branch** (see Session Completion).
+7. **The human reviews, fast-forwards the branch into `main`, and pushes `main` to all three remotes** (see Session Completion).
 8. **Commit before next task**: never open/claim the next task before handing off the previous one.
+
+Rationale: the project is single-owner, so feature branches stay local. The agent works on isolated, reproducible steps; the human is the only one who signs off on what lands on the canonical `main` and what reaches the public mirrors. When more contributors join, add PRs by pushing the feature branch to `origin` and letting the human open the PR.
 
 ### Human-in-the-Loop Split
 
@@ -81,15 +82,12 @@ bd close bd-42 --reason "Completed" --json
 | Check bd, claim, branch | ✓ | |
 | Implement, test, commit on branch | ✓ | |
 | Run quality gates on branch | ✓ | |
-| Push branch to `origin` (visibility) | ✓ | |
 | Review diff / branch | | ✓ |
-| Merge `main` with `--no-ff` | | ✓ |
-| Push to all 3 remotes (`origin` / `github` / `gitlab`) | | ✓ |
-| Delete feature branch (local + remotes) | | ✓ |
+| Fast-forward `main` (or rebase-then-merge for cleaner history) | | ✓ |
+| Push `main` to all 3 remotes (`origin` / `github` / `gitlab`) | | ✓ |
+| Delete local feature branch | | ✓ |
 | Confirm `bd close` or reopen with feedback | | ✓ |
 | Force-push (only after history rewrite) | | ✓ |
-
-Rationale: the agent works on isolated, reproducible steps; the human is the only one who signs off on what lands on the canonical `main` and what reaches the public mirrors.
 
 ### Pre-change Workflow (Direct Requests & Untracked Work)
 
@@ -101,17 +99,15 @@ The standard workflow above assumes the agent is picking from `bd ready`. For **
    - Commit the bd state change (claim or create, plus any `--deps` linkage) so the bd auto-export to `.beads/issues.jsonl` is in git history
    - Branch from `main` with `git switch -c <bd-id>`
    - Implement, run quality gates on the branch, commit with a `Refs: <id>` footer in the work commit
-   - Push the branch to `origin` with `git push -u origin <bd-id>` and hand off to the human for review
-   - Do **not** merge to `main`, push to `github`/`gitlab`, or delete the branch — that is the human's job (see Session Completion)
+   - Hand off to the human with a short summary — do **not** merge to `main`, push to any remote, or delete the branch; that is the human's job (see Session Completion)
    - `bd close <id> --reason "..."` is provisional; the human confirms or reopens after merge
 
 **Pausing a task (work not finished):**
 
-If you need to pause before completing a task, commit the partial work on the branch, push it, and switch to the new task's branch. Never leave uncommitted work on main or the branch when switching contexts.
+If you need to pause before completing a task, commit the partial work on the branch (local only), and switch to the new task's branch. Never leave uncommitted work on main or the branch when switching contexts.
 
 ```bash
 git add -A && git commit -m "wip: <bd-task-id> partial work checkpoint"
-git push -u origin <bd-task-id>
 git switch -c <next-task-id>
 ```
 
@@ -158,44 +154,43 @@ For more details, see README.md and docs/QUICKSTART.md.
 
 ## Session Completion
 
-This section is **split between agent and human** per the Responsibilities table above. The agent does the handoff work; the human signs off on what hits `main` and the public mirrors.
+This section is **split between agent and human** per the Responsibilities table above. The agent does the handoff work; the human signs off on what hits `main` and the public mirrors. Feature branches stay local — only `main` is pushed.
 
 ### Agent handoff (end of session)
 
 1. **File issues for remaining work** — anything you noticed but didn't fix
 2. **Run quality gates** on the branch — `bin/ci` (or the relevant subset)
 3. **Provisional `bd close`** — `bd close <id> --reason "..."` with a reference to the work commit; the human confirms or reopens
-4. **Push the branch to `origin`** — `git push -u origin <bd-id>` for visibility
-5. **Present a handoff summary** to the human: branch name, key commits, diff highlights, quality-gate status, suggested merge commit message
+4. **Present a handoff summary** to the human: branch name, key commits, diff highlights, quality-gate status, suggested merge commit message
 
 ### Human merge & publish (after review)
 
-6. **Review the diff on the branch** (and the handoff summary)
-7. **Merge to `main` with `--no-ff`**:
+5. **Review the diff on the branch** (and the handoff summary)
+6. **Fast-forward `main`** (or rebase the branch first for a cleaner linear history):
    ```bash
+   git switch <bd-id>          # on the feature branch
+   git rebase main             # optional, replays work on top of current main
    git switch main
-   git merge --no-ff <bd-id>   # uses the suggested message
+   git merge <bd-id>           # fast-forward — no merge commit
    ```
-8. **Push to all three remotes**:
+7. **Push `main` to all three remotes**:
    ```bash
    git push origin main   # codeberg (canonical)
    git push github main   # github mirror
    git push gitlab main   # gitlab mirror
    git remote -v          # MUST show all three at the same tip
    ```
-9. **Delete the feature branch** (local + on all remotes):
+8. **Delete the local feature branch**:
    ```bash
    git branch -d <bd-id>
-   git push origin --delete <bd-id>
-   git push github --delete <bd-id>
-   git push gitlab --delete <bd-id>
    ```
-10. **Confirm `bd close` or reopen with feedback** — if you reopen, the agent picks the task back up on the same branch
+9. **Confirm `bd close` or reopen with feedback** — if you reopen, the agent picks the task back up on the same branch
 
 **CRITICAL RULES:**
 - The agent **never** runs `git push <remote> main` for the canonical branch — only the human does
 - The agent **never** force-pushes (`--force` / `--force-with-lease`) — only the human does, and only after a history rewrite
 - The agent **never** merges to `main` — only the human does
+- The agent **never** pushes feature branches — only `main` is pushed
 - If the agent runs into a git state it can't recover from, it stops, commits a `wip:` checkpoint, and hands off to the human for the next move
 
 <!-- END BEADS INTEGRATION -->
