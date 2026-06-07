@@ -1,6 +1,7 @@
 class AssignmentSubmissionsController < ApplicationController
   before_action :require_authentication
   before_action :set_subject_and_assignment
+  before_action :authorize_subject_show, only: [ :create ]
 
   def create
     if @assignment.assignment_submissions.exists?(user_id: Current.user.id)

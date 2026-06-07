@@ -265,6 +265,102 @@ class AcademicToolsTest < ActionDispatch::IntegrationTest
     assert_redirected_to subject_assignments_path(@subject)
   end
 
+  test "denies access to unenrolled users on all academic routes" do
+    other_teacher = create(:user, role: :teacher, full_name: "Other Teacher")
+    other_subject = create(:subject, teacher: other_teacher, code: "OTH999")
+
+    # Student not enrolled in other_subject
+    sign_in_as(@student)
+
+    get subject_path(other_subject)
+    assert_redirected_to root_path
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
+
+    get subject_materials_path(other_subject)
+    assert_redirected_to root_path
+
+    get subject_quizzes_path(other_subject)
+    assert_redirected_to root_path
+
+    get subject_assignments_path(other_subject)
+    assert_redirected_to root_path
+
+    get subject_schedules_path(other_subject)
+    assert_redirected_to root_path
+
+    get subject_attendances_path(other_subject)
+    assert_redirected_to root_path
+
+    # Teacher not teaching other_subject
+    sign_in_as(@teacher)
+
+    get subject_path(other_subject)
+    assert_redirected_to root_path
+
+    get subject_materials_path(other_subject)
+    assert_redirected_to root_path
+
+    get subject_quizzes_path(other_subject)
+    assert_redirected_to root_path
+
+    get subject_assignments_path(other_subject)
+    assert_redirected_to root_path
+
+    get subject_schedules_path(other_subject)
+    assert_redirected_to root_path
+
+    get subject_attendances_path(other_subject)
+    assert_redirected_to root_path
+  end
+
+  test "denies quiz answer submission for unenrolled student" do
+    other_teacher = create(:user, role: :teacher, full_name: "Other Teacher")
+    other_subject = create(:subject, teacher: other_teacher, code: "OTH998")
+
+    sign_in_as(other_teacher)
+    post subject_quizzes_path(other_subject), params: {
+      quiz: {
+        title: "Unauthorized Quiz",
+        due_at: 2.days.from_now.to_s,
+        quiz_questions_attributes: [
+          { question: "Q1", question_type: "true_false", points: 5 }
+        ]
+      }
+    }
+    quiz = Quiz.last
+    q1 = quiz.quiz_questions.first
+
+    sign_in_as(@student)
+    post subject_quiz_quiz_answers_path(other_subject, quiz), params: {
+      answers: { q1.id => "True" }
+    }
+    assert_redirected_to root_path
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
+  end
+
+  test "denies assignment submission for unenrolled student" do
+    other_teacher = create(:user, role: :teacher, full_name: "Other Teacher")
+    other_subject = create(:subject, teacher: other_teacher, code: "OTH997")
+
+    sign_in_as(other_teacher)
+    post subject_assignments_path(other_subject), params: {
+      assignment: {
+        title: "Unauthorized Assignment",
+        due_at: 2.days.from_now.to_s,
+        total_points: 50
+      }
+    }
+    assignment = Assignment.last
+
+    sign_in_as(@student)
+    student_solution = fixture_file_upload("test.pdf", "application/pdf")
+    post subject_assignment_assignment_submissions_path(other_subject, assignment), params: {
+      assignment_submission: { file: student_solution }
+    }
+    assert_redirected_to root_path
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
+  end
+
   test "locking quiz and assignment blocks submission" do
     # 1. Teacher creates a quiz
     sign_in_as(@teacher)

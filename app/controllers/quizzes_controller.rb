@@ -1,6 +1,7 @@
 class QuizzesController < ApplicationController
   before_action :require_authentication
   before_action :set_subject
+  before_action :authorize_subject_show, only: [ :index, :show ]
   before_action :require_teacher_or_admin, only: [ :new, :create, :edit, :update, :destroy, :grade, :grade_answers ]
   before_action :set_quiz, only: [ :show, :edit, :update, :destroy, :grade, :grade_answers ]
 

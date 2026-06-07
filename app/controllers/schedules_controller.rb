@@ -1,6 +1,7 @@
 class SchedulesController < ApplicationController
   before_action :require_authentication
   before_action :set_subject
+  before_action :authorize_subject_show, only: [ :index ]
   before_action :require_teacher_or_admin, only: [ :new, :create, :destroy ]
 
   def index

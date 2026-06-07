@@ -1,6 +1,7 @@
 class QuizAnswersController < ApplicationController
   before_action :require_authentication
   before_action :set_subject_and_quiz
+  before_action :authorize_subject_show, only: [ :create ]
 
   def create
     answers_params = params[:answers] || {}

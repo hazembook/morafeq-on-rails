@@ -34,4 +34,8 @@ class ApplicationController < ActionController::Base
     flash[:alert] = t("alerts.not_authorized")
     redirect_to root_path
   end
+
+  def authorize_subject_show
+    authorize @subject, :show?
+  end
 end

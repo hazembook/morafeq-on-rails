@@ -1,5 +1,6 @@
 class MaterialsController < ApplicationController
   before_action :set_subject
+  before_action :authorize_subject_show, only: [ :index, :show ]
   before_action :require_teacher, only: [ :new, :create, :destroy ]
 
   def index

@@ -1,5 +1,6 @@
 class SubjectsController < ApplicationController
   before_action :set_subject, only: [ :show ]
+  before_action :authorize_subject_show, only: [ :show ]
 
   def index
     @subjects = if Current.user.admin?
