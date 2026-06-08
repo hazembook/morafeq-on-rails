@@ -21,7 +21,7 @@ class User < ApplicationRecord
   has_many :acted_notifications, class_name: "Notification", foreign_key: :actor_id, dependent: :destroy, inverse_of: :actor
   has_one_attached :avatar, dependent: :purge_later
 
-  enum :role, { student: 0, teacher: 1, admin: 2 }
+  enum :role, { student: 0, teacher: 1, admin: 2, moderator: 3, teaching_assistant: 4 }
 
   validates :email_address, presence: true, uniqueness: true
   validates :full_name, presence: true

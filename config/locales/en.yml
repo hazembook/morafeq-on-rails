@@ -145,6 +145,8 @@ en:
     student: "Student"
     teacher: "Teacher"
     admin: "Admin"
+    moderator: "Moderator"
+    teaching_assistant: "Teaching Assistant"
   chats:
     title: "Your Conversations"
     tabs:

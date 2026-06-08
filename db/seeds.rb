@@ -8,9 +8,21 @@ puts "Cleaning existing data..."
 ActiveStorage::Attachment.delete_all
 ActiveStorage::Blob.delete_all
 Message.delete_all
+ChatParticipant.delete_all
+TaskDistribution.delete_all
 ChatRoom.delete_all
 Material.delete_all
 AuditLog.delete_all
+Comment.delete_all
+PostView.delete_all
+QuizAnswer.delete_all
+QuizQuestion.delete_all
+Quiz.delete_all
+AssignmentSubmission.delete_all
+Assignment.delete_all
+Attendance.delete_all
+Schedule.delete_all
+Notification.delete_all
 Post.delete_all
 Enrollment.delete_all
 Subject.delete_all
@@ -77,6 +89,20 @@ student4 = User.create!(
   role: :student
 )
 
+moderator = User.create!(
+  full_name: "Moderator User",
+  email_address: "moderator@morafeq.edu",
+  password: "password123",
+  role: :moderator
+)
+
+ta = User.create!(
+  full_name: "TA User",
+  email_address: "ta@morafeq.edu",
+  password: "password123",
+  role: :teaching_assistant
+)
+
 students = [ student1, student2, student3, student4 ]
 teachers = [ teacher1, teacher2, teacher3 ]
 
@@ -114,10 +140,10 @@ end
 
 puts "Creating enrollments..."
 
-# Enroll all students in core CS subjects
-[ student1, student2, student3, student4 ].each do |student|
-  Enrollment.create!(user: student, subject: subjects.find { |s| s.code == "CS101" })
-  Enrollment.create!(user: student, subject: subjects.find { |s| s.code == "CS201" })
+# Enroll all students and TA in core CS subjects
+[ student1, student2, student3, student4, ta ].each do |user|
+  Enrollment.create!(user: user, subject: subjects.find { |s| s.code == "CS101" })
+  Enrollment.create!(user: user, subject: subjects.find { |s| s.code == "CS201" })
 end
 
 # Specialized enrollments
@@ -167,7 +193,7 @@ puts "  #{Message.count} messages"
 
 puts ""
 puts "Seeding complete!"
-puts "  #{User.count} users (#{User.student.count} students, #{User.teacher.count} teachers, #{User.admin.count} admins)"
+puts "  #{User.count} users (#{User.student.count} students, #{User.teacher.count} teachers, #{User.admin.count} admins, #{User.moderator.count} moderators, #{User.teaching_assistant.count} TAs)"
 puts "  #{College.count} colleges"
 puts "  #{Department.count} departments"
 puts "  #{Subject.count} subjects"

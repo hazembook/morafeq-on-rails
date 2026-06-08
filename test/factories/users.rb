@@ -13,5 +13,13 @@ FactoryBot.define do
     trait :admin do
       role { :admin }
     end
+
+    trait :moderator do
+      role { :moderator }
+    end
+
+    trait :teaching_assistant do
+      role { :teaching_assistant }
+    end
   end
 end
