@@ -71,6 +71,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Deployment tool — SSH + Docker-based deploy for Rails
+  gem "kamal", require: false
 end
 
 group :test do

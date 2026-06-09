@@ -1,0 +1,41 @@
+service: morafeq
+image: hazembook/morafeq
+
+servers:
+  web:
+    - 192.168.122.29
+
+volumes:
+  - "morafeq_storage:/rails/storage"
+
+proxy:
+  forward_headers: true
+  host:
+    - "morafeq.hazembook.com"
+    - "morafeq.local"
+
+registry:
+  server: ghcr.io
+  username: hazembook
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  clear:
+    RAILS_LOG_TO_STDOUT: "1"
+    RAILS_SERVE_STATIC_FILES: "true"
+    RAILS_MAX_THREADS: "5"
+    APP_HOST: <%= ENV.fetch("APP_HOST", "morafeq.hazembook.com") %>
+  secret:
+    - RAILS_MASTER_KEY
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64
+
+aliases:
+  console: app exec -i -e "RAILS_ENV=production" -- rails console
+  shell: app exec -i -- bash
+  logs: app logs -f
+  dbconsole: app exec -i -e "RAILS_ENV=production" -- rails dbconsole
