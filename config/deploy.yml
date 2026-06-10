@@ -10,7 +10,7 @@ volumes:
 
 proxy:
   forward_headers: true
-  host:
+  hosts:
     - "morafeq.hazembook.com"
     - "morafeq.local"
 
