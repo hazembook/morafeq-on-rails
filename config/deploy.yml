@@ -13,8 +13,9 @@ proxy:
   hosts:
     - "morafeq.hazembook.com"
     - "morafeq.local"
-  bind_ips:
-    - 127.0.0.1
+  run:
+    bind_ips:
+      - 127.0.0.1
 
 registry:
   server: ghcr.io
