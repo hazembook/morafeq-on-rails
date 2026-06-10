@@ -34,4 +34,38 @@ class MaterialTest < ActiveSupport::TestCase
     material.discard
     assert_not_includes Material.kept, material
   end
+
+  test "validates file type is allowed" do
+    material = build(:material)
+    material.file.attach(
+      io: StringIO.new("test content"),
+      filename: "test.html",
+      content_type: "text/html"
+    )
+    assert_not material.valid?
+    assert_includes material.errors[:file], "must be a PDF, PPT, DOCX, or image file"
+  end
+
+  test "validates file size does not exceed maximum" do
+    material = build(:material)
+    material.file.attach(
+      io: StringIO.new("test content"),
+      filename: "test.pdf",
+      content_type: "application/pdf"
+    )
+    original = Material::MAX_FILE_SIZE
+    Material.send(:remove_const, :MAX_FILE_SIZE)
+    Material.const_set(:MAX_FILE_SIZE, 1.byte)
+
+    assert_not material.valid?
+    assert_includes material.errors[:file], "must be less than 50MB"
+  ensure
+    Material.send(:remove_const, :MAX_FILE_SIZE)
+    Material.const_set(:MAX_FILE_SIZE, original)
+  end
+
+  test "allows valid file" do
+    material = build(:material, :with_file)
+    assert material.valid?
+  end
 end
