@@ -25,6 +25,11 @@
   </head>
 
   <body class="bg-gray-50 <%= content_for?(:body_class) ? yield(:body_class) : "pb-16 md:pb-0" %>" style="<%= content_for?(:body_style) ? yield(:body_style) : "padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px))" %>">
+    <%# Staging banner %>
+    <div class="bg-amber-400 text-amber-900 text-xs text-center py-1 px-2 font-semibold select-none" style="padding-top: calc(0.25rem + env(safe-area-inset-top, 0px))">
+      ⚠️ <%= t("staging_banner") %>
+    </div>
+
     <%# Desktop top nav %>
     <nav class="hidden md:block bg-white border-b border-gray-200 fixed top-0 w-full z-50">
       <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">

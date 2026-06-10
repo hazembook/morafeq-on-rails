@@ -1,6 +1,7 @@
 ar:
   hello: "مرحباً بك"
   app_name: "مرافق"
+  staging_banner: "بيئة تجريبية / عرض — ليست إنتاج. قد تُعاد ضبط البيانات."
   db:
     colleges:
       faculty_of_engineering: "كلية الهندسة"

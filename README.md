@@ -92,6 +92,24 @@ mise install ruby@4.0.1
 
 ---
 
+## 🧪 Demo Accounts
+
+After running `bin/rails db:seed`, you can sign in with any of these accounts (password: `password123` for all):
+
+| Role | Email | Can do |
+|---|---|---|
+| **Admin** | `admin@morafeq.edu` | Full access to `/admin` — manage colleges, departments, subjects, users |
+| **Teacher** | `ahmed@morafeq.edu` | Create quizzes, assignments, take attendance, grade submissions |
+| **Teacher** | `sara@morafeq.edu` | Same as above |
+| **Student** | `omar@morafeq.edu` | View subjects/submissions, take quizzes, chat, browse feed |
+| **Student** | `layla@morafeq.edu` | Same as above |
+| **Moderator** | `moderator@morafeq.edu` | Moderate posts and comments across the feed |
+| **TA** | `ta@morafeq.edu` | Assist teachers with grading and course materials |
+
+> ⚠️ **Staging instance**: `morafeq.hazembook.com` runs the latest code from `main` on a development VM. It uses SQLite and seeded demo data — **not production-ready**. Data may be reset at any time.
+
+---
+
 ## 🧪 Testing & Linting
 
 *   **Run the test suite:**

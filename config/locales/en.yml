@@ -1,6 +1,7 @@
 en:
   hello: "Hello world"
   app_name: "Morafeq"
+  staging_banner: "Demo / Staging — not production. Data may be reset."
   db:
     colleges:
       faculty_of_engineering: "Faculty of Engineering"
