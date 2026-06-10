@@ -82,7 +82,7 @@ Rails.application.configure do
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
     "morafeq.hazembook.com",
-    /.*\.morafeq\.hazembook\.com/,
+    /\A.*\.morafeq\.hazembook\.com\z/,
     "morafeq.local",
     "192.168.122.29"
   ]
