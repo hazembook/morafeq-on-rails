@@ -25,7 +25,9 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Only allow images + PDF for inline display; everything else forces download.
-  config.active_storage.content_types_allowed_inline = ALLOWED_IMAGE_TYPES + %w[application/pdf]
+  config.active_storage.content_types_allowed_inline = %w[
+    image/png image/jpeg image/gif image/webp application/pdf
+  ]
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
