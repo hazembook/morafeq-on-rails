@@ -4,6 +4,7 @@ class MessagesController < ApplicationController
 
   def create
     @room = ChatRoom.includes(:subject, chat_participants: :user, messages: :user).find(params[:chat_room_id])
+    authorize @room, :show?
     @message = @room.messages.build(message_params.merge(user: Current.user))
 
     if @message.save
