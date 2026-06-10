@@ -39,9 +39,17 @@
 # Ignore CI service files.
 /.github
 
+# Ignore Kamal files.
+/config/deploy*.yml
+/.kamal
+
 # Ignore development files
 /.devcontainer
 
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+# Ignore beads / dolt files
+/.dolt/
+*.db
