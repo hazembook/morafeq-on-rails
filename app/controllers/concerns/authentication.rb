@@ -13,6 +13,8 @@ module Authentication
   end
 
   private
+    LAST_USED_REFRESH_INTERVAL = 5.minutes
+
     def authenticated?
       resume_session
     end
@@ -23,10 +25,20 @@ module Authentication
 
     def resume_session
       Current.session ||= find_session_by_cookie
+      if Current.session&.expired?
+        Current.session.destroy
+        cookies.delete(:session_id)
+        Current.session = nil
+      elsif Current.session && should_refresh_last_used?
+        Current.session.update_column(:last_used_at, Time.current)
+      end
+      Current.session
     end
 
     def find_session_by_cookie
-      Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+      if cookie = cookies.signed[:session_id]
+        Session.find_by(token: cookie)
+      end
     end
 
     def request_authentication
@@ -41,12 +53,22 @@ module Authentication
     def start_new_session_for(user)
       user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
         Current.session = session
-        cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax }
+        cookies.signed[:session_id] = {
+          value: session.token,
+          expires: session.expires_at,
+          httponly: true,
+          same_site: :lax
+        }
       end
     end
 
     def terminate_session
       Current.session.destroy
       cookies.delete(:session_id)
+    end
+
+    def should_refresh_last_used?
+      Current.session.last_used_at.nil? ||
+        Current.session.last_used_at < LAST_USED_REFRESH_INTERVAL.ago
     end
 end
