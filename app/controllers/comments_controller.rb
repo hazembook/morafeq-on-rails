@@ -3,6 +3,7 @@ class CommentsController < ApplicationController
 
   def create
     @post = Post.feed_for(Current.user).find(params[:feed_id])
+    authorize @post, :show?
     @comment = @post.comments.build(comment_params.merge(user: Current.user))
 
     if @comment.save
