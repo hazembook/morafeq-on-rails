@@ -8,11 +8,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <% if authenticated? %>
-      <meta name="current-user-id" content="<%= Current.user.id %>">
-      <meta name="current-user-role" content="<%= Current.user.role %>">
-    <% end %>
-
     <%= yield :head %>
 
     <link rel="icon" href="/icon.png" type="image/png">
