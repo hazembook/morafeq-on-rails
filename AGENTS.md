@@ -165,9 +165,10 @@ This section describes the **explicit-confirm publish flow**: the agent prepares
 7. **Close the task on the feature branch** before merging, then commit the JSONL export as the final branch commit:
    ```bash
    bd close <id> --reason "<substantive resolution summary>" --json
-   git add .beads/ && git commit -m "chore(bd): close <id>"
+   git add .beads/ && git commit -m "chore(bd): close <id> — <short summary>"
    ```
    The `--reason` must be a substantive summary of what was fixed and why, not git bookkeeping.
+   The commit message should include a brief human-readable description of what was done (e.g. "add file type and size model tests") so `git log --oneline` is informative.
    After this, `git status` on the feature branch is clean.
 
 8. **Fast-forward `main`** (or rebase the branch first for a cleaner linear history):
