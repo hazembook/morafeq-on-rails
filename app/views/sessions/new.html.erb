@@ -20,4 +20,17 @@
       </div>
     </div>
   <% end %>
+
+  <% if request.host == "morafeq.hazembook.com" %>
+    <details class="mt-8 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-md p-3">
+      <summary class="cursor-pointer font-semibold text-xs uppercase tracking-wide select-none">
+        <%= t("sessions.demo_title") %>
+      </summary>
+      <div class="mt-2 space-y-1 text-xs">
+        <p><%= t("roles.admin") %>: <code class="bg-amber-100 px-1 rounded">admin@morafeq.edu</code> / <code class="bg-amber-100 px-1 rounded">password123</code></p>
+        <p><%= t("roles.teacher") %>: <code class="bg-amber-100 px-1 rounded">ahmed@morafeq.edu</code> / <code class="bg-amber-100 px-1 rounded">password123</code></p>
+        <p><%= t("roles.student") %>: <code class="bg-amber-100 px-1 rounded">omar@morafeq.edu</code> / <code class="bg-amber-100 px-1 rounded">password123</code></p>
+      </div>
+    </details>
+  <% end %>
 </div>
