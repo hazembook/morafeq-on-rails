@@ -9,6 +9,8 @@ class Post < ApplicationRecord
 
   validates :content, presence: true
   validates :scope_type, inclusion: { in: %w[College Department Subject] }, allow_nil: true
+  validate :attachments_type_valid, if: -> { attachments.any? }
+  validate :attachments_size_valid, if: -> { attachments.any? }
 
   scope :pinned_first, -> { order(pinned: :desc, created_at: :desc) }
   scope :not_pinned, -> { where(pinned: false) }
@@ -36,7 +38,28 @@ class Post < ApplicationRecord
     ).merge(pinned_first)
   end
 
+  ALLOWED_ATTACHMENT_TYPES = (ALLOWED_IMAGE_TYPES + ALLOWED_DOCUMENT_TYPES + ALLOWED_MEDIA_TYPES).freeze
+
+  MAX_FILE_SIZE = 50.megabytes
+
   private
+
+  def attachments_type_valid
+    attachments.each do |attachment|
+      unless ALLOWED_ATTACHMENT_TYPES.include?(attachment.content_type)
+        errors.add(:attachments, "must be an image, document, video, or audio file")
+        break
+      end
+    end
+  end
+
+  def attachments_size_valid
+    attachments.each do |attachment|
+      if attachment.byte_size > MAX_FILE_SIZE
+        errors.add(:attachments, "must be less than 50MB each")
+      end
+    end
+  end
 
   def notify_recipients
     action = pinned? ? "new_pinned_post" : "new_post"

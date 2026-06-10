@@ -26,10 +26,30 @@ class User < ApplicationRecord
   validates :email_address, presence: true, uniqueness: true
   validates :full_name, presence: true
   validates :role, presence: true
+  validate :avatar_type_valid, if: -> { avatar.attached? }
+  validate :avatar_size_valid, if: -> { avatar.attached? }
 
   def full_name
     return super if super.blank?
     I18n.t("db.users.#{super.parameterize(separator: '_')}", default: super)
+  end
+
+  ALLOWED_AVATAR_TYPES = ALLOWED_IMAGE_TYPES
+
+  MAX_FILE_SIZE = 5.megabytes
+
+  private
+
+  def avatar_type_valid
+    unless ALLOWED_AVATAR_TYPES.include?(avatar.content_type)
+      errors.add(:avatar, "must be a PNG, JPEG, GIF, or WebP image")
+    end
+  end
+
+  def avatar_size_valid
+    if avatar.byte_size > MAX_FILE_SIZE
+      errors.add(:avatar, "must be less than 5MB")
+    end
   end
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }

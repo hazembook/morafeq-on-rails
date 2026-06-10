@@ -9,8 +9,15 @@ class MaterialsController < ApplicationController
 
   def show
     @material = @subject.materials.kept.find(params[:id])
-    disposition = params[:download] ? :attachment : :inline
-    send_data @material.file.download, filename: @material.file.filename.to_s, content_type: @material.file.content_type, disposition: disposition
+    file = @material.file
+    if params[:download]
+      send_data file.download, filename: file.filename.to_s, content_type: file.content_type, disposition: :attachment
+    else
+      safe_type = Material::ALLOWED_TYPES.include?(file.content_type)
+      send_data file.download, filename: file.filename.to_s,
+        content_type: safe_type ? file.content_type : "application/octet-stream",
+        disposition: safe_type ? :inline : :attachment
+    end
   end
 
   def new

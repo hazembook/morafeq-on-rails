@@ -8,6 +8,7 @@ class Message < ApplicationRecord
   after_create_commit :notify_recipients
 
   validates :content, presence: true, unless: -> { attachments.any? }
+  validate :attachments_type_valid, if: -> { attachments.any? }
   validate :attachments_size_valid, if: -> { attachments.any? }
 
   scope :ordered, -> { order(created_at: :asc) }
@@ -20,7 +21,18 @@ class Message < ApplicationRecord
              .exists?
   end
 
+  ALLOWED_ATTACHMENT_TYPES = (ALLOWED_IMAGE_TYPES + ALLOWED_DOCUMENT_TYPES + ALLOWED_MEDIA_TYPES).freeze
+
   private
+
+  def attachments_type_valid
+    attachments.each do |attachment|
+      unless ALLOWED_ATTACHMENT_TYPES.include?(attachment.content_type)
+        errors.add(:attachments, "must be an image, document, video, or audio file")
+        break
+      end
+    end
+  end
 
   def notify_recipients
     return unless chat_room.is_private?

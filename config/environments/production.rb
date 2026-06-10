@@ -24,6 +24,9 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
+  # Only allow images + PDF for inline display; everything else forces download.
+  config.active_storage.content_types_allowed_inline = ALLOWED_IMAGE_TYPES + %w[application/pdf]
+
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
 
