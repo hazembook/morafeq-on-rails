@@ -16,7 +16,16 @@
       </div>
 
       <div class="mt-4 text-sm text-gray-500 sm:mt-0">
-        <%= link_to t("sessions.forgot_password"), new_password_path, class: "text-gray-700 underline hover:no-underline" %>
+        <% if request.host == "morafeq.hazembook.com" %>
+          <a href="#" onclick="this.nextElementSibling.classList.remove('hidden'); return false;" class="text-gray-400 underline cursor-not-allowed">
+            <%= t("sessions.forgot_password") %>
+          </a>
+          <div class="hidden mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
+            <%= t("sessions.demo_forgot_password_notice") %>
+          </div>
+        <% else %>
+          <%= link_to t("sessions.forgot_password"), new_password_path, class: "text-gray-700 underline hover:no-underline" %>
+        <% end %>
       </div>
     </div>
   <% end %>
