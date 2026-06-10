@@ -8,4 +8,8 @@ export default class extends Controller {
       Turbo.visit(url)
     }
   }
+
+  stopPropagation(event) {
+    event.stopPropagation()
+  }
 }

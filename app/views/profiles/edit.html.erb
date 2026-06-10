@@ -43,7 +43,7 @@
           <% end %>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-3">
-              <%= f.file_field :avatar, class: "hidden", id: "profile-avatar-input", data: { selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") }, onchange: "let label = document.getElementById('profile-avatar-label'); if(this.files.length > 0) { label.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); } else { label.innerText = this.getAttribute('data-placeholder'); }" %>
+              <%= f.file_field :avatar, class: "hidden", id: "profile-avatar-input", data: { controller: "file-label", action: "change->file-label#update", file_label_target_value: "profile-avatar-label", selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") } %>
               <label for="profile-avatar-input" class="py-1.5 px-4 rounded-xl border border-gray-300 text-xs font-semibold bg-white text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm">
                 <%= t("common.choose_file") %>
               </label>

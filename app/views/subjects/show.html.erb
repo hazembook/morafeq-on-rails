@@ -68,7 +68,7 @@
                   </span>
                   
                   <% if preview_type.present? %>
-                    <button class="font-semibold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer text-start truncate font-sans text-sm min-w-0 max-w-[200px] sm:max-w-sm lightbox-trigger" data-src="<%= rails_storage_proxy_path(material.file, only_path: true) %>" data-download="<%= subject_material_path(@subject, material, download: true) %>" data-type="<%= preview_type %>" data-title="<%= j material.title %>" onclick="openLightboxGallery(this)">
+                    <button class="font-semibold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer text-start truncate font-sans text-sm min-w-0 max-w-[200px] sm:max-w-sm lightbox-trigger" data-src="<%= rails_storage_proxy_path(material.file, only_path: true) %>" data-download="<%= subject_material_path(@subject, material, download: true) %>" data-type="<%= preview_type %>" data-title="<%= j material.title %>" data-action="click->lightbox-gallery#open">
                       <%= material.title %>
                     </button>
                   <% else %>

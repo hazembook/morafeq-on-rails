@@ -39,7 +39,7 @@
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1"><%= t("feed.add_attachments") %></label>
         <div class="flex items-center gap-3">
-          <%= f.file_field :attachments, multiple: true, class: "hidden", id: "post-attachments-input", name: "post[attachments][]", data: { selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") }, onchange: "let label = document.getElementById('post-attachments-label'); if(this.files.length > 0) { label.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); } else { label.innerText = this.getAttribute('data-placeholder'); }" %>
+          <%= f.file_field :attachments, multiple: true, class: "hidden", id: "post-attachments-input", name: "post[attachments][]", data: { controller: "file-label", action: "change->file-label#update", file_label_target_value: "post-attachments-label", selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") } %>
           <label for="post-attachments-input" class="py-1.5 px-4 rounded-md border border-gray-300 text-xs font-semibold bg-white text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm">
             <%= t("common.choose_file") %>
           </label>

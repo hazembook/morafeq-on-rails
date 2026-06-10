@@ -13,7 +13,7 @@
     <div>
       <%= f.label :file, t("materials.new.file_label"), class: "block text-sm font-medium text-gray-700 mb-1" %>
       <div class="flex items-center gap-3">
-        <%= f.file_field :file, accept: ".pdf,.ppt,.pptx,.doc,.docx,.png,.jpg,.jpeg,.gif,.webp", class: "hidden", id: "material-file-input", data: { selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") }, onchange: "let label = document.getElementById('material-file-label'); if(this.files.length > 0) { label.innerText = this.getAttribute('data-selected-template').replace('%{count}', this.files.length); } else { label.innerText = this.getAttribute('data-placeholder'); }" %>
+        <%= f.file_field :file, accept: ".pdf,.ppt,.pptx,.doc,.docx,.png,.jpg,.jpeg,.gif,.webp", class: "hidden", id: "material-file-input", data: { controller: "file-label", action: "change->file-label#update", file_label_target_value: "material-file-label", selected_template: t("chats.files_selected", count: "%{count}"), placeholder: t("common.no_file_chosen") } %>
         <label for="material-file-input" class="py-2 px-4 rounded-md border border-gray-300 text-sm font-medium bg-white text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm">
           <%= t("common.choose_file") %>
         </label>

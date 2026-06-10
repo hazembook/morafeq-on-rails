@@ -30,13 +30,13 @@
         <% if images.any? %>
           <% if images.size == 1 %>
             <% attachment = images.first %>
-            <div class="block max-w-lg overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" onclick="event.stopPropagation(); openLightboxGallery(this)">
+            <div class="block max-w-lg overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" data-action="click->lightbox-gallery#open:stopPropagation">
               <%= image_tag attachment, class: "w-full max-h-64 object-cover hover:scale-[1.02] transition-transform duration-300" %>
             </div>
           <% else %>
             <div class="grid gap-1 max-w-lg <%= images.size == 2 ? "grid-cols-2" : "grid-cols-3" %> rounded-lg overflow-hidden border border-gray-200">
               <% images.each_with_index do |attachment, idx| %>
-                <div class="relative cursor-zoom-in aspect-square overflow-hidden bg-gray-100 lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" onclick="event.stopPropagation(); openLightboxGallery(this)">
+                <div class="relative cursor-zoom-in aspect-square overflow-hidden bg-gray-100 lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="image" data-title="<%= j attachment.filename.to_s %>" data-action="click->lightbox-gallery#open:stopPropagation">
                   <%= image_tag attachment, class: "w-full h-full object-cover hover:scale-105 transition-transform duration-300" %>
                   <% if idx == 2 && images.size > 3 %>
                     <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-lg pointer-events-none">
@@ -83,11 +83,11 @@
                 </div>
                 <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
                   <% if preview_type.present? %>
-                    <button class="px-2.5 py-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors cursor-pointer font-sans lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="<%= preview_type %>" data-title="<%= j attachment.filename.to_s %>" onclick="event.stopPropagation(); openLightboxGallery(this)">
+                    <button class="px-2.5 py-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors cursor-pointer font-sans lightbox-trigger" data-src="<%= rails_storage_proxy_path(attachment, only_path: true) %>" data-download="<%= rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true) %>" data-type="<%= preview_type %>" data-title="<%= j attachment.filename.to_s %>" data-action="click->lightbox-gallery#open:stopPropagation">
                       <%= t("feed.preview") %>
                     </button>
                   <% end %>
-                  <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "p-1.5 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 rounded border border-gray-200 transition-colors cursor-pointer", title: t("common.download"), download: true, onclick: "event.stopPropagation()" do %>
+                  <%= link_to rails_storage_proxy_path(attachment, disposition: "attachment", only_path: true), class: "p-1.5 text-gray-500 hover:text-gray-700 bg-white hover:bg-gray-50 rounded border border-gray-200 transition-colors cursor-pointer", title: t("common.download"), download: true do %>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
@@ -120,7 +120,7 @@
         <span data-controller="timeago" data-timeago-datetime-value="<%= post.created_at.iso8601 %>" data-timeago-format-value="<%= t("datetime.time_ago", time: "%{time}") %>"><%= t("datetime.time_ago", time: time_ago_in_words(post.created_at)) %></span>
         <% if post.author == Current.user && post.post_views_count.to_i > 0 %>
           <span class="text-gray-300">•</span>
-          <details class="relative inline-flex" onclick="event.stopPropagation()">
+          <details class="relative inline-flex" data-action="click->post-actions#stopPropagation">
             <summary class="list-none flex items-center gap-1 text-blue-500 hover:text-blue-700 cursor-pointer text-xs font-semibold select-none">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
