@@ -1,1 +1,11 @@
-# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+Sitemap: https://morafeq.hazembook.com/sitemap.xml
+
+User-agent: *
+Allow: /
+Disallow: /session/
+Disallow: /profile/
+Disallow: /admin/
+Disallow: /feed/
+Disallow: /chat_rooms/
+Disallow: /subjects/
+Disallow: /csp-violation-report

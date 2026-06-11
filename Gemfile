@@ -87,3 +87,5 @@ gem "discard", "~> 2.0"
 gem "kaminari", "~> 1.2"
 
 gem "rails-i18n"
+
+gem "meta-tags", "~> 2.23"

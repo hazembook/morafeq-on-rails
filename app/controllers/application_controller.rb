@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   before_action :set_locale
+  before_action :set_meta_tags_defaults
 
   def set_locale
     locale = params[:locale] || cookies[:locale] || session[:locale] || I18n.default_locale
@@ -37,5 +38,30 @@ class ApplicationController < ActionController::Base
 
   def authorize_subject_show
     authorize @subject, :show?
+  end
+
+  def set_meta_tags_defaults
+    set_meta_tags(
+      site: t("app_name"),
+      title: nil,
+      description: t("og_description"),
+      separator: "|",
+      canonical: request.original_url.split("?").first,
+      og: {
+        title: :full_title,
+        description: :description,
+        type: "website",
+        url: request.original_url,
+        image: {
+          _: URI.join(request.base_url, "/morafeq-logo.png").to_s,
+          width: 1024,
+          height: 1024
+        }
+      },
+      twitter: {
+        card: "summary_large_image",
+        image: URI.join(request.base_url, "/morafeq-logo.png").to_s
+      }
+    )
   end
 end
