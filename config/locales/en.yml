@@ -185,7 +185,7 @@ en:
     members_count: "%{count} participants"
   home:
     welcome: "Welcome to Morafeq"
-    subtitle: "Your university companion app. Stay connected with your courses, materials, and community."
+    subtitle: "Your learning companion. Stay connected with your courses, materials, and community."
     signed_in_as: "You're signed in as %{name}."
   feed:
     create_post: "Create Post"
