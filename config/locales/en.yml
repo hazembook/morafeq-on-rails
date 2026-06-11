@@ -128,7 +128,7 @@ en:
     rate_limited: "Try again later."
     signed_out: "Signed out successfully."
     demo_title: "Demo accounts"
-    demo_forgot_password_notice: "Password reset is not available on the demo. Use one of the accounts above to sign in."
+    demo_forgot_password_notice: "Password reset is not available in the demo. Use one of the accounts listed below to log in."
   passwords:
     forgot_title: "Forgot your password?"
     reset_button: "Email reset instructions"
