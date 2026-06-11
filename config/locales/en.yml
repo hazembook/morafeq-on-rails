@@ -1,6 +1,7 @@
 en:
   hello: "Hello world"
   app_name: "Morafeq"
+  og_description: "Morafeq is an open-source (Waqf license), self-hostable learning management platform for universities and schools. Manage subjects, materials, quizzes, assignments, attendance, and more."
   staging_banner: "Demo — not production. Data may be reset."
   db:
     colleges:
