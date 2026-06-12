@@ -14,15 +14,6 @@ class AssignmentSubmission < ApplicationRecord
   validate :file_type_valid, if: -> { file.attached? }
   validate :file_size_valid, if: -> { file.attached? }
 
-  ALLOWED_TYPES = %w[
-    application/pdf
-    application/vnd.ms-powerpoint
-    application/vnd.openxmlformats-officedocument.presentationml.presentation
-    application/msword
-    application/vnd.openxmlformats-officedocument.wordprocessingml.document
-    image/png image/jpeg image/gif image/webp
-  ].freeze
-
   MAX_FILE_SIZE = 50.megabytes
 
   after_update_commit :broadcast_grade_update
@@ -46,7 +37,7 @@ class AssignmentSubmission < ApplicationRecord
   end
 
   def file_type_valid
-    unless ALLOWED_TYPES.include?(file.content_type)
+    unless ALLOWED_UPLOAD_TYPES.include?(file.content_type)
       errors.add(:file, "must be a PDF, PPT, DOCX, or image file")
     end
   end

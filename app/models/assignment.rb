@@ -17,15 +17,6 @@ class Assignment < ApplicationRecord
     subject.teacher
   end
 
-  ALLOWED_TYPES = %w[
-    application/pdf
-    application/vnd.ms-powerpoint
-    application/vnd.openxmlformats-officedocument.presentationml.presentation
-    application/msword
-    application/vnd.openxmlformats-officedocument.wordprocessingml.document
-    image/png image/jpeg image/gif image/webp
-  ].freeze
-
   def status
     if locked?
       "locked"
@@ -51,7 +42,7 @@ class Assignment < ApplicationRecord
   end
 
   def file_type_valid
-    unless ALLOWED_TYPES.include?(file.content_type)
+    unless ALLOWED_UPLOAD_TYPES.include?(file.content_type)
       errors.add(:file, "must be a PDF, PPT, DOCX, or image file")
     end
   end

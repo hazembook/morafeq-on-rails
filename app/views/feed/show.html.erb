@@ -17,7 +17,7 @@
       </h3>
 
       <div class="mb-6">
-        <%= form_with model: [@post, Comment.new], url: feed_comments_path(@post), local: true, class: "space-y-3" do |f| %>
+        <%= form_with model: [ @post, Comment.new ], url: feed_comments_path(@post), local: true, class: "space-y-3" do |f| %>
           <div>
             <%= f.text_area :content, placeholder: t("feed.comment_placeholder"), rows: 3, class: "w-full rounded-lg border-gray-300 shadow-inner focus:border-blue-500 focus:ring-blue-500 text-sm p-3 bg-gray-50 focus:bg-white transition-all resize-none", required: true %>
           </div>

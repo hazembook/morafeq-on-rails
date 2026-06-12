@@ -15,7 +15,7 @@
         <div class="flex items-center gap-3 min-w-0">
           <%= link_to chat_rooms_path, class: "md:hidden p-1.5 hover:bg-gray-100 rounded-full text-gray-500 hover:text-gray-800 transition-colors shrink-0" do %>
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<%= I18n.locale == :ar ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7' %>"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<%= I18n.locale == :ar ? "M9 5l7 7-7 7" : "M15 19l-7-7 7-7" %>"></path>
             </svg>
           <% end %>
           
@@ -45,9 +45,9 @@
             <h1 class="text-sm font-bold text-gray-900 truncate"><%= display_name %></h1>
             <p class="text-[10px] text-gray-400">
               <% if @room.is_private? %>
-                <%= t("chats.private_message", default: "Private Conversation") %>
+                <%= t("chats.private_message") %>
               <% else %>
-                <%= t("chats.class_chat", code: @room.subject&.code, default: "Class Room") %> &middot; <%= t("chats.members_count", count: @room.participants.count, default: "%{count} participants") %>
+                <%= t("chats.class_chat", code: @room.subject&.code) %> &middot; <%= t("chats.members_count", count: @room.participants.count) %>
               <% end %>
             </p>
           </div>

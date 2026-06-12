@@ -16,3 +16,6 @@ ALLOWED_MEDIA_TYPES = %w[
 ].freeze
 
 ALLOWED_ATTACHMENT_TYPES = (ALLOWED_IMAGE_TYPES + ALLOWED_DOCUMENT_TYPES + ALLOWED_MEDIA_TYPES).freeze
+
+# Shared type list for Material, Assignment, AssignmentSubmission file uploads
+ALLOWED_UPLOAD_TYPES = (ALLOWED_IMAGE_TYPES + ALLOWED_DOCUMENT_TYPES).freeze

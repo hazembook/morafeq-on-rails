@@ -1,4 +1,4 @@
-<div id="typing_indicator" data-typing-user-id="<%= typing ? user.id : "" %>" class="<%= 'hidden' if typing && user.id == Current.user.id %> text-xs text-gray-500 bg-white/70 backdrop-blur-sm px-4 py-0 transition-opacity duration-300 z-10 leading-none">
+<div id="typing_indicator" data-typing-user-id="<%= typing ? user.id : "" %>" class="<%= "hidden" if typing && user.id == Current.user.id %> text-xs text-gray-500 bg-white/70 backdrop-blur-sm px-4 py-0 transition-opacity duration-300 z-10 leading-none">
   <% if typing %>
     <div class="py-1 border-t border-gray-100/50"><%= t("chats.is_typing", name: user.full_name) %></div>
   <% end %>
