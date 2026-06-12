@@ -6,5 +6,20 @@
       "command": ["rails-mcp-server"],
       "enabled": true
     }
+  },
+  "permission": {
+    "read": {
+      ".kamal/secrets": "deny",
+      ".kamal/secrets-common": "deny",
+      ".kamal/secrets.*": "deny",
+      "config/*.key": "deny",
+      "config/credentials.yml.enc": "deny"
+    },
+    "glob": {
+      ".kamal/secrets*": "deny"
+    },
+    "grep": {
+      ".kamal/secrets*": "deny"
+    }
   }
 }
