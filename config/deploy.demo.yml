@@ -11,7 +11,6 @@ env:
     APP_HOST: <%= ENV.fetch("APP_HOST", "morafeq.hazembook.com") %>
   secret:
     - RAILS_MASTER_KEY
-    - ADMIN_PASSWORD
 
 aliases:
   console: app exec -i -e "RAILS_ENV=demo" -- rails console
