@@ -145,6 +145,7 @@ ar:
       reset_instruction: "يمكنك إعادة تعيين كلمة المرور الخاصة بك من خلال"
       reset_link_text: "صفحة إعادة تعيين كلمة المرور هذه"
       expires_in: "ستنتهي صلاحية هذا الرابط خلال %{time}."
+      subject: "إعادة تعيين كلمة المرور"
   roles:
     student: "طالب"
     teacher: "أستاذ"
@@ -216,6 +217,10 @@ ar:
       rule2: "انشر محتوى أكاديمياً وتعليمياً فقط"
       rule3: "يمنع الغش الأكاديمي أو الرسائل العشوائية"
       rule4: "اتبع إرشادات مدرس المادة"
+      portal_title: "بوابة مرافق"
+      member_count:
+        one: "مستخدم واحد"
+        other: "%{count} مستخدم"
     scope_general: "عام"
     scope_univ: "على مستوى الجامعة"
     scope_general_option: "عام (على مستوى الجامعة)"
@@ -234,6 +239,13 @@ ar:
     comment_placeholder: "ما رأيك؟"
     add_comment: "تعليق"
 
+  date:
+    formats:
+      long: "%d %B %Y %I:%M %p"
+  time:
+    formats:
+      time_only: "%I:%M %p"
+      month_year: "%B %Y"
   datetime:
     time_ago: "منذ %{time}"
   subjects:
@@ -386,6 +398,9 @@ ar:
       college: "الكلية"
       department: "القسم"
       teacher: "الأستاذ"
+      scope_college: "كلية"
+      scope_department: "قسم"
+      scope_subject: "مادة"
     nav:
       colleges: "الكليات"
       departments: "الأقسام"
@@ -453,6 +468,7 @@ ar:
     confirm_delete: "هل أنت متأكد؟"
     choose_file: "اختر ملفاً"
     no_file_chosen: "لم يتم اختيار ملف"
+    not_available: "غير متاح"
 
   flash:
     admin:

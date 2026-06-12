@@ -38,6 +38,6 @@ module Morafeq
 
     # Locales configuration
     config.i18n.available_locales = [ :en, :ar ]
-    config.i18n.default_locale = :en
+    config.i18n.default_locale = :ar
   end
 end

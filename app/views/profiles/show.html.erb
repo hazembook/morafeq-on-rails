@@ -97,7 +97,7 @@
         </div>
         <div class="flex items-baseline gap-1.5">
           <span class="text-3xl font-extrabold text-slate-900">
-            <%= @attendance_rate.present? ? "#{@attendance_rate}%" : "N/A" %>
+            <%= @attendance_rate.present? ? "#{@attendance_rate}%" : t("common.not_available") %>
           </span>
           <% if @attendance_rate.present? %>
             <span class="text-xs font-semibold text-gray-400"><%= t("profile.academic.rate") %></span>
@@ -127,7 +127,7 @@
         </div>
         <div class="flex items-baseline gap-1.5">
           <span class="text-3xl font-extrabold text-slate-900">
-            <%= @quiz_average.present? ? "#{@quiz_average}%" : "N/A" %>
+            <%= @quiz_average.present? ? "#{@quiz_average}%" : t("common.not_available") %>
           </span>
           <% if @quiz_average.present? %>
             <span class="text-xs font-semibold text-gray-400"><%= t("profile.academic.average") %></span>
@@ -155,7 +155,7 @@
         </div>
         <div class="flex items-baseline gap-1.5">
           <span class="text-3xl font-extrabold text-slate-900">
-            <%= @assignment_average.present? ? "#{@assignment_average}%" : "N/A" %>
+            <%= @assignment_average.present? ? "#{@assignment_average}%" : t("common.not_available") %>
           </span>
           <% if @assignment_average.present? %>
             <span class="text-xs font-semibold text-gray-400"><%= t("profile.academic.average") %></span>

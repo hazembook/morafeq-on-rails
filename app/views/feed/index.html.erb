@@ -88,27 +88,27 @@
   <div class="hidden lg:block w-80 shrink-0 space-y-4 select-none">
     <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
       <div class="h-12 bg-blue-500 rounded-t-lg -mx-4 -mt-4 mb-3 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-      <h3 class="font-bold text-sm text-gray-900 mb-1">Morafeq Portal</h3>
-      <p class="text-xs text-gray-500 mb-4 leading-relaxed"><%= t("feed.sidebar.about", default: "Welcome to your academic home feed. Here you can find official pinned announcements and course-related posts.") %></p>
+      <h3 class="font-bold text-sm text-gray-900 mb-1"><%= t("feed.sidebar.portal_title") %></h3>
+      <p class="text-xs text-gray-500 mb-4 leading-relaxed"><%= t("feed.sidebar.about") %></p>
       <div class="text-xs text-gray-600 space-y-2.5 pt-3 border-t border-gray-100">
         <div class="flex justify-between">
-          <span class="text-gray-400"><%= t("feed.sidebar.created", default: "Created") %></span>
-          <span class="font-semibold text-gray-800">June 2026</span>
+          <span class="text-gray-400"><%= t("feed.sidebar.created") %></span>
+          <span class="font-semibold text-gray-800"><%= l(Time.current, format: :month_year) %></span>
         </div>
         <div class="flex justify-between">
-          <span class="text-gray-400"><%= t("feed.sidebar.members", default: "Members") %></span>
-          <span class="font-semibold text-gray-800"><%= User.count %> users</span>
+          <span class="text-gray-400"><%= t("feed.sidebar.members") %></span>
+          <span class="font-semibold text-gray-800"><%= t("feed.sidebar.member_count", count: User.count) %></span>
         </div>
       </div>
     </div>
 
     <div class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm text-xs">
-      <h3 class="font-bold text-gray-900 mb-3 uppercase tracking-wider text-[10px] text-gray-400"><%= t("feed.sidebar.guidelines_title", default: "Portal Guidelines") %></h3>
+      <h3 class="font-bold text-gray-900 mb-3 uppercase tracking-wider text-[10px] text-gray-400"><%= t("feed.sidebar.guidelines_title") %></h3>
       <ol class="list-decimal list-inside space-y-2 text-gray-600 font-medium">
-        <li><%= t("feed.sidebar.rule1", default: "Be respectful and constructive") %></li>
-        <li><%= t("feed.sidebar.rule2", default: "Post academic content only") %></li>
-        <li><%= t("feed.sidebar.rule3", default: "No cheating or spamming") %></li>
-        <li><%= t("feed.sidebar.rule4", default: "Follow teacher guidelines") %></li>
+        <li><%= t("feed.sidebar.rule1") %></li>
+        <li><%= t("feed.sidebar.rule2") %></li>
+        <li><%= t("feed.sidebar.rule3") %></li>
+        <li><%= t("feed.sidebar.rule4") %></li>
       </ol>
     </div>
   </div>

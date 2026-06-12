@@ -145,6 +145,7 @@ en:
       reset_instruction: "You can reset your password on"
       reset_link_text: "this password reset page"
       expires_in: "This link will expire in %{time}."
+      subject: "Reset your password"
   roles:
     student: "Student"
     teacher: "Teacher"
@@ -216,6 +217,10 @@ en:
       rule2: "Post academic content only"
       rule3: "No cheating or spamming"
       rule4: "Follow teacher guidelines"
+      portal_title: "Morafeq Portal"
+      member_count:
+        one: "%{count} user"
+        other: "%{count} users"
     scope_general: "General"
     scope_univ: "University-wide"
     scope_general_option: "General (University-wide)"
@@ -234,6 +239,13 @@ en:
     comment_placeholder: "What are your thoughts?"
     add_comment: "Comment"
 
+  date:
+    formats:
+      long: "%B %d, %Y %I:%M %p"
+  time:
+    formats:
+      time_only: "%I:%M %p"
+      month_year: "%B %Y"
   datetime:
     time_ago: "%{time} ago"
   subjects:
@@ -386,6 +398,9 @@ en:
       college: "College"
       department: "Department"
       teacher: "Teacher"
+      scope_college: "College"
+      scope_department: "Department"
+      scope_subject: "Subject"
     nav:
       colleges: "Colleges"
       departments: "Departments"
@@ -453,6 +468,7 @@ en:
     confirm_delete: "Are you sure?"
     choose_file: "Choose File"
     no_file_chosen: "No file chosen"
+    not_available: "N/A"
 
   flash:
     admin:
