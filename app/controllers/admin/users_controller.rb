@@ -54,7 +54,7 @@ module Admin
 
     def user_params
       permitted = [ :full_name, :email_address, :role, :bio ]
-      permitted << :password if params[:user][:password].present?
+      permitted << :password if params[:user][:password].present? && !Rails.env.demo?
       params.require(:user).permit(permitted)
     end
   end
