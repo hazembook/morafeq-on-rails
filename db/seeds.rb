@@ -4,6 +4,10 @@
 # Idempotent: this file wipes all rows from the tables below and re-creates
 # the demo dataset, so re-running bin/rails db:seed is safe.
 
+abort("Seeds are only allowed in development and test environments.") unless Rails.env.development? || Rails.env.test?
+
+default_password = ENV.fetch("ADMIN_PASSWORD", "password123")
+
 puts "Cleaning existing data..."
 ActiveStorage::Attachment.delete_all
 ActiveStorage::Blob.delete_all
@@ -36,70 +40,70 @@ puts "Creating users..."
 admin = User.create!(
   full_name: "Admin User",
   email_address: "admin@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :admin
 )
 
 teacher1 = User.create!(
   full_name: "Dr. Ahmed Hassan",
   email_address: "ahmed@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :teacher
 )
 
 teacher2 = User.create!(
   full_name: "Dr. Sara Ali",
   email_address: "sara@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :teacher
 )
 
 teacher3 = User.create!(
   full_name: "Dr. Khaled Omar",
   email_address: "khaled@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :teacher
 )
 
 student1 = User.create!(
   full_name: "Omar Youssef",
   email_address: "omar@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :student
 )
 
 student2 = User.create!(
   full_name: "Layla Mahmoud",
   email_address: "layla@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :student
 )
 
 student3 = User.create!(
   full_name: "Yassin Nour",
   email_address: "yassin@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :student
 )
 
 student4 = User.create!(
   full_name: "Nadia Ibrahim",
   email_address: "nadia@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :student
 )
 
 moderator = User.create!(
   full_name: "Moderator User",
   email_address: "moderator@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :moderator
 )
 
 ta = User.create!(
   full_name: "TA User",
   email_address: "ta@morafeq.edu",
-  password: "password123",
+  password: default_password,
   role: :teaching_assistant
 )
 
