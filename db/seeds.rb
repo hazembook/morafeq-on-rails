@@ -4,7 +4,7 @@
 # Idempotent: this file wipes all rows from the tables below and re-creates
 # the demo dataset, so re-running bin/rails db:seed is safe.
 
-abort("Seeds are only allowed in development and test environments.") unless Rails.env.development? || Rails.env.test?
+abort("Seeds are only allowed in development, test, and demo environments.") unless Rails.env.development? || Rails.env.test? || Rails.env.demo?
 
 default_password = ENV.fetch("ADMIN_PASSWORD", "password123")
 
