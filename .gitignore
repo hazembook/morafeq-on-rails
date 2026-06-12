@@ -40,6 +40,7 @@
 
 # Kamal secrets
 .kamal/secrets
+.kamal/secrets.*
 
 # Beads / Dolt files (added by bd init)
 .dolt/
