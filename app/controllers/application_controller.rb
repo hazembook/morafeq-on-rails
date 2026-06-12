@@ -46,7 +46,8 @@ class ApplicationController < ActionController::Base
       title: nil,
       description: t("og_description"),
       separator: "|",
-      canonical: request.original_url.split("?").first,
+      canonical: canonical_url,
+      alternate: alternate_urls,
       og: {
         title: :full_title,
         description: :description,
@@ -63,5 +64,17 @@ class ApplicationController < ActionController::Base
         image: URI.join(request.base_url, "/morafeq-logo.png").to_s
       }
     )
+  end
+
+  def canonical_url
+    request.original_url.split("?").first
+  end
+
+  def alternate_urls
+    result = {}
+    I18n.available_locales.each do |locale|
+      result[locale.to_s] = url_for(only_path: false, locale: locale)
+    end
+    result
   end
 end

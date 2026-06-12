@@ -4,6 +4,7 @@ class PasswordsController < ApplicationController
   rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_password_path, alert: I18n.t("sessions.rate_limited") }
 
   def new
+    set_meta_tags title: t("passwords.forgot_title"), noindex: true, nofollow: true
   end
 
   def create

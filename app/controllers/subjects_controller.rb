@@ -3,6 +3,7 @@ class SubjectsController < ApplicationController
   before_action :authorize_subject_show, only: [ :show ]
 
   def index
+    set_meta_tags title: t("subjects.title")
     @subjects = if Current.user.admin?
       Subject.includes(:department, :teacher).order(:code)
     elsif Current.user.teacher?
@@ -13,6 +14,7 @@ class SubjectsController < ApplicationController
   end
 
   def show
+    set_meta_tags title: @subject.name
     @materials = @subject.materials.kept.order(created_at: :desc).limit(5)
     @quizzes = @subject.quizzes.order(due_at: :desc)
     @assignments = @subject.assignments.order(due_at: :desc)

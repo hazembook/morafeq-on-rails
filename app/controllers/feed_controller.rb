@@ -3,6 +3,7 @@ class FeedController < ApplicationController
   before_action :authorize_post_owner!, only: [ :edit, :update, :destroy ]
 
   def index
+    set_meta_tags title: t("feed.title")
     @pinned_posts = Post.feed_for(Current.user).pinned_first.where(pinned: true).limit(5)
     @posts = Post.feed_for(Current.user).not_pinned.page(params[:page]).per(10)
   end

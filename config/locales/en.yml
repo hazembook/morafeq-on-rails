@@ -185,10 +185,13 @@ en:
     search_placeholder: "Search chats or users..."
     members_count: "%{count} participants"
   home:
+    title: "Welcome to Morafeq"
+    description: "Morafeq is an open-source learning management platform. Manage subjects, materials, quizzes, assignments, and attendance."
     welcome: "Welcome to Morafeq"
     subtitle: "Your learning companion. Stay connected with your courses, materials, and community."
     signed_in_as: "You're signed in as %{name}."
   feed:
+    title: "Feed"
     create_post: "Create Post"
     mind_placeholder: "Share an announcement"
     scope_prompt: "Post to a subject..."
@@ -250,6 +253,7 @@ en:
     time_ago: "%{time} ago"
   subjects:
     title: "My Subjects"
+    description: "Browse and manage your enrolled subjects, view materials, quizzes, assignments, and attendance."
     teacher_label: "Teacher: %{name}"
     instructor_label: "Instructor: %{name}"
     you_teach: "You teach this"

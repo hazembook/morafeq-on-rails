@@ -2,6 +2,7 @@ module Admin
   class BaseController < ApplicationController
     before_action :require_admin
     before_action :restrict_demo, if: -> { action_name.in?(%w[create update destroy]) }
+    before_action :noindex_admin
 
     private
 
@@ -11,6 +12,10 @@ module Admin
 
     def restrict_demo
       redirect_to request.referer || admin_root_path, alert: t("flash.admin.demo_restricted") if Rails.env.demo?
+    end
+
+    def noindex_admin
+      set_meta_tags noindex: true, nofollow: true
     end
 
     def log_audit(action, auditable, changes = nil)

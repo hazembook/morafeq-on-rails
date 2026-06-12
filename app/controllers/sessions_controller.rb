@@ -4,6 +4,7 @@ class SessionsController < ApplicationController
   before_action :redirect_if_authenticated, only: :new
 
   def new
+    set_meta_tags title: t("sessions.title"), noindex: true, nofollow: true
   end
 
   def create
