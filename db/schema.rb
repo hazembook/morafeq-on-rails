@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_12_124409) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_12_130235) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -104,8 +104,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_12_124409) do
     t.datetime "created_at", null: false
     t.boolean "is_private", default: false, null: false
     t.string "name", null: false
+    t.string "participant_key"
     t.integer "subject_id"
     t.datetime "updated_at", null: false
+    t.index ["participant_key"], name: "index_chat_rooms_on_participant_key", unique: true, where: "is_private = true"
     t.index ["subject_id"], name: "index_chat_rooms_on_subject_id"
   end
 

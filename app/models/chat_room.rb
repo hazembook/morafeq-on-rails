@@ -23,32 +23,27 @@ class ChatRoom < ApplicationRecord
     end
   end
 
+  def self.participant_key_for(user_a, user_b)
+    [ user_a.id, user_b&.id ].compact.sort.join("-")
+  end
+
   def self.find_or_create_private(user_a, user_b)
     return nil if user_a.nil? || user_b.nil?
 
-    room = if user_a == user_b
-      joins(:chat_participants)
-        .where(is_private: true)
-        .group("chat_rooms.id")
-        .having("count(distinct chat_participants.user_id) = 1 AND sum(case when chat_participants.user_id = ? then 1 else 0 end) = 1", user_a.id)
-        .order(created_at: :desc)
-        .first
-    else
-      joins(:chat_participants)
-        .where(is_private: true)
-        .where(chat_participants: { user_id: [ user_a.id, user_b.id ] })
-        .group("chat_rooms.id")
-        .having("count(distinct chat_participants.user_id) = 2")
-        .first
-    end
+    key = participant_key_for(user_a, user_b)
 
-    return room if room
+    where(is_private: true, participant_key: key).first ||
+      create_private_room!(user_a, user_b, key)
+  end
 
+  def self.create_private_room!(user_a, user_b, key)
     transaction do
-      room = create!(is_private: true, name: "Private Chat")
+      room = create!(is_private: true, name: "Private Chat", participant_key: key)
       room.chat_participants.create!(user: user_a)
       room.chat_participants.create!(user: user_b) unless user_a == user_b
       room
     end
+  rescue ActiveRecord::RecordNotUnique
+    retry
   end
 end
