@@ -469,6 +469,7 @@ ar:
       user_updated: "تم تحديث المستخدم بنجاح."
       user_deleted: "تم حذف المستخدم بنجاح."
       cannot_delete_self: "لا يمكنك حذف حسابك الشخصي."
+      demo_restricted: "هذا الإجراء غير متاح في وضع العرض التوضيحي."
       enrollment_created: "تم تسجيل الطالب بنجاح."
       enrollment_deleted: "تم حذف الطالب من المادة."
       task_distribution_created: "تم إنشاء توزيع المهام."
