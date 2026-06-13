@@ -1,21 +1,11 @@
 # frozen_string_literal: true
 
-# Idempotent seed for records required in every environment.
-# Run with: bin/rails db:seed (or runs automatically via db:prepare).
+# This file should ensure the existence of records required to run the application in every environment (production,
+# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
+# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 #
-# For development/demo data, run: bin/rails demo:seed
-
-admin_email = "admin@morafeq.edu"
-
-unless User.exists?(email_address: admin_email)
-  password = SecureRandom.hex(32)
-
-  User.create!(
-    full_name: "Admin User",
-    email_address: admin_email,
-    password: password,
-    role: :admin
-  )
-
-  puts "  Created admin: #{admin_email} / #{password}"
-end
+# Example:
+#
+#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
+#     MovieGenre.find_or_create_by!(name: genre_name)
+#   end
