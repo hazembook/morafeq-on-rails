@@ -6,7 +6,7 @@
 
 abort("Seeds are only allowed in development, test, and demo environments.") unless Rails.env.development? || Rails.env.test? || Rails.env.demo?
 
-default_password = ENV.fetch("ADMIN_PASSWORD", "password123")
+default_password = "password123"
 
 puts "Cleaning existing data..."
 ActiveStorage::Attachment.delete_all
