@@ -51,10 +51,20 @@ Morafeq is built with a focus on speed, responsiveness, and clean aesthetics, de
 
 ### Prerequisites
 
-Make sure you have the following installed on your system:
-
 *   **mise** — a dev tools version manager ([install guide](https://mise.jdx.dev/getting-started.html))
-*   **SQLite3**
+*   **C compiler toolchain** (required for native gem compilation):
+
+    | OS | Command |
+    |---|---|
+    | **Ubuntu/Debian** | `sudo apt-get install build-essential` |
+    | **Fedora/Rocky Linux** | `sudo dnf groupinstall "Development Tools"` |
+    | **macOS** | `xcode-select --install` |
+    | **Windows** | Use [WSL2](https://learn.microsoft.com/en-us/windows/wsl/) with Ubuntu |
+
+    > **Tip:** To speed up Ruby installation with precompiled binaries:
+    > ```bash
+    > mise settings set ruby.compile=false
+    > ```
 
 ### Setup Installation
 
@@ -66,35 +76,29 @@ Make sure you have the following installed on your system:
 
 2.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/morafeq.git
+    git clone https://codeberg.org/hazembook/morafeq-on-rails
     cd morafeq
     ```
 
 3.  **Install Ruby and dependencies:**
     ```bash
+    mise trust        # trust mise.toml
     mise install
     bundle install
     ```
 
-4.  **Prepare the database (creates tables, runs migrations, and inserts seed data):**
+4.  **Prepare the database and seed demo data:**
     ```bash
     bin/rails db:prepare
-    bin/rails db:seed
+    bin/rails demo:seed
     ```
-    *Note: The seed script populates colleges, departments, subjects, students, teachers, assignments, and mock chat rooms to start testing right away.*
+    *Note: The demo seed populates colleges, departments, subjects, students, teachers, assignments, and mock chat rooms to start testing right away.*
 
 5.  **Start the development server:**
     ```bash
     bin/dev
     ```
     This starts both the Rails server and the Tailwind CSS compiler. You can now access the app at `http://localhost:3000`.
-
-### Troubleshooting
-
-If `mise install` does not automatically read `.ruby-version`, run:
-```bash
-mise install ruby@4.0.1
-```
 
 ---
 
