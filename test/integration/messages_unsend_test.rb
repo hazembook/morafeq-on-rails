@@ -9,31 +9,31 @@ class MessagesUnsendTest < ActionDispatch::IntegrationTest
     sign_in_as(@student)
   end
 
-  test "user can unsend their own message within 5 minutes" do
+  test "user can delete their own message within 5 minutes" do
     message = Message.create!(chat_room: @chat_room, user: @student, content: "Hello class!")
 
-    assert_changes -> { message.reload.discarded? }, from: false, to: true do
+    assert_changes -> { Message.exists?(message.id) }, from: true, to: false do
       delete chat_room_message_path(@chat_room, message)
     end
 
     assert_redirected_to @chat_room
   end
 
-  test "user cannot unsend their own message after 5 minutes" do
+  test "user cannot delete their own message after 5 minutes" do
     message = Message.create!(chat_room: @chat_room, user: @student, content: "Hello class!", created_at: 6.minutes.ago)
 
-    assert_no_changes -> { message.reload.discarded? } do
+    assert_no_changes -> { Message.exists?(message.id) } do
       delete chat_room_message_path(@chat_room, message)
     end
 
     assert_redirected_to @chat_room
   end
 
-  test "user cannot unsend another user's message" do
+  test "user cannot delete another user's message" do
     other_user = create(:user)
     message = Message.create!(chat_room: @chat_room, user: other_user, content: "Spam message")
 
-    assert_no_changes -> { message.reload.discarded? } do
+    assert_no_changes -> { Message.exists?(message.id) } do
       delete chat_room_message_path(@chat_room, message)
     end
 

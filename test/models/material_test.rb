@@ -22,17 +22,10 @@ class MaterialTest < ActiveSupport::TestCase
     assert_respond_to Material.new, :file
   end
 
-  test "discard soft-deletes material" do
+  test "destroy hard-deletes material" do
     material = create(:material, :with_file)
-    material.discard
-    assert material.discarded?
-    assert material.discarded_at.present?
-  end
-
-  test "kept scope excludes discarded" do
-    material = create(:material, :with_file)
-    material.discard
-    assert_not_includes Material.kept, material
+    material.destroy
+    assert_not Material.exists?(material.id)
   end
 
   test "validates file type is allowed" do

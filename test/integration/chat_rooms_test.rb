@@ -104,14 +104,14 @@ class ChatRoomsTest < ActionDispatch::IntegrationTest
 
     # Teacher can delete student's message
     sign_in_as(@teacher)
-    assert_changes -> { message.reload.discarded? }, from: false, to: true do
+    assert_changes -> { Message.exists?(message.id) }, from: true, to: false do
       delete chat_room_message_path(@chat_room, message)
     end
 
     # Admin can delete any message too
     message2 = Message.create!(chat_room: @chat_room, user: @student_a, content: "Another student message")
     sign_in_as(@admin)
-    assert_changes -> { message2.reload.discarded? }, from: false, to: true do
+    assert_changes -> { Message.exists?(message2.id) }, from: true, to: false do
       delete chat_room_message_path(@chat_room, message2)
     end
   end

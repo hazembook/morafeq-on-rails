@@ -67,16 +67,16 @@ class PostTest < ActiveSupport::TestCase
     assert_includes feed, post2
   end
 
-  test "discard soft-deletes post" do
+  test "destroy hard-deletes post" do
     post = create(:post, author: @teacher, scope: @subject)
-    post.discard
-    assert post.discarded_at.present?
-    assert post.discarded?
+    post.destroy
+    assert_not Post.exists?(post.id)
   end
 
-  test "kept scope excludes discarded posts" do
+  test "destroy hard-deletes comments" do
     post = create(:post, author: @teacher, scope: @subject)
-    post.discard
-    assert_not_includes Post.kept, post
+    comment = create(:comment, post: post, user: @student, content: "Nice post!")
+    post.destroy
+    assert_not Comment.exists?(comment.id)
   end
 end

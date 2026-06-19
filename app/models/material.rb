@@ -1,6 +1,4 @@
 class Material < ApplicationRecord
-  include Discard::Model
-
   belongs_to :subject, inverse_of: :materials
   has_one_attached :file, dependent: :purge_later
 

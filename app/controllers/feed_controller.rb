@@ -95,8 +95,7 @@ class FeedController < ApplicationController
   end
 
   def destroy
-    # Soft-delete via discard gem; row stays so post_views and comments survive
-    @post.discard
+    @post.destroy
     redirect_to feed_index_path, notice: t("flash.feed.post_deleted")
   end
 

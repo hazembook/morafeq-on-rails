@@ -1,6 +1,6 @@
 <% 
   my_participant = room.chat_participants.find { |p| p.user_id == user.id }
-  last_msg = room.messages.kept.last
+  last_msg = room.messages.last
   is_active = defined?(current_room) && current_room && current_room.id == room.id
   unread = last_msg && my_participant && (my_participant.last_read_message_id.nil? || last_msg.id > my_participant.last_read_message_id)
 

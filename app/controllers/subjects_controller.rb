@@ -15,11 +15,11 @@ class SubjectsController < ApplicationController
 
   def show
     set_meta_tags title: @subject.name
-    @materials = @subject.materials.kept.order(created_at: :desc).limit(5)
+    @materials = @subject.materials.order(created_at: :desc).limit(5)
     @quizzes = @subject.quizzes.order(due_at: :desc)
     @assignments = @subject.assignments.order(due_at: :desc)
     @schedules = @subject.schedules.order(:day, :start_time)
-    @posts = Post.kept.where(scope_type: "Subject", scope_id: @subject.id).order(pinned: :desc, created_at: :desc).limit(5)
+    @posts = Post.where(scope_type: "Subject", scope_id: @subject.id).order(pinned: :desc, created_at: :desc).limit(5)
 
     if Current.user.student?
       @student_attendances = @subject.attendances.where(user: Current.user)

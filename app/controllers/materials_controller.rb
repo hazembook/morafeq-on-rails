@@ -4,11 +4,11 @@ class MaterialsController < ApplicationController
   before_action :require_teacher, only: [ :new, :create, :destroy ]
 
   def index
-    @materials = @subject.materials.kept.order(created_at: :desc)
+    @materials = @subject.materials.order(created_at: :desc)
   end
 
   def show
-    @material = @subject.materials.kept.find(params[:id])
+    @material = @subject.materials.find(params[:id])
     file = @material.file
     if params[:download]
       send_data file.download, filename: file.filename.to_s, content_type: file.content_type, disposition: :attachment
@@ -34,8 +34,8 @@ class MaterialsController < ApplicationController
   end
 
   def destroy
-    @material = @subject.materials.kept.find(params[:id])
-    @material.discard
+    @material = @subject.materials.find(params[:id])
+    @material.destroy
     redirect_to subject_materials_path(@subject), notice: t("flash.materials.removed")
   end
 

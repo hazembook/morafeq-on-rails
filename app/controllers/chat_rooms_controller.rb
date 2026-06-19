@@ -10,13 +10,13 @@ class ChatRoomsController < ApplicationController
     authorize @room
 
     @participant = @room.chat_participants.find_or_create_by!(user: Current.user)
-    last_message = @room.messages.kept.last
+    last_message = @room.messages.last
     if last_message && @participant.last_read_message_id != last_message.id
       @participant.update!(last_read_message_id: last_message.id)
       broadcast_read_status(last_message)
     end
 
-    @messages = @room.messages.kept.ordered.includes(:user)
+    @messages = @room.messages.ordered.includes(:user)
   end
 
   def create_private

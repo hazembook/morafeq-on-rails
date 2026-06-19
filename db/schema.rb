@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_12_130235) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_19_183106) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -149,11 +149,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_12_130235) do
 
   create_table "materials", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.datetime "discarded_at"
     t.integer "subject_id", null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
-    t.index ["discarded_at"], name: "index_materials_on_discarded_at"
     t.index ["subject_id"], name: "index_materials_on_subject_id"
   end
 
@@ -161,11 +159,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_12_130235) do
     t.integer "chat_room_id", null: false
     t.text "content", null: false
     t.datetime "created_at", null: false
-    t.datetime "discarded_at"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["chat_room_id"], name: "index_messages_on_chat_room_id"
-    t.index ["discarded_at"], name: "index_messages_on_discarded_at"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
@@ -199,14 +195,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_12_130235) do
     t.boolean "comments_disabled", default: true, null: false
     t.text "content", null: false
     t.datetime "created_at", null: false
-    t.datetime "discarded_at"
     t.boolean "pinned", default: false, null: false
     t.integer "post_views_count"
     t.integer "scope_id"
     t.string "scope_type"
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_posts_on_author_id"
-    t.index ["discarded_at"], name: "index_posts_on_discarded_at"
     t.index ["scope_type", "scope_id"], name: "index_posts_on_scope_type_and_scope_id"
   end
 

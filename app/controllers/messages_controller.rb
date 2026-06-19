@@ -16,7 +16,6 @@ class MessagesController < ApplicationController
     end
   end
 
-  # Soft-delete supports the 5-minute retraction window checked in messages/_message.html.erb
   def destroy
     @message = Message.find(params[:id])
     authorize @message
@@ -24,7 +23,7 @@ class MessagesController < ApplicationController
     room = @message.chat_room
     is_author = @message.user_id == Current.user.id
 
-    @message.discard
+    @message.destroy
     broadcast_destroy
 
     flash[:notice] = is_author ? t("chats.unsent") : t("chats.deleted_by_moderator")

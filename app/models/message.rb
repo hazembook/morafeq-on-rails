@@ -1,6 +1,4 @@
 class Message < ApplicationRecord
-  include Discard::Model
-
   belongs_to :user, inverse_of: :messages
   belongs_to :chat_room, inverse_of: :messages
   has_many_attached :attachments, dependent: :purge_later

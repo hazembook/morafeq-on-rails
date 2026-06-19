@@ -9,7 +9,6 @@ class ChatRoom < ApplicationRecord
   # Order by last message time, falling back to room creation when empty
   scope :ordered, -> {
     left_joins(:messages)
-      .where(messages: { discarded_at: nil }).or(where(messages: { id: nil }))
       .group("chat_rooms.id")
       .order(Arel.sql("COALESCE(MAX(messages.created_at), chat_rooms.created_at) DESC"))
   }
