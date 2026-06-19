@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # Authentication
-  resource :session
-  resources :passwords, param: :token
+  resource :session, only: [ :new, :create, :destroy ]
+  resources :passwords, param: :token, only: [ :new, :create, :edit, :update ]
 
   # Academic tools — nested under subjects
   resources :subjects, only: [ :index, :show ] do
