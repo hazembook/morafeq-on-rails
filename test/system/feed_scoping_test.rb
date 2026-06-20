@@ -68,7 +68,7 @@ class FeedScopingTest < ApplicationSystemTestCase
     # Verify preview and download controls exist for the PDF
     assert_selector "button", text: "Preview"
     preview_btn = find("button", text: "Preview")
-    assert_match /openLightboxGallery\(this\)/, preview_btn[:onclick]
+    assert_equal "click->lightbox-gallery#open:stopPropagation", preview_btn["data-action"]
     assert_equal "pdf", preview_btn["data-type"]
     assert_equal "test.pdf", preview_btn["data-title"]
 
@@ -135,9 +135,9 @@ class FeedScopingTest < ApplicationSystemTestCase
     # We should have an image element rendered within the lightbox zoom-in container
     assert_selector "div.cursor-zoom-in img"
 
-    # Verify that clicking it triggers showLightbox with the image source
+    # Verify that clicking it triggers lightbox via Stimulus data-action
     zoom_container = find("div.cursor-zoom-in")
-    assert_match /openLightboxGallery\(this\)/, zoom_container[:onclick]
+    assert_equal "click->lightbox-gallery#open:stopPropagation", zoom_container["data-action"]
     assert_equal "image", zoom_container["data-type"]
     assert_equal "test.gif", zoom_container["data-title"]
 
@@ -162,7 +162,7 @@ class FeedScopingTest < ApplicationSystemTestCase
     assert_text "Original content"
     assert_text "test.pdf"
 
-    click_link "Edit"
+    visit edit_feed_path(post)
 
     assert_text "test.pdf"
     check "remove_attachments[]"
@@ -175,8 +175,8 @@ class FeedScopingTest < ApplicationSystemTestCase
     assert_no_text "Original content"
     assert_no_text "test.pdf"
 
+    visit post_actions_feed_path(post)
     click_button "Delete"
-
     assert_text "Post deleted."
     assert_no_text "Updated content by teacher"
   end

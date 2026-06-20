@@ -36,7 +36,9 @@ class AdminFlowsTest < ApplicationSystemTestCase
     assert_text "Faculty of Software Engineering"
 
     # Delete
-    click_button "Delete"
+    within("tr", text: "Faculty of Software Engineering") do
+      click_button "Delete"
+    end
     assert_text "College deleted."
     assert_no_text "Faculty of Software Engineering"
   end
@@ -63,7 +65,9 @@ class AdminFlowsTest < ApplicationSystemTestCase
     assert_text "Bio-Engineering"
 
     # Delete
-    click_button "Delete"
+    within("tr", text: "Bio-Engineering") do
+      click_button "Delete"
+    end
     assert_text "Department deleted."
     assert_no_text "Bio-Engineering"
   end
@@ -93,7 +97,9 @@ class AdminFlowsTest < ApplicationSystemTestCase
     assert_text "Advanced Signals and Systems"
 
     # Delete
-    click_button "Delete"
+    within("tr", text: "Advanced Signals and Systems") do
+      click_button "Delete"
+    end
     assert_text "Subject deleted."
     assert_no_text "Advanced Signals and Systems"
   end

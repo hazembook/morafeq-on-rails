@@ -47,6 +47,11 @@ Rails.application.configure do
   config.i18n.raise_on_missing_translations = true
   config.i18n.default_locale = :en
 
+  # Disable Turbo cable stream source connection waiting in system tests.
+  # We use rack_test (no JavaScript), so turbo-cable-stream-source elements
+  # can never get connected="true" — skip the post-visit assertion.
+  config.turbo.test_connect_after_actions = []
+
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
