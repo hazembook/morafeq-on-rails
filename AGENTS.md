@@ -61,24 +61,26 @@ bd close bd-42 --reason "Substantive summary of what was fixed/why" --json
 ### Workflow for AI Agents
 
 1. **Check ready work**: `bd ready` shows unblocked issues
-2. **Create a branch for the task**: `git switch -c <bd-task-id>`
-3. **Claim your task atomically**: `bd update <id> --claim`
-4. **Work on it**: Implement, test, document
-5. **Discover new work?** Create linked issue:
+2. **Create the feature branch first**: `git switch -c <bd-id>` before any state changes
+3. **Claim on the branch and commit beads**: `bd update <id> --claim --json && git add .beads/ && git commit -m "chore(bd): claim <id>"`
+4. **Investigate using MCP tools before writing code:**
+   - `mcp__semble__search` — search the codebase by intent/concept to find related code, patterns, and existing implementations
+   - `rails-explorer` tools — `analyze_models`, `get_schema`, `analyze_controller_views`, `get_routes` to understand full context
+   - `git log --follow <affected-files>` — check for prior workarounds, related commits, and linked issue IDs
+5. **Present an investigation report** (see Reports section) covering what was found, proposed approach, alternatives, and risks. **Wait for explicit human approval before implementing.**
+6. **Implement, test, run quality gates** on the branch
+7. **Discover new work?** Create linked issue:
    - `bd create "Found bug" --description="Details about what was found" -p 1 --deps discovered-from:<parent-id>`
-6. **Commit and present a handoff summary**, then **stop and wait for explicit human confirmation**:
-   - `git add -A && git commit -m "..."` with a `Refs: <id>` footer
-   - Present: branch name, key commits, diff highlights, quality-gate status, suggested merge message
-   - Do **not** merge, push, or close the bd task until the human says "go ahead" (or equivalent)
-7. **After explicit confirmation, run the publish steps** (see Session Completion): `bd close` on the feature branch with a substantive reason, commit the JSONL export, then fast-forward `main`, push to `origin main`, delete local branch
-8. **Commit before next task**: never open/claim the next task before handing off the previous one.
+8. **Present a thorough handoff report** (see Reports section) and **stop and wait for explicit human confirmation** — the agent never assumes approval from a "thanks" or "looks good" alone
+9. **After explicit confirmation, run the publish steps** (see Session Completion): `bd close` on the feature branch with a substantive reason, commit the JSONL export, then fast-forward `main`, push to `origin main`, delete local branch
+10. **Commit before next task**: never open/claim the next task before handing off the previous one.
 
 Rationale: the project is single-owner, so feature branches stay local. The agent works on isolated, reproducible steps; the human reviews the diff and explicitly signs off before anything touches `main` on `origin`. The explicit "go ahead" is the gate — the agent never assumes approval from a "thanks" or "looks good" alone. When more contributors join, add PRs by pushing the feature branch to `origin` and letting the human open the PR.
 
 ### Human-in-the-Loop Split
 
-- **Agent** owns: check bd, claim, branch, implement, test, commit, run quality gates, present handoff summary
-- **Human** owns: review diff, give explicit confirmation (e.g., "go ahead")
+- **Agent** owns: check bd, branch, claim, investigate, present investigation report, implement, test, quality gates, present handoff report
+- **Human** owns: review investigation report (approve approach), review diff + handoff (approve publish)
 - **After confirmation, agent** owns: `bd close` on the feature branch with a substantive reason, commit the JSONL export, fast-forward `main`, push to `origin main`, delete local feature branch
 
 ### Pre-change Workflow (Direct Requests & Untracked Work)
@@ -87,12 +89,18 @@ The standard workflow above assumes the agent is picking from `bd ready`. For **
 
 1. **Review and debate the request.** If the change is non-trivial, the approach is unclear, or there's a tradeoff to weigh, surface it first — propose options, cite constraints, and confirm direction. Do not assume the literal request is the best path.
 2. **Check bd for related work:** `bd ready --json` and `bd list --json`. If an existing issue already covers the request (even partially), use it: claim with `bd update <id> --claim` and link new findings via `--deps discovered-from:<id>`. If nothing matches, create a new task with `bd create` (clear title, type, priority, description).
-3. **Never work on `main` directly — always branch, even for tracked work.** This applies whether the task was pre-existing or just created. The flow is:
-   - Commit the bd state change (claim or create, plus any `--deps` linkage) so the bd auto-export to `.beads/issues.jsonl` is in git history
-   - Branch from `main` with `git switch -c <bd-id>`
-   - Implement, run quality gates on the branch, commit with a `Refs: <id>` footer in the work commit
-   - Present a handoff summary and **stop and wait for explicit human confirmation** before any merge, push, or bd close — the agent never assumes approval from a "thanks" or "looks good" alone
-   - After the human says "go ahead" (or equivalent), execute the publish steps in Session Completion
+3. **Branch from main first, then claim on the branch:**
+   - `git switch -c <bd-id>`
+   - `bd update <id> --claim --json`
+   - `git add .beads/ && git commit -m "chore(bd): claim <id>"`
+4. **Investigate using MCP tools before writing code:**
+   - `mcp__semble__search` — search by intent/concept to find related code, patterns, and existing implementations
+   - `rails-explorer` tools — `analyze_models`, `get_schema`, `analyze_controller_views`, `get_routes` to understand full context
+   - `git log --follow <affected-files>` — check for prior workarounds, related commits, and linked issue IDs
+5. **Present an investigation report** (see Reports section) covering what was found, proposed approach, alternatives, and risks. **Wait for explicit human approval before implementing.**
+6. **Implement, run quality gates on the branch, commit** with a `Refs: <id>` footer in the work commit
+7. **Present a thorough handoff report** (see Reports section) and **stop and wait for explicit human confirmation** before any merge, push, or bd close — the agent never assumes approval from a "thanks" or "looks good" alone
+8. **After the human says "go ahead"** (or equivalent), execute the publish steps in Session Completion
 
 **Pausing a task (work not finished):**
 
@@ -144,6 +152,32 @@ bd automatically syncs via Dolt:
 
 For more details, see README.md and docs/QUICKSTART.md.
 
+## Reports
+
+### Investigation Report
+
+Presented after MCP investigation, before implementation. Wait for explicit human approval before proceeding.
+
+- **Related code found**: what semble/rails-explorer revealed about the area
+- **Prior art**: `git log --follow` findings (prior commits, workarounds, linked issue IDs)
+- **Current behavior**: how the code works today
+- **Proposed approach**: specific plan to fix or implement
+- **Alternatives considered**: other approaches and why they were rejected
+- **Risks**: edge cases, breaking changes, dependencies, scope
+- **Affected files**: list of files expected to change
+
+### Handoff Report
+
+Presented after quality gates pass, before publishing. Stop and wait for explicit confirmation.
+
+- **Branch**: the branch name
+- **Task**: bd issue ID and title
+- **Key commits**: `git log --oneline` of work commits
+- **Diff highlights**: what changed and why
+- **Quality gates**: test count/pass/fail/skip, rubocop, brakeman, bundler-audit, erb_lint status
+- **What was NOT done**: deferred work, known limitations, follow-up issues created
+- **Suggested merge message**: proposed commit message for main
+
 ## Session Completion
 
 This section describes the **explicit-confirm publish flow**: the agent prepares the work, the human reviews and gives explicit "go ahead", and only then does the agent touch `main` on `origin`. Feature branches stay local — only `main` is pushed.
@@ -152,7 +186,7 @@ This section describes the **explicit-confirm publish flow**: the agent prepares
 
 1. **File issues for remaining work** — anything you noticed but didn't fix
 2. **Run quality gates** on the branch — `bin/ci` (or the relevant subset)
-3. **Present a handoff summary** to the human: branch name, key commits, diff highlights, quality-gate status, suggested merge commit message
+3. **Present a thorough handoff report** to the human (see Reports section): branch name, key commits, diff highlights, quality-gate status, what was deferred, suggested merge commit message
 4. **Stop and wait for explicit confirmation** — the agent does nothing further until the human says "go ahead" (or equivalent). A "thanks" or "looks good" is **not** approval.
 
 ### Human review (gate)
