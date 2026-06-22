@@ -9,8 +9,6 @@ class Message < ApplicationRecord
   validate :attachments_type_valid, if: -> { attachments.any? }
   validate :attachments_size_valid, if: -> { attachments.any? }
 
-  before_validation :set_content_default, on: :create
-
   scope :ordered, -> { order(created_at: :asc) }
 
   def seen_by?(user_to_exclude)
@@ -24,10 +22,6 @@ class Message < ApplicationRecord
   ALLOWED_ATTACHMENT_TYPES = (ALLOWED_IMAGE_TYPES + ALLOWED_DOCUMENT_TYPES + ALLOWED_MEDIA_TYPES).freeze
 
   private
-
-  def set_content_default
-    self.content ||= "" if content.blank? && attachments.any?
-  end
 
   def attachments_type_valid
     attachments.each do |attachment|
