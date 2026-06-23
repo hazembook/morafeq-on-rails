@@ -53,6 +53,16 @@ class MessageTest < ActiveSupport::TestCase
     assert_not msg.seen_by?(nil)
   end
 
+  test "rejects binary attachment with spoofed content type" do
+    msg = Message.new(chat_room: @dm, user: @teacher, content: "Look at this")
+    msg.attachments.attach(
+      io: StringIO.new(+"MZ\x90\x00\x03\x00\x00\x00\x04\x00\x00\x00\xff\xff\x00\x00\xb8\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00".b),
+      filename: "image.png",
+      content_type: "image/png"
+    )
+    assert_not msg.valid?
+  end
+
   test "ordered scope ascends by created_at" do
     first = @dm.messages.create!(user: @teacher, content: "First", created_at: 2.hours.ago)
     second = @dm.messages.create!(user: @student, content: "Second", created_at: 1.hour.ago)

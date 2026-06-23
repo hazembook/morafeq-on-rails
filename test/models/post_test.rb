@@ -79,4 +79,14 @@ class PostTest < ActiveSupport::TestCase
     post.destroy
     assert_not Comment.exists?(comment.id)
   end
+
+  test "rejects binary attachment with spoofed content type" do
+    post = build(:post, author: @teacher, scope: @subject)
+    post.attachments.attach(
+      io: StringIO.new(+"MZ\x90\x00\x03\x00\x00\x00\x04\x00\x00\x00\xff\xff\x00\x00\xb8\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00".b),
+      filename: "image.png",
+      content_type: "image/png"
+    )
+    assert_not post.valid?
+  end
 end

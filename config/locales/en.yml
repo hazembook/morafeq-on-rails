@@ -1,4 +1,9 @@
 en:
+  activerecord:
+    errors:
+      messages:
+        invalid_magic_bytes: "file content does not match the declared type (detected: %{detected})"
+        magic_bytes_check_failed: "could not verify the file content"
   hello: "Hello world"
   app_name: "Morafeq"
   og_description: "Morafeq is an open-source (Waqf license), self-hostable learning management platform for universities and schools. Manage subjects, materials, quizzes, assignments, attendance, and more."

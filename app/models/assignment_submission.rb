@@ -11,6 +11,7 @@ class AssignmentSubmission < ApplicationRecord
   }, allow_nil: true
 
   validate :file_attached
+  validates :file, magic_bytes: { allowed: ALLOWED_UPLOAD_TYPES }, if: -> { file.attached? }
   validate :file_type_valid, if: -> { file.attached? }
   validate :file_size_valid, if: -> { file.attached? }
 

@@ -74,6 +74,16 @@ class AssignmentTest < ActiveSupport::TestCase
     assert_not assignment.ended?
   end
 
+  test "rejects binary file with spoofed content type" do
+    assignment = Assignment.new(title: "HW", subject: @subject, due_at: 1.week.from_now, total_points: 100)
+    assignment.file.attach(
+      io: StringIO.new(+"MZ\x90\x00\x03\x00\x00\x00\x04\x00\x00\x00\xff\xff\x00\x00\xb8\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00".b),
+      filename: "image.png",
+      content_type: "image/png"
+    )
+    assert_not assignment.valid?
+  end
+
   test "owner returns subject teacher" do
     assignment = create(:assignment, subject: @subject)
     assert_equal @teacher, assignment.owner

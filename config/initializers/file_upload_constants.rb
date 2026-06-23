@@ -8,6 +8,8 @@ ALLOWED_DOCUMENT_TYPES = %w[
   application/vnd.openxmlformats-officedocument.presentationml.presentation
   application/msword
   application/vnd.openxmlformats-officedocument.wordprocessingml.document
+  text/plain
+  text/markdown
 ].freeze
 
 ALLOWED_MEDIA_TYPES = %w[

@@ -66,4 +66,14 @@ class UserTest < ActiveSupport::TestCase
     user = build(:user, :admin)
     assert user.admin?
   end
+
+  test "rejects binary avatar with spoofed content type" do
+    user = build(:user)
+    user.avatar.attach(
+      io: StringIO.new(+"MZ\x90\x00\x03\x00\x00\x00\x04\x00\x00\x00\xff\xff\x00\x00\xb8\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00".b),
+      filename: "avatar.png",
+      content_type: "image/png"
+    )
+    assert_not user.valid?
+  end
 end

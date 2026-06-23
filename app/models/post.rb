@@ -5,8 +5,11 @@ class Post < ApplicationRecord
   has_many :comments, -> { order(created_at: :asc) }, dependent: :destroy, inverse_of: :post
   has_many :post_views, dependent: :destroy, inverse_of: :post
 
+  ALLOWED_ATTACHMENT_TYPES = (ALLOWED_IMAGE_TYPES + ALLOWED_DOCUMENT_TYPES + ALLOWED_MEDIA_TYPES).freeze
+
   validates :content, presence: true
   validates :scope_type, inclusion: { in: %w[College Department Subject] }, allow_nil: true
+  validates :attachments, magic_bytes: { allowed: ALLOWED_ATTACHMENT_TYPES }, if: -> { attachments.any? }
   validate :attachments_type_valid, if: -> { attachments.any? }
   validate :attachments_size_valid, if: -> { attachments.any? }
 
@@ -35,8 +38,6 @@ class Post < ApplicationRecord
       subject_ids, department_ids, college_ids
     ).merge(pinned_first)
   end
-
-  ALLOWED_ATTACHMENT_TYPES = (ALLOWED_IMAGE_TYPES + ALLOWED_DOCUMENT_TYPES + ALLOWED_MEDIA_TYPES).freeze
 
   MAX_FILE_SIZE = 50.megabytes
 

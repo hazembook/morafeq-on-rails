@@ -10,6 +10,7 @@ class Assignment < ApplicationRecord
   validates :due_at, presence: true
   validates :total_points, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
+  validates :file, magic_bytes: { allowed: ALLOWED_UPLOAD_TYPES }, if: -> { file.attached? }
   validate :file_type_valid, if: -> { file.attached? }
   validate :file_size_valid, if: -> { file.attached? }
 

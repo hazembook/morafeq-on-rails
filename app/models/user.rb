@@ -23,9 +23,12 @@ class User < ApplicationRecord
 
   enum :role, { student: 0, teacher: 1, admin: 2, moderator: 3, teaching_assistant: 4 }
 
+  ALLOWED_AVATAR_TYPES = ALLOWED_IMAGE_TYPES
+
   validates :email_address, presence: true, uniqueness: true
   validates :full_name, presence: true
   validates :role, presence: true
+  validates :avatar, magic_bytes: { allowed: ALLOWED_AVATAR_TYPES }, if: -> { avatar.attached? }
   validate :avatar_type_valid, if: -> { avatar.attached? }
   validate :avatar_size_valid, if: -> { avatar.attached? }
 
@@ -33,8 +36,6 @@ class User < ApplicationRecord
     return super if super.blank?
     I18n.t("db.users.#{super.parameterize(separator: '_')}", default: super)
   end
-
-  ALLOWED_AVATAR_TYPES = ALLOWED_IMAGE_TYPES
 
   MAX_FILE_SIZE = 5.megabytes
 

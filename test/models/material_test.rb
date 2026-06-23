@@ -61,4 +61,34 @@ class MaterialTest < ActiveSupport::TestCase
     material = build(:material, :with_file)
     assert material.valid?
   end
+
+  test "allows text file" do
+    material = build(:material)
+    material.file.attach(
+      io: StringIO.new("Hello world"),
+      filename: "notes.txt",
+      content_type: "text/plain"
+    )
+    assert material.valid?
+  end
+
+  test "allows markdown file" do
+    material = build(:material)
+    material.file.attach(
+      io: StringIO.new("# Heading"),
+      filename: "readme.md",
+      content_type: "text/markdown"
+    )
+    assert material.valid?
+  end
+
+  test "rejects binary file with spoofed content type" do
+    material = build(:material)
+    material.file.attach(
+      io: StringIO.new(+"MZ\x90\x00\x03\x00\x00\x00\x04\x00\x00\x00\xff\xff\x00\x00\xb8\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00".b),
+      filename: "image.png",
+      content_type: "image/png"
+    )
+    assert_not material.valid?
+  end
 end
