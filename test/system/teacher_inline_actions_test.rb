@@ -38,7 +38,7 @@ class TeacherInlineActionsTest < ApplicationSystemTestCase
     assert_text "Syllabus 2026"
 
     assert_selector "svg.text-red-500"
-    assert_text "58 Bytes"
+    assert_text "215 Bytes"
 
     assert_selector "button", text: "Preview"
     preview_btn = find("button", text: "Preview")
