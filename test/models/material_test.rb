@@ -36,7 +36,7 @@ class MaterialTest < ActiveSupport::TestCase
       content_type: "text/html"
     )
     assert_not material.valid?
-    assert_includes material.errors[:file], "must be a PDF, PPT, DOCX, or image file"
+    assert_includes material.errors[:file], "file content does not match the declared type (detected: text/html)"
   end
 
   test "validates file size does not exceed maximum" do

@@ -11,7 +11,6 @@ class Assignment < ApplicationRecord
   validates :total_points, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   validates :file, magic_bytes: { allowed: ALLOWED_UPLOAD_TYPES }, if: -> { file.attached? }
-  validate :file_type_valid, if: -> { file.attached? }
   validate :file_size_valid, if: -> { file.attached? }
 
   def owner
@@ -40,12 +39,6 @@ class Assignment < ApplicationRecord
 
   def notify_recipients
     NotificationJob.perform_later(owner, "new_assignment", self)
-  end
-
-  def file_type_valid
-    unless ALLOWED_UPLOAD_TYPES.include?(file.content_type)
-      errors.add(:file, "must be a PDF, PPT, DOCX, or image file")
-    end
   end
 
   def file_size_valid

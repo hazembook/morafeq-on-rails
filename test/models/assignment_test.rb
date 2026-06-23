@@ -34,7 +34,7 @@ class AssignmentTest < ActiveSupport::TestCase
     assignment = Assignment.new(title: "HW", subject: @subject, due_at: 1.week.from_now, total_points: 100)
     assignment.file.attach(io: StringIO.new("bad"), filename: "test.exe", content_type: "application/x-msdownload")
     assert_not assignment.valid?
-    assert_includes assignment.errors[:file], "must be a PDF, PPT, DOCX, or image file"
+    assert_includes assignment.errors[:file], "file content does not match the declared type (detected: application/x-dosexec)"
   end
 
   test "validates file size" do

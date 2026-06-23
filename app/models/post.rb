@@ -10,7 +10,6 @@ class Post < ApplicationRecord
   validates :content, presence: true
   validates :scope_type, inclusion: { in: %w[College Department Subject] }, allow_nil: true
   validates :attachments, magic_bytes: { allowed: ALLOWED_ATTACHMENT_TYPES }, if: -> { attachments.any? }
-  validate :attachments_type_valid, if: -> { attachments.any? }
   validate :attachments_size_valid, if: -> { attachments.any? }
 
   scope :pinned_first, -> { order(pinned: :desc, created_at: :desc) }
@@ -42,15 +41,6 @@ class Post < ApplicationRecord
   MAX_FILE_SIZE = 50.megabytes
 
   private
-
-  def attachments_type_valid
-    attachments.each do |attachment|
-      unless ALLOWED_ATTACHMENT_TYPES.include?(attachment.content_type)
-        errors.add(:attachments, "must be an image, document, video, or audio file")
-        break
-      end
-    end
-  end
 
   def attachments_size_valid
     attachments.each do |attachment|

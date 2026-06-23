@@ -9,7 +9,6 @@ class Message < ApplicationRecord
 
   validates :content, presence: true, unless: -> { attachments.any? }
   validates :attachments, magic_bytes: { allowed: ALLOWED_ATTACHMENT_TYPES }, if: -> { attachments.any? }
-  validate :attachments_type_valid, if: -> { attachments.any? }
   validate :attachments_size_valid, if: -> { attachments.any? }
 
   scope :ordered, -> { order(created_at: :asc) }
@@ -23,15 +22,6 @@ class Message < ApplicationRecord
   end
 
   private
-
-  def attachments_type_valid
-    attachments.each do |attachment|
-      unless ALLOWED_ATTACHMENT_TYPES.include?(attachment.content_type)
-        errors.add(:attachments, "must be an image, document, video, or audio file")
-        break
-      end
-    end
-  end
 
   def notify_recipients
     return unless chat_room.is_private?

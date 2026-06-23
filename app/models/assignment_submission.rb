@@ -12,7 +12,6 @@ class AssignmentSubmission < ApplicationRecord
 
   validate :file_attached
   validates :file, magic_bytes: { allowed: ALLOWED_UPLOAD_TYPES }, if: -> { file.attached? }
-  validate :file_type_valid, if: -> { file.attached? }
   validate :file_size_valid, if: -> { file.attached? }
 
   MAX_FILE_SIZE = 50.megabytes
@@ -35,12 +34,6 @@ class AssignmentSubmission < ApplicationRecord
 
   def file_attached
     errors.add(:file, "must be attached to submit") unless file.attached?
-  end
-
-  def file_type_valid
-    unless ALLOWED_UPLOAD_TYPES.include?(file.content_type)
-      errors.add(:file, "must be a PDF, PPT, DOCX, or image file")
-    end
   end
 
   def file_size_valid
